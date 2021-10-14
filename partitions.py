@@ -5,6 +5,8 @@
 
 import numpy as np
 from scipy import sparse
+from scipy.linalg import eigh
+from scipy.sparse.linalg import eigsh
 import numba as nb
 from time import time as now
 
@@ -50,12 +52,8 @@ def generate_partitions(n):
 
 #  ----------------------------------  build adjacency matrix  ---------------------------------  #
 
-@nb.jit
-def a():
-    A = sparse.lil_matrix((dim[n_fin],dim[n_fin]))
-
-a()
-exit(0)
+# this can be done also in numba by directly manipulating the sparse matrix sub-arrays
+# see https://stackoverflow.com/questions/52299420/scipy-csr-matrix-understand-indptr
 
 A = sparse.lil_matrix((dim[n_fin],dim[n_fin]))
 
@@ -86,16 +84,32 @@ print("A built", now()-start)
 
 
 
+#  -------------------------------  diagonalize adjacency matrix  ------------------------------  #
 
 
+A = A.todense()
+
+eigvals, eigvecs = eigh(A)
+eigvecs = eigvecs.T
+print("A diagonalized", now()-start)
+
+IPR = np.sum(eigvecs**4, axis=1)
+
+from matplotlib import pyplot as plt
+
+fig, ax = plt.subplots()
+
+ax.plot(np.arange(dim[n_fin]), eigvals, '.', c='black')
+#ax.plot(np.arange(dim[n_fin]), 1/IPR, '.', c='black')
+
+ax.set_xlabel("k")
+#ax.set_ylabel("PR")
+ax.set_ylabel(r"$E_k$")
 
 
+ax.set_title("n=%d (dim=%d)" %(n_fin,dim[n_fin]))
 
-
-
-
-
-
+plt.show()
 
 
 
