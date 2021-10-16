@@ -12,15 +12,12 @@
 #  ---------------------------------------------------------------------------------------------  #
 
 import numpy as np
-#from scipy import sparse
-#from scipy.linalg import eigh
-#from scipy.sparse.linalg import eigsh
 import numba as nb
 #from time import time as now
 
 instring = input("").split(' ')
 
-n_fin = int( instring[0] )
+N = int( instring[0] )
 
 #start = now()
 
@@ -79,7 +76,7 @@ col_ind = []
 
 next_level = np.array( [x for x in generate_partitions(1)] )
 levels = [next_level]
-for n in range(1,n_fin):
+for n in range(1,N):
 
     # reshape level n to make the strings long n+1
     level = np.append(next_level, np.zeros((p[n],1), dtype=np.int_), 1)
@@ -92,16 +89,16 @@ for n in range(1,n_fin):
     
     # update the adjacencies
     temp = update_adj(level,next_level,n)
-    row_ind += temp[1]
-    col_ind += temp[2]
+    row_ind += temp[0]
+    col_ind += temp[1]
 
     
 #  ---------------------------------------  save to file  --------------------------------------  #
 
-filename = "Hamiltonians/n%d.txt" % n_fin
+filename = "Hamiltonians/N%d.txt" % N
 toSave = np.array((row_ind,col_ind)).T
 head = "row col"
-np.savetxt(filename, toSave, header=)
+np.savetxt(filename, toSave, header=head, fmt='%d')
 
 #print("A built", now()-start)
 #print(n, now()-start)
