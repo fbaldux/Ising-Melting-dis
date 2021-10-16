@@ -71,8 +71,9 @@ def update_adj(l1,l2,n):
     
     return row_ind, col_ind
 
-row_ind = []
-col_ind = []  
+# the first box
+row_ind = [0]
+col_ind = [1]  
 
 next_level = np.array( [x for x in generate_partitions(1)] )
 levels = [next_level]
@@ -95,7 +96,7 @@ for n in range(1,N):
     
 #  ---------------------------------------  save to file  --------------------------------------  #
 
-filename = "Hamiltonians/N%d.txt" % N
+filename = "Hamiltonians/clean_N%d.txt" % N
 toSave = np.array((row_ind,col_ind)).T
 head = "row col"
 np.savetxt(filename, toSave, header=head, fmt='%d')
