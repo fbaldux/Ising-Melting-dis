@@ -62,7 +62,6 @@ def generate_partitions(n):
 
 @nb.njit
 def update_adj(l1,l2,n):
-    data = [np.float_(1) for i in range(0)]
     row_ind = [np.int_(1) for i in range(0)]
     col_ind = [np.int_(1) for i in range(0)]
     
@@ -73,9 +72,8 @@ def update_adj(l1,l2,n):
                 row_ind.append(dim[n]+i)
                 col_ind.append(dim[n-1]+j)
     
-    return data, row_ind, col_ind
+    return row_ind, col_ind
 
-data = []
 row_ind = []
 col_ind = []  
 
@@ -94,7 +92,6 @@ for n in range(1,n_fin):
     
     # update the adjacencies
     temp = update_adj(level,next_level,n)
-    data += temp[0]
     row_ind += temp[1]
     col_ind += temp[2]
 
@@ -102,8 +99,8 @@ for n in range(1,n_fin):
 #  ---------------------------------------  save to file  --------------------------------------  #
 
 filename = "Hamiltonians/n%d.txt" % n_fin
-toSave = np.array((row_ind,col_ind,data)).T
-head = "row col entry"
+toSave = np.array((row_ind,col_ind)).T
+head = "row col"
 np.savetxt(filename, toSave, header=)
 
 #print("A built", now()-start)
