@@ -35,8 +35,8 @@ print("Numba:  time ~ %.2e exp( %.2f n ) seconds" % (np.exp(fit[1]), fit[0]))
 
 
 
-plt.xlabel("n")
-plt.ylabel("time")
+plt.xlabel("N")
+plt.ylabel("time [s]")
 
 plt.yscale("log")
 

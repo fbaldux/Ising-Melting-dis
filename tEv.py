@@ -1,28 +1,20 @@
 #  ---------------------------------------------------------------------------------------------  #
 #
-#   The program builds the adjacency matrix of the partitions graph as follows:
-#   - It generates all partitions of n and n+1 w/ the accelerated ruleAsc algorithm 
-#   - It runs through both arrays and finds what couples are linked by a "hook move"
-#   - It saves the sparse adjacency matrix entry by entry (i.e. row indices and column indices
-#     that are non-zero) 
-#
-#   The program uses Numba to speed up calculations.
-#   The data, row indices and column indices are saved to txt file.
 #
 #  ---------------------------------------------------------------------------------------------  #
 
 import numpy as np
-#from scipy import sparse
-#from scipy.linalg import eigh
-#from scipy.sparse.linalg import eigsh
+from scipy import sparse
+from scipy.linalg import eigh
+from scipy.sparse.linalg import eigsh
 import numba as nb
-#from time import time as now
+from time import time as now
 
 instring = input("").split(' ')
 
 n_fin = int( instring[0] )
 
-#start = now()
+start = now()
 
 p = np.array((1, 1, 2, 3, 5, 7, 11, 15, 22, 30, 42, 56, 77, 101, 135, 176, 231, 297, 385, 490, 627, \
      792, 1002, 1255, 1575, 1958, 2436, 3010, 3718, 4565, 5604, 6842, 8349, 10143, 12310, 14883, 17977,\
@@ -70,6 +62,7 @@ def update_adj(l1,l2,n):
     for i in range(p[n+1]):
         for j in range(p[n]):
             if np.sum((l2[i]-l1[j])**2) == 1:
+                data.append(1)
                 row_ind.append(dim[n]+i)
                 col_ind.append(dim[n-1]+j)
     
@@ -99,15 +92,11 @@ for n in range(1,n_fin):
     col_ind += temp[2]
 
     
-#  ---------------------------------------  save to file  --------------------------------------  #
+A = sparse.csr_matrix((data, (row_ind, col_ind)), shape=(dim[n_fin], dim[n_fin]))
 
-filename = "Hamiltonians/n%d.txt" % n_fin
-toSave = np.array((row_ind,col_ind,data)).T
-head = "row col entry"
-np.savetxt(filename, toSave, header=)
 
 #print("A built", now()-start)
-#print(n, now()-start)
+print(n, now()-start)
 
 
 
