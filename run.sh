@@ -1,8 +1,11 @@
+rep_num=1000
 
-#for N in $(seq 2 4);
-#do
+for N in 100 400 1000 4000 10000 40000 100000 ;
+do
     #echo $N | python3 buildHam.py
-    #done
+    
+    echo $N $rep_num | python3 MC.py &
+done
 
 #for n in $(seq 2 30);
 #do
@@ -14,6 +17,6 @@ Tfin=10
 dt=0.1
 save_step=10
 
-echo $N | python3 buildHam.py
+#echo $N | python3 buildHam.py
 
 #echo $N $Tfin $dt $save_step | python3 tEv.py
