@@ -139,12 +139,12 @@ for iN in range(len(Ns)):
 
     #yO = Okounkov(x)
     
-    plt.plot(x, shape, '-', c=cols(iN), label=r"$N=10^{%d}$"%np.log10(N))
+    #plt.plot(x, shape, '-', c=cols(iN), label=r"$N=10^{%d}$"%np.log10(N))
 
     filename = "Results/MC_N%d_av%d.txt" % (N,rep_num)
     np.savetxt(filename, np.stack((x,shape)).T, header="x y")
 
-
+"""
 xO = np.linspace(-3,3,100)
 yO = Okounkov(xO)
 plt.plot(xO, yO, '--', c='darkgreen', label="Okounkov")
@@ -161,7 +161,7 @@ plt.ylim((-1,4))
 plt.legend(loc="lower left")
 plt.show()
 
-
+"""
 
 
 
