@@ -37,12 +37,21 @@ cols = cm.get_cmap('viridis', t_steps+1)
     
 #  -------------------------------------  load Hamiltonian  ------------------------------------  #
 
-filename = "Hamiltonians/clean_N30.txt"
-row_ind, col_ind = np.loadtxt(filename)[:dim[N]].T
+Ham_lens = np.loadtxt("ham_lengths.txt", dtype=np.int_).T
+try:
+    my_len = Ham_lens[1,Ham_lens[0]==N][0]
+except:
+    print("\nError! Hamiltonian for N=%d not built\n" % N)
+    exit(0)
+    
+filename = "Hamiltonians/clean_N10.txt"
+row_ind, col_ind = np.loadtxt(filename)[:my_len].T
 
 H = sparse.csr_matrix((np.ones(len(row_ind)), (row_ind, col_ind)), shape=(dim[N], dim[N]))
 H += H.T
 
+print(H.todense())
+exit(0)
 
 #  -------------------------------  time evolve the Hamiltonian  -------------------------------  #
 
@@ -61,15 +70,19 @@ top = 0
 
 for it in range(1,t_steps):
     v = U.dot(v)
+    #v /= np.linalg.norm(v)
     #v = expm_krylov_lanczos(applyH, v, dt, numiter=20)
     
     if it%save_step == 0:
-        ax.plot(np.arange(dim[N]), np.abs(v)**2, '.', c=cols(it), label=it*dt)
+        ax.plot(np.arange(dim[N]), np.abs(v)**2, '.', c=cols(it), label="t=%.2f"%(it*dt))
         top = max(top, np.max(np.abs(v)**2))
         
 for n in range(N):
     ax.plot(np.ones(2)*dim[n], np.linspace(0,top,2), '-', lw=0.75, c='black')
 
+
+ax.set_xlabel(r"$k$")
+ax.set_ylabel(r"$|\psi_k(t)|^2$")
 
 ax.set_title("n=%d (dim=%d)" %(N,dim[N]))
 

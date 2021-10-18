@@ -75,6 +75,11 @@ def update_adj(l1,l2,n):
 row_ind = [0]
 col_ind = [1]  
 
+# file of sparse Hamiltonians sizes
+flen = open("ham_lengths.txt", "w")
+flen.write("# N nonzero_elements\n")
+flen.close()
+
 next_level = np.array( [x for x in generate_partitions(1)] )
 levels = [next_level]
 for n in range(1,N):
@@ -92,7 +97,11 @@ for n in range(1,N):
     temp = update_adj(level,next_level,n)
     row_ind += temp[0]
     col_ind += temp[1]
-
+    
+    # save the lengths
+    flen = open("ham_lengths.txt", "a")
+    flen.write("%d %d\n" % (n+1,len(row_ind)))
+    flen.close()
     
 #  ---------------------------------------  save to file  --------------------------------------  #
 

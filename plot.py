@@ -28,7 +28,7 @@ dim = np.cumsum(p)
     
 #  -------------------------------------  load Hamiltonian  ------------------------------------  #
 
-filename = "Hamiltonians/n%d.txt" % N
+filename = "Hamiltonians/clean_N%d.txt" % N
 row_ind, col_ind = np.loadtxt(filename).T
 
 A = sparse.csr_matrix((np.ones(len(row_ind)), (row_ind, col_ind)), shape=(dim[N], dim[N]))
@@ -44,31 +44,30 @@ eigvals, eigvecs = eigh(A)
 eigvecs = eigvecs.T
 
 
-#ax.plot(np.arange(dim[N]), eigvals, '.', c='black')
+ax.plot(np.arange(dim[N]), eigvals, '.', c='black')
 
 ax.set_xlabel("k")
-#ax.set_ylabel(r"$E_k$")
-ax.set_ylabel(r"$\psi_k$")
+ax.set_ylabel(r"$E_k$")
+#ax.set_ylabel(r"$\psi_k$")
 
-ax.plot(np.arange(dim[N]), eigvecs[390], '.', ms=3)
+#ax.plot(np.arange(dim[N]), eigvecs[390], '.', ms=3)
 #ax.plot(np.arange(dim[N]), -eigvecs[293], '.', ms=3)
-top = np.max(eigvecs[390])
-bot = np.min(eigvecs[390])
+#top = np.max(eigvecs[390])
+#bot = np.min(eigvecs[390])
 
 """
 top = 0.
-bottom = 0.
+bot = 0.
 for k in range(dim[N]//2-4,dim[N]//2+3):
     ax.plot(np.arange(dim[N]), eigvecs[k], '.', label="E=%.2e"%eigvals[k], ms=3)
     top = max( top, np.max(eigvecs[k]) )
     bot = min( bot, np.min(eigvecs[k]) )
-"""
 
 
 for n in range(N):
     ax.plot(np.ones(2)*dim[n], np.linspace(bot, top, 2), '-', lw=0.75, c='black')
 
-
+"""
 
 
 #  ------------------------------  matrix plot of the Hamiltonian  -----------------------------  #
