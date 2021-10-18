@@ -12,14 +12,20 @@ from scipy.interpolate import interp1d
 from matplotlib import pyplot as plt
 from matplotlib import cm
 
-plt.rcParams["figure.figsize"] = [6,6]
+#plt.rcParams["figure.figsize"] = [6,6]
 
-
+"""
 #Ns = np.array( (1e3,1e4,1e5), dtype=np.int_ )
 Ns = np.array( (1e6,), dtype=np.int_ )
 rep_num = 1000
 
 cols = cm.get_cmap('magma', len(Ns)+1)
+"""
+instring = input("").split(' ')
+
+# system size
+N = int( instring[0] )
+rep_num = int( instring[1] )
 
 
 #  ---------------------------------------  corner plot  ---------------------------------------  #
