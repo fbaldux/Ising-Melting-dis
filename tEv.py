@@ -1,6 +1,9 @@
 #  ---------------------------------------------------------------------------------------------  #
 #
-#   The program ...
+#   The program evolves a state on the Young diagram lattice.
+#   - It loads the non-zero entries of the Hamiltonian from the biggest Hamiltonian/clean_N#.txt file.
+#   - It builds sparse Hamiltonian from the entries.
+#   - It evolves an initial state via Krylov (from LanczosRoutines.py).
 #
 #  ---------------------------------------------------------------------------------------------  #
 
@@ -44,7 +47,7 @@ except:
     print("\nError! Hamiltonian for N=%d not built\n" % N)
     exit(0)
     
-filename = "Hamiltonians/clean_N10.txt"
+filename = "Hamiltonians/clean_N33.txt"
 row_ind, col_ind = np.loadtxt(filename)[:my_len].T
 
 H = sparse.csr_matrix((np.ones(len(row_ind)), (row_ind, col_ind)), shape=(dim[N], dim[N]))

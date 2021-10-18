@@ -9,9 +9,11 @@
 #    echo $n $(( $( wc -l < Hamiltonians/clean_N$n.txt ) - 1)) >> lengths.txt
 #done
 
-N=5
+N=33
 Tfin=10
 dt=0.1
 save_step=10
 
-echo $N $Tfin $dt $save_step | python3 tEv.py
+echo $N | python3 buildHam.py
+
+#echo $N $Tfin $dt $save_step | python3 tEv.py

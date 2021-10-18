@@ -5,6 +5,8 @@
 #   - It runs through both arrays and finds what couples are linked by a "hook move"
 #   - It saves the sparse adjacency matrix entry by entry (i.e. row indices and column indices
 #     that are non-zero) 
+#   - In the meanwhile, it saves how many matrix elements are needed at each level n<N: in this 
+#     way, all the Hamiltonians for smaller N can be loaded from the same file. 
 #
 #   The program uses Numba to speed up calculations.
 #   The data, row indices and column indices are saved to txt file.
