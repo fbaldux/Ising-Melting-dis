@@ -13,7 +13,7 @@ instring = input("").split(' ')
 # system size
 N = int( float(instring[0]) )
 
-# probability to do forward
+# probability to add a box
 pForw = float( instring[1] )
 
 # average over disorder
@@ -47,8 +47,8 @@ def MC(N,p):
         
         # remove a box
         else:
-            row = np.random.randint(max_row-1)
-            #row = rng.integers(max_row-1)
+            row = np.random.randint(max_row)
+            #row = rng.integers(max_row)
             
             if shape[row+1]<shape[row]:
                 shape[row] -= 1
@@ -56,8 +56,7 @@ def MC(N,p):
             
                 if shape[row] == 0:
                     max_row -= 1
-            
-
+    
     return shape
 
 
@@ -65,6 +64,8 @@ def MC(N,p):
 
 @nb.njit
 def reshape(shape,N):
+    box_num = np.sum(shape)
+    
     shape_x = np.zeros(2*N+1)
     shape_y = np.zeros(2*N+1)
     
@@ -72,7 +73,7 @@ def reshape(shape,N):
     y = 0
     
     c = 0
-    while y < N:
+    while y < box_num:
         shape_x[c] = x
         shape_y[c] = y
         
@@ -92,6 +93,8 @@ def reshape(shape,N):
 
 #  -------------------------------------------  main  ------------------------------------------  #
 
+from matplotlib import pyplot as plt
+
 av_V_shape = np.zeros(2*N+1)
 
 for rep in range(rep_num):
@@ -103,8 +106,14 @@ for rep in range(rep_num):
     
 av_V_shape /= rep_num 
 
-filename = "Results/MC_N%d_av%d.txt" % (N,rep_num)
-np.savetxt(filename, np.stack((x,shape)).T, header="x y")
+
+#  -------------------------------------------  save  ------------------------------------------  #
+
+x = np.arange(-N,N+1) / np.sqrt(2*N)
+y = av_V_shape / np.sqrt(N)
+
+filename = "Results/MC_N%d_p%.4f_av%d.txt" % (N,pForw,rep_num)
+np.savetxt(filename, np.stack((x,y)).T, header="x y")
 
 
 

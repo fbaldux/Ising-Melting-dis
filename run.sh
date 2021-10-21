@@ -1,17 +1,18 @@
-rep_num=1000
+#  ---------------  MONTECARLO  --------------  #
 
-for N in 100 400 1000 4000 10000 40000 100000 ;
-do
-    #echo $N | python3 buildHam.py
-    
-    echo $N $rep_num | python3 MC.py &
+p=.9
+rep_num=1
+
+for N in 1e4; #100 400 1000 4000 10000 40000 100000 ;
+do    
+    echo $N $p $rep_num | python3 MC.py &
 done
+wait
 
-#for n in $(seq 2 30);
-#do
-#    echo $n $(( $( wc -l < Hamiltonians/clean_N$n.txt ) - 1)) >> lengths.txt
-#done
+#echo $N $p $rep_num | python3 plot_MC.py &
 
+#  ----------------  DYNAMICS  ---------------  #
+ 
 N=33
 Tfin=10
 dt=0.1
