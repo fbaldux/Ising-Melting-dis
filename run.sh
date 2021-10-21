@@ -1,13 +1,26 @@
 #  ---------------  MONTECARLO  --------------  #
+run=1
+plot=1
 
-p=.9
-rep_num=1
+N=1e4
+p=0.75
+rep_num=100
 
-for N in 1e4; #100 400 1000 4000 10000 40000 100000 ;
-do    
-    echo $N $p $rep_num | python3 MC.py &
-done
-wait
+if (( $run == 1 ))
+then
+    #for N in 1e4; #100 400 1000 4000 10000 40000 100000 ;
+    #do    
+    #    echo $N $p $rep_num | python3 MC.py &
+    #done
+    #wait
+    
+    echo $N $p $rep_num | python3 MC.py
+fi
+
+if (( $plot == 1 ))
+then
+    echo $N $p $rep_num | python3 plot_MC.py &
+fi
 
 #echo $N $p $rep_num | python3 plot_MC.py &
 

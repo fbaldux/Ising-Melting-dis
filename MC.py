@@ -50,7 +50,7 @@ def MC(N,p):
             row = np.random.randint(max_row)
             #row = rng.integers(max_row)
             
-            if shape[row+1]<shape[row]:
+            if shape[row+1]<shape[row]: #and shape[row]>0:
                 shape[row] -= 1
                 c += 1
             
@@ -96,21 +96,26 @@ def reshape(shape,N):
 from matplotlib import pyplot as plt
 
 av_V_shape = np.zeros(2*N+1)
+scale = 0
 
 for rep in range(rep_num):
     corner_shape = MC(N,pForw)
+    scale += np.sum(corner_shape)
+    
     corner_shape = reshape(corner_shape,N)
     
     # 45 deg rotation
     av_V_shape += (corner_shape[0] + corner_shape[1]) / np.sqrt(2)
     
 av_V_shape /= rep_num 
+scale /= rep_num
 
 
 #  -------------------------------------------  save  ------------------------------------------  #
 
-x = np.arange(-N,N+1) / np.sqrt(2*N)
-y = av_V_shape / np.sqrt(N)
+
+x = np.arange(-N,N+1) / np.sqrt(2*scale)
+y = av_V_shape / np.sqrt(scale)
 
 filename = "Results/MC_N%d_p%.4f_av%d.txt" % (N,pForw,rep_num)
 np.savetxt(filename, np.stack((x,y)).T, header="x y")

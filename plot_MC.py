@@ -13,14 +13,19 @@ from matplotlib import cm
 
 plt.rcParams["figure.figsize"] = [8,4]
 
+instring = input("").split(' ')
 
-#Ns = np.array( (1e3,1e4,1e5,1e6), dtype=np.int_ )
-Ns = np.array( (1e4, ), dtype=np.int_ )
 
-pForw = .9
-rep_num = 1
+# system size
+N = int( float(instring[0]) )
 
-cols = cm.get_cmap('magma', len(Ns)+1)
+# probability to add a box
+pForw = float( instring[1] )
+
+# average over disorder
+rep_num = int( instring[2] )
+
+cols = cm.get_cmap('turbo', 10)
 
 
 #  -------------------------------------  horizontal plot  -------------------------------------  #
@@ -40,7 +45,6 @@ def Okounkov(x):
 def Dijkgraaf(x):
     return 2*np.log(2*np.cosh(0.5*x))
 
-#@nb.vectorize
 def diffusion(x):
     return np.exp(-x**2)/np.sqrt(np.pi) + x*erf(x)
 
@@ -54,23 +58,15 @@ def subdiff(x):
 
 subdiff_v = np.vectorize(subdiff)
 
-for iN in range(len(Ns)):
-    N = Ns[iN]
-    
-    #try: 
-    filename = "Results/MC_N%d_p%.4f_av%d.txt" % (N,pForw,rep_num)
-    x,y = np.loadtxt(filename).T
 
-    plt.plot(x, y, '-', c=cols(iN), label=r"$N=10^{%d}$"%np.log10(N))
-   
-        #plt.plot(x, y-Okounkov(x), '-', c=cols(iN), label=r"$N=10^{%d}$"%np.log10(N))
+filename = "Results/MC_N%d_p%.4f_av%d.txt" % (N,pForw,rep_num)
+x,y = np.loadtxt(filename).T
 
-    #except:
-    #    None
+plt.plot(np.sqrt(2)*x, np.sqrt(2)*y, '-', c=cols(0), label=r"$N=10^{%d}$"%np.log10(N))
 
    
 xO = np.linspace(-3,3,100)
-#plt.plot(xO, Okounkov(xO), '--', c='darkgreen', label="Okounkov")
+plt.plot(xO, Okounkov(xO), '--', c='darkgreen', label="Okounkov")
 #plt.plot(xO, Dijkgraaf(xO), '--', c='royalblue', label="Dijkgraaf")
 plt.plot(xO, subdiff_v(xO), '-.', c='royalblue', label="subdiff")
 
