@@ -32,7 +32,7 @@ Program nicely given us from Vittorio Vitale & Alessadro Santini. It contains th
 ---
 ### MC.py
 
-The program builds a Young diagram by successively adding boxes. It thus samples, through a MonteCarlo procedure, the n-box Young diagrams with the measure given by the paths in the graph.
+The program samples Young diagrams by successively adding/removing boxes. The probability of adding a box is pForw, therefore of removing one is 1-pForw.
 
 
 ---
