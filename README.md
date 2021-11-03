@@ -1,6 +1,6 @@
 # Ising-Melting
 
-Melting of ``solid'' initial condition in 2d quantum Ising model.
+Melting of "solid" initial condition in 2d quantum Ising model.
 
 
 ---
@@ -44,14 +44,6 @@ Program nicely given us from Vittorio Vitale & Alessadro Santini. It contains th
 
 
 ---
-### matBuilder.py
-
-The program builds the sparse matrices Sx[i],Sy[i],etc. of a spin chain of length L, acting only on site i.
-
-Constants are defined in the program that calls it.
-
-
----
 ### MC.py
 
 The program samples Young diagrams by successively adding/removing boxes. The probability of adding a box is pForw, therefore of removing one is 1-pForw.
@@ -74,9 +66,11 @@ Just to plot results.
 
 The program evolves a state on the Young diagram lattice.
 
-- It loads the non-zero entries of the Hamiltonian from the biggest Hamiltonian/clean\_N#.txt file. How many entries are needed is loaded from the file ham\_lengths.txt 
+- It loads the non-zero entries of the adjacency matrix from the biggest Hamiltonian/clean_N#.txt file.
+- It loads the diagonal entries of the Hamiltonian matrix from the files Hamiltonian/rand...
 - It builds sparse Hamiltonian from the entries.
 - It evolves an initial state via Krylov (from LanczosRoutines.py).
+
 
 
 ---
@@ -86,6 +80,6 @@ Just to estimate how long computing times become.
 
 
 ---
-### run.sh
+### run??.sh
 
 One shell to rule them all!

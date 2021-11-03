@@ -2,7 +2,7 @@
 #
 #   The program evolves a state on the Young diagram lattice.
 #   - It loads the non-zero entries of the adjacency matrix from the biggest Hamiltonian/clean_N#.txt file.
-#   – 
+#   - It loads the diagonal entries of the Hamiltonian matrix from the files Hamiltonian/rand...
 #   - It builds sparse Hamiltonian from the entries.
 #   - It evolves an initial state via Krylov (from LanczosRoutines.py).
 #
@@ -28,7 +28,8 @@ epsilon = float( instring[1] )
 Tfin = float( instring[2] )
 dt = float( instring[3] )
 t_steps = int( Tfin/dt )
-save_step = int( instring[4] )
+save_dt = float( instring[4] )
+save_step = int( save_dt/dt )
 
 # number of disorder instances
 dis_num = int( instring[5] )
@@ -41,7 +42,7 @@ p = np.array((1, 1, 2, 3, 5, 7, 11, 15, 22, 30, 42, 56, 77, 101, 135, 176, 231, 
 dim = np.cumsum(p)
 
 
-#plt.rcParams["figure.figsize"] = [6,6]
+plt.rcParams["figure.figsize"] = [8,4]
 
 fig, ax = plt.subplots()
 cols = cm.get_cmap('viridis', t_steps+1)
@@ -65,12 +66,12 @@ H0 += H0.T
 
 #  -------------------------------------------  main  ------------------------------------------  #
 
-for dis in range(1):
+for dis in range(dis_num):
     
     # load the disorder
-    filename = "Hamiltonians/rand_N%d_d%d.txt" % (n,dis)
+    filename = "Hamiltonians/rand_N%d_d%d.txt" % (N,dis)
     diag = np.loadtxt(filename)
-    H = H0 + sparse.diags(diag)
+    H = H0 + epsilon * sparse.diags(diag)
  
  
     # initial state
@@ -83,8 +84,6 @@ for dis in range(1):
     H = H.todense()
     U = expm(-1j*H*dt)
 
-    top = 0
-
     for it in range(1,t_steps):
         v = U.dot(v)
         #v /= np.linalg.norm(v)
@@ -92,25 +91,28 @@ for dis in range(1):
     
         if it%save_step == 0:
             ax.plot(np.arange(dim[N]), np.abs(v)**2, '.', c=cols(it), label="t=%.2f"%(it*dt))
-            top = max(top, np.max(np.abs(v)**2))
+    
+    ax.plot(np.arange(dim[N]), np.abs(v)**2, '.', c=cols(t_steps), label="t=%.2f"%Tfin)
     
     
 #  -------------------------------  plot  -------------------------------  #
 
 
 for n in range(N):
-    ax.plot(np.ones(2)*dim[n], np.linspace(0,top,2), '-', lw=0.75, c='black')
+    ax.axvline(dim[n], lw=0.75, c='black')
 
 
 ax.set_xlabel(r"$k$")
 ax.set_ylabel(r"$|\psi_k(t)|^2$")
 
-ax.set_title("n=%d (dim=%d)" %(N,dim[N]))
+#ax.set_title("n=%d (dim=%d)" %(N,dim[N]))
+ax.set_title(r"n=%d: $\epsilon = %.2f$" %(N,epsilon))
 
-#ax.set_xscale("log")
-#ax.set_yscale("log")
+ax.set_xscale("log")
+ax.set_yscale("log")
 
 ax.legend()
+plt.savefig("eps%.2f.pdf"%epsilon, bbox_inches='tight')
 plt.show()
 
 
