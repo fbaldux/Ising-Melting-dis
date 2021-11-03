@@ -80,24 +80,41 @@ for dis in range(dis_num):
  
  
     # time evolve the Hamiltonian
-    applyH = lambda v: 1j * H.dot(v)
+    # sparse
+    #applyH = lambda v: 1j * H.dot(v)
+    # dense
     H = H.todense()
     U = expm(-1j*H*dt)
+    
+    # array to store the evolved array
+    vStore = np.zeros((t_steps//save_step,dim[N]+1))
 
     for it in range(1,t_steps):
-        v = U.dot(v)
-        #v /= np.linalg.norm(v)
+        # sparse
         #v = expm_krylov_lanczos(applyH, v, dt, numiter=20)
+        # dense
+        v = U.dot(v)
+        
     
         if it%save_step == 0:
-            ax.plot(np.arange(dim[N]), np.abs(v)**2, '.', c=cols(it), label="t=%.2f"%(it*dt))
+            vStore[it//save_step-1,0] = it*dt
+            vStore[it//save_step-1,1:] = np.abs(v)**2
+            #ax.plot(np.arange(dim[N]), np.abs(v)**2, '.', c=cols(it), label="t=%.2f"%(it*dt))
     
-    ax.plot(np.arange(dim[N]), np.abs(v)**2, '.', c=cols(t_steps), label="t=%.2f"%Tfin)
-    
+    #ax.plot(np.arange(dim[N]), np.abs(v)**2, '.', c=cols(t_steps), label="t=%.2f"%Tfin)
+    vStore[t_steps//save_step-1,0] = Tfin
+    vStore[t_steps//save_step-1,1:] = np.abs(v)**2
+
+
+    # save to file
+    filename = "Results/tEv_N%d_e%.4f_d%d.txt" % (N, epsilon, dis)
+    head = "t |v[0]|^2 |v[1]|^2 ..."
+    np.savetxt(filename, vStore, header=head)
+
     
 #  -------------------------------  plot  -------------------------------  #
 
-
+exit(0)
 for n in range(N):
     ax.axvline(dim[n], lw=0.75, c='black')
 
