@@ -30,13 +30,11 @@ def MC(N,p):
     c = 1
     max_row = 2
     while c<N:
-        #coin = rng.random()
         coin = np.random.random()
         
         # add a box
         if coin < pForw:
             row = np.random.randint(max_row)
-            #row = rng.integers(max_row)
         
             if row==0 or shape[row-1]>shape[row]:
                 shape[row] += 1
@@ -48,12 +46,12 @@ def MC(N,p):
         # remove a box
         else:
             row = np.random.randint(max_row)
-            #row = rng.integers(max_row)
             
-            if shape[row+1]<shape[row]: #and shape[row]>0:
+            if shape[row+1]<shape[row]:
                 shape[row] -= 1
                 c += 1
-            
+                
+                # it can get to 0 only in the last row
                 if shape[row] == 0:
                     max_row -= 1
     
@@ -92,8 +90,6 @@ def reshape(shape,N):
 
 
 #  -------------------------------------------  main  ------------------------------------------  #
-
-from matplotlib import pyplot as plt
 
 av_V_shape = np.zeros(2*N+1)
 scale = 0

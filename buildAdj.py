@@ -9,7 +9,7 @@
 #     way, all the Hamiltonians for smaller N can be loaded from the same file. 
 #
 #   The program uses Numba to speed up calculations.
-#   The data, row indices and column indices are saved to txt file.
+#   The row indices and column indices are saved to a .txt file.
 #
 #  ---------------------------------------------------------------------------------------------  #
 
