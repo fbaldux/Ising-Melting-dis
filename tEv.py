@@ -1,7 +1,8 @@
 #  ---------------------------------------------------------------------------------------------  #
 #
 #   The program evolves a state on the Young diagram lattice.
-#   - It loads the non-zero entries of the Hamiltonian from the biggest Hamiltonian/clean_N#.txt file.
+#   - It loads the non-zero entries of the adjacency matrix from the biggest Hamiltonian/clean_N#.txt file.
+#   – 
 #   - It builds sparse Hamiltonian from the entries.
 #   - It evolves an initial state via Krylov (from LanczosRoutines.py).
 #
@@ -44,7 +45,8 @@ dim = np.cumsum(p)
 
 fig, ax = plt.subplots()
 cols = cm.get_cmap('viridis', t_steps+1)
-    
+
+ 
 #  ------------------------------------  load hopping terms  -----------------------------------  #
 
 Ham_lens = np.loadtxt("ham_lengths.txt", dtype=np.int_).T
@@ -60,39 +62,42 @@ row_ind, col_ind = np.loadtxt(filename)[:my_len].T
 H0 = sparse.csr_matrix((np.ones(len(row_ind)), (row_ind, col_ind)), shape=(dim[N], dim[N]))
 H0 += H0.T
 
-#  ------------------------------------  load diagonal terms  ----------------------------------  #
+
+#  -------------------------------------------  main  ------------------------------------------  #
 
 for dis in range(1):
+    
+    # load the disorder
     filename = "Hamiltonians/rand_N%d_d%d.txt" % (n,dis)
     diag = np.loadtxt(filename)
+    H = H0 + sparse.diags(diag)
+ 
+ 
+    # initial state
+    v = np.zeros(dim[N])
+    v[0] = 1
+ 
+ 
+    # time evolve the Hamiltonian
+    applyH = lambda v: 1j * H.dot(v)
+    H = H.todense()
+    U = expm(-1j*H*dt)
 
-H = H0 + sparse.diags(diag)
+    top = 0
 
-
-#  -------------------------------  time evolve the Hamiltonian  -------------------------------  #
-
-H = H.todense()
-"""
-def applyH(v):
-    return 1j * H.dot(v)
-"""
-
-# initial state
-v = np.zeros(dim[N])
-v[0] = 1
-U = expm(-1j*H*dt)
-
-top = 0
-
-for it in range(1,t_steps):
-    v = U.dot(v)
-    #v /= np.linalg.norm(v)
-    #v = expm_krylov_lanczos(applyH, v, dt, numiter=20)
+    for it in range(1,t_steps):
+        v = U.dot(v)
+        #v /= np.linalg.norm(v)
+        #v = expm_krylov_lanczos(applyH, v, dt, numiter=20)
     
-    if it%save_step == 0:
-        ax.plot(np.arange(dim[N]), np.abs(v)**2, '.', c=cols(it), label="t=%.2f"%(it*dt))
-        top = max(top, np.max(np.abs(v)**2))
-        
+        if it%save_step == 0:
+            ax.plot(np.arange(dim[N]), np.abs(v)**2, '.', c=cols(it), label="t=%.2f"%(it*dt))
+            top = max(top, np.max(np.abs(v)**2))
+    
+    
+#  -------------------------------  plot  -------------------------------  #
+
+
 for n in range(N):
     ax.plot(np.ones(2)*dim[n], np.linspace(0,top,2), '-', lw=0.75, c='black')
 

@@ -59,8 +59,6 @@ def generate_partitions(n):
 
 @nb.njit
 def update_diag(l,square_dis,n):
-    #row_ind = [np.int_(1) for i in range(0)]
-    #col_ind = [np.int_(1) for i in range(0)]
     matr_el = [np.float_(1) for i in range(0)]
     
     # sum the squares in the Young diagram
@@ -70,12 +68,9 @@ def update_diag(l,square_dis,n):
         while r<n and l[i,r]>0:
             tot += np.sum(square_dis[r,:l[i,r]])
             r += 1
-        
-        #row_ind.append(dim[n-1]+i)
-        #col_ind.append(dim[n-1]+i)
+
         matr_el.append(tot)        
     
-    #return row_ind, col_ind, matr_el
     return matr_el
 
 
@@ -91,28 +86,18 @@ for n in range(1,N+1):
 for dis in range(dis_num):
     
     # extract the disorder
-    #square_dis = np.ones((N,N)) 
     square_dis = rng.uniform(-epsilon,epsilon,size=(N,N))
-    #square_dis = np.arange(N**2).reshape(N,N).T
 
     # arrays for the sparse Hamiltonian
-    row_ind = [0]
-    col_ind = [0]  
     matr_el = [0.]  
 
     for n in range(1,N+1):
-    
-        #temp = update_diag(levels[n],square_dis,n)
-        #row_ind += temp[0]
-        #col_ind += temp[1]
         matr_el += update_diag(levels[n],square_dis,n)
     
     
     #  save to file
     filename = "Hamiltonians/rand_N%d_d%d.txt" % (N,dis)
-    #toSave = np.array((row_ind,col_ind,matr_el)).T
     head = "element [column and row given by index]"
-    #np.savetxt(filename, matr_el, header=head, fmt='%d %d %e')
     np.savetxt(filename, matr_el, header=head)
 
 

@@ -11,6 +11,7 @@
 #   The program uses Numba to speed up calculations.
 #   The data, row indices and column indices are saved to txt file.
 #
+#   Various trials to reorder the partitions.
 #  ---------------------------------------------------------------------------------------------  #
 
 import numpy as np
