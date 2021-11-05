@@ -2,7 +2,9 @@
 #
 #   The program builds the diagonal part of the Hamiltonian for the partitions graph. It proceeds as follows:
 #   - It generates all partitions of n w/ the accelerated ruleAsc algorithm 
-#   - It extracts a NxN grid of disordered on-site energies for the 2d model
+#   - It extracts a NxN grid of disordered on-site energies for the 2d model. The energies are
+#     uniformly distributed in [-1,1], then the disorder strength can be easily increased by
+#     rescaling with an overall factor.
 #   - For each partition, it sums the disordered energies contained in the shape
 #
 #   The program uses Numba to speed up calculations.
@@ -17,8 +19,7 @@ rng = np.random.default_rng()
 instring = input("").split(' ')
 
 N = int( instring[0] )
-epsilon = float( instring[1] )
-dis_num = int( instring[2] )
+dis_num = int( instring[1] )
 
 
 p = np.array((1, 1, 2, 3, 5, 7, 11, 15, 22, 30, 42, 56, 77, 101, 135, 176, 231, 297, 385, 490, 627, \
@@ -86,7 +87,7 @@ for n in range(1,N+1):
 for dis in range(dis_num):
     
     # extract the disorder
-    square_dis = rng.uniform(-epsilon,epsilon,size=(N,N))
+    square_dis = rng.uniform(-1,1,size=(N,N))
 
     # arrays for the sparse Hamiltonian
     matr_el = [0.]  
