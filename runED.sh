@@ -18,9 +18,9 @@ for N in $(seq $Nmin $dN $Nmax);
 do
     for eps in $(seq $epsMin $dEps $epsMax);
     do
-        echo $N $dis_num | python3 buildDiagHam.py
+        echo $N $dis_num #| python3 buildDiagHam.py
     
-        echo $N $eps $eig_frac $dis_num | python3 spectrum.py
+        echo $N $eps $eig_frac $dis_num #| python3 spectrum.py
     done
 done
 
