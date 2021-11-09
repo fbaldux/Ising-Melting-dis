@@ -21,9 +21,6 @@ p = np.array((1, 1, 2, 3, 5, 7, 11, 15, 22, 30, 42, 56, 77, 101, 135, 176, 231, 
 
 dim = np.cumsum(p)
 
-plt.rcParams["figure.figsize"] = [6,6]
-
-
 
 #  ----------------------------  generate the partitions at level n  ---------------------------  #
 
@@ -59,27 +56,26 @@ for n in range(1,N+1):
     levels.append( np.array( [x for x in generate_partitions(n)] ) )
 
 
-#  ---------------------------------  compute the magnetization  --------------------------------  #
+#  -----------------------------------  compute height at 0  -----------------------------------  #
 
-# "magnetization" in the 2d plane: how much of the corner is removed
+# build (diagonal) operator that gives the height at 0 of the tilted Young diagram
 @nb.njit
-def mag2d(v, levels):
-    
-    Mtemp = np.zeros((N,N), dtype=np.float_)
+def height0(levels):
+    h0 = np.zeros(dim[N], dtype=np.float_)
     
     # sum over all basis states (split in n and i)
     for n in range(N):
         for i in range(p[n]):
             k = dim[n-1]+i
             
-            # iterate over the rows of the Young diagrams
+            # check how many rows are longer than their index (i.e. one can fit in a square)
             r = 0
-            while r<n and levels[n][i,r]>0:
-                Mtemp[r,:levels[n][i,r]] += v[k]
+            while r<n and levels[n][i,r]>r:
                 r += 1
             
-    return Mtemp
-
+            h0[k] = r
+            
+    return h0
 
 #  -------------------------------------------  main  ------------------------------------------  #
 
@@ -87,7 +83,10 @@ filename = "Results/tEv_N%d_e%.4f_d%d.txt" % (N,epsilon,0)
 data = np.loadtxt(filename)
 t_steps = len(data)
 
-M = np.zeros((t_steps,N,N))
+h = np.zeros(t_steps)
+
+# build the height operator
+h_op = height0(levels)
 
 for dis in range(dis_num):
 
@@ -98,37 +97,35 @@ for dis in range(dis_num):
     ts = data[:,0]
     v = data[:,1:]
     
-    # compute the magnetization
-    for it in range(t_steps):
-        M[it] += mag2d(v[it], levels)
+    # compute the height
+    for it in range(len(ts)):
+        h[it] += np.dot(v[it],h_op)
 
-M /= dis_num
+h /= dis_num
 
 
 #  -------------------------------------------  plot  ------------------------------------------  #
 
-for it in range(t_steps):
-    fig, ax = plt.subplots()
-    
-    #tics = np.linspace(0, 1, 11)
-    
-    im = ax.imshow(M[it], vmin=0, vmax=1)
-    cbar = ax.figure.colorbar(im, ax=ax) #boundaries=tics, ticks=tics)
+#plt.rcParams["figure.figsize"] = [6,6]
 
-    ax.set_xlabel(r"$x$")
-    ax.set_ylabel(r"$y$")
-    
-    #plt.clim((0,1))
+fig, ax = plt.subplots()
 
-    ax.set_title(r"n=%d: $\epsilon = %.2f, t = %.2f$" %(N,epsilon,ts[it]))
+ax.plot(ts, h, '-')
 
-    #ax.set_xscale("log")
-    #ax.set_yscale("log")
+ax.set_xlabel(r"$t$")
+ax.set_ylabel(r"height")
 
-    #ax.legend()
-    plt.savefig("Plots/e%.2f_t%.2f.pdf"%(epsilon,ts[it]), bbox_inches='tight')
-    #plt.show()
-    plt.clf()
+#plt.clim((0,1))
+
+#ax.set_title(r"n=%d: $\epsilon = %.2f, t = %.2f$" %(N,epsilon,ts[it]))
+
+#ax.set_xscale("log")
+#ax.set_yscale("log")
+
+#ax.legend()
+#plt.savefig("Plots/e%.2f_t%.2f.pdf"%(epsilon,ts[it]), bbox_inches='tight')
+plt.show()
+#plt.clf()
 
 
 

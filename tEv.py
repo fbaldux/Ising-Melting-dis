@@ -1,10 +1,11 @@
 #  ---------------------------------------------------------------------------------------------  #
 #
 #   The program evolves a state on the Young diagram graph.
-#   - It loads the non-zero entries of the adjacency matrix from the biggest Hamiltonian/clean_N#.txt file.
+#   - It loads the non-zero entries of the adjacency matrix from the biggest Hamiltonian/clean_N#.txt
+#     file.
 #   - It loads the diagonal entries of the Hamiltonian matrix from the files Hamiltonian/rand...
 #   - It builds the sparse Hamiltonian from the entries.
-#   - It evolves an initial state via Krylov (from LanczosRoutines.py).
+#   - It evolves an initial state via Krylov (from LanczosRoutines.py), or full exact diagonalization.
 #
 #  ---------------------------------------------------------------------------------------------  #
 
@@ -13,8 +14,6 @@ from scipy import sparse
 from scipy.linalg import eigh,expm
 from scipy.sparse.linalg import eigsh
 #from LanczosRoutines import *
-from matplotlib import pyplot as plt
-from matplotlib import cm
 
 instring = input("").split(' ')
 
@@ -42,12 +41,6 @@ p = np.array((1, 1, 2, 3, 5, 7, 11, 15, 22, 30, 42, 56, 77, 101, 135, 176, 231, 
 dim = np.cumsum(p)
 
 
-plt.rcParams["figure.figsize"] = [8,4]
-
-fig, ax = plt.subplots()
-cols = cm.get_cmap('viridis', t_steps+1)
-
- 
 #  ------------------------------------  load hopping terms  -----------------------------------  #
 
 Ham_lens = np.loadtxt("ham_lengths.txt", dtype=np.int_).T
@@ -99,9 +92,7 @@ for dis in range(dis_num):
         if it%save_step == 0:
             vStore[it//save_step-1,0] = it*dt
             vStore[it//save_step-1,1:] = np.abs(v)**2
-            #ax.plot(np.arange(dim[N]), np.abs(v)**2, '.', c=cols(it), label="t=%.2f"%(it*dt))
     
-    #ax.plot(np.arange(dim[N]), np.abs(v)**2, '.', c=cols(t_steps), label="t=%.2f"%Tfin)
     vStore[t_steps//save_step-1,0] = Tfin
     vStore[t_steps//save_step-1,1:] = np.abs(v)**2
 
@@ -112,32 +103,6 @@ for dis in range(dis_num):
     np.savetxt(filename, vStore, header=head)
 
     
-#  -------------------------------  plot  -------------------------------  #
-
-exit(0)
-for n in range(N):
-    ax.axvline(dim[n], lw=0.75, c='black')
-
-
-ax.set_xlabel(r"$k$")
-ax.set_ylabel(r"$|\psi_k(t)|^2$")
-
-#ax.set_title("n=%d (dim=%d)" %(N,dim[N]))
-ax.set_title(r"n=%d: $\epsilon = %.2f$" %(N,epsilon))
-
-ax.set_xscale("log")
-ax.set_yscale("log")
-
-ax.legend()
-plt.savefig("eps%.2f.pdf"%epsilon, bbox_inches='tight')
-plt.show()
-
-
-
-
-
-
-
 
 
 

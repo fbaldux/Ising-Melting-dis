@@ -30,6 +30,11 @@ The program builds the diagonal part of the Hamiltonian for the partitions graph
 - The matrix elements are saved to a .txt file.
 
 
+---
+### diagonalize.py
+
+By Carlo Vanoni.
+
 
 ---
 ### ham_lengths.txt
@@ -41,6 +46,11 @@ The file containing the number of non-zero entries of the sparse adjacency matri
 ### LanczosRoutines.py
 
 Program nicely given us from Vittorio Vitale & Alessadro Santini. It contains the Lanczos algorithm for matrix exponentiation with Krylov subspaces.
+
+---
+### masterUlysses.sh
+
+Shell to send multiple jobs on Ulysses. It modifies and executes `runUlysses.py`.
 
 
 ---
@@ -69,7 +79,7 @@ The program diagonalizes the disordered, Young graph Hamiltonian
 - It loads the non-zero entries of the adjacency matrix from the biggest Hamiltonian/clean_N#.txt file.
 - It loads the diagonal entries of the Hamiltonian matrix from the files Hamiltonian/rand...
 - It builds the sparse Hamiltonian from the entries.
-- It saves to file the eigenvalues, IPR and r parameters.
+- It saves to file the eigenvalues, IPR and r parameters (or the eigenvectors, but it takes a lot of space).
 
 
 ---
@@ -80,7 +90,7 @@ The program evolves a state on the Young diagram lattice.
 - It loads the non-zero entries of the adjacency matrix from the biggest Hamiltonian/clean_N#.txt file.
 - It loads the diagonal entries of the Hamiltonian matrix from the files Hamiltonian/rand...
 - It builds sparse Hamiltonian from the entries.
-- It evolves an initial state via Krylov (from LanczosRoutines.py).
+- It evolves an initial state via Krylov (from LanczosRoutines.py), or full exact diagonalization.
 
 
 
@@ -94,3 +104,9 @@ Just to estimate how long computing times become.
 ### run??.sh
 
 One shell to rule them all!
+
+
+---
+### runUlysses.sh
+
+Shell to run the single job on Ulysses.
