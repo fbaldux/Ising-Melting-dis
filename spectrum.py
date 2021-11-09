@@ -12,8 +12,6 @@ import numpy as np
 from scipy import sparse
 from scipy.linalg import eigh,expm
 from scipy.sparse.linalg import eigsh
-from matplotlib import pyplot as plt
-from matplotlib import cm
 
 instring = input("").split(' ')
 
@@ -37,12 +35,6 @@ p = np.array((1, 1, 2, 3, 5, 7, 11, 15, 22, 30, 42, 56, 77, 101, 135, 176, 231, 
 dim = np.cumsum(p)
 
 
-plt.rcParams["figure.figsize"] = [8,4]
-
-fig, ax = plt.subplots()
-#cols = cm.get_cmap('viridis', t_steps+1)
-
- 
 #  ------------------------------------  load hopping terms  -----------------------------------  #
 
 Ham_lens = np.loadtxt("ham_lengths.txt", dtype=np.int_).T
@@ -71,12 +63,12 @@ for dis in range(dis_num):
     # dense
     H = H.todense()
     eigvals, eigvecs = eigh(H)
-    eigvecs = eigvecs.T
+    #eigvecs = eigvecs.T
     
     # sparse
     #eigvals, eigvecs = eigsh(H, k=dim[N]//eig_frac, which='SM')
     #eigvecs = eigvecs.T
-    
+    """
     # compute the IPR
     IPRs = np.sum(eigvecs**4, axis=1)
 
@@ -89,35 +81,11 @@ for dis in range(dis_num):
     filename = "Results/spec_N%d_e%.4f_d%d.txt" % (N, epsilon, dis)
     head = "eigenvalue IPR r"
     np.savetxt(filename, np.stack((eigvals, IPRs, r)).T, header=head)
-
+    """
     
-#  -------------------------------  plot  -------------------------------  #
-
-exit(0)
-for n in range(N):
-    ax.axvline(dim[n], lw=0.75, c='black')
-
-
-ax.set_xlabel(r"$k$")
-ax.set_ylabel(r"$|\psi_k(t)|^2$")
-
-#ax.set_title("n=%d (dim=%d)" %(N,dim[N]))
-ax.set_title(r"n=%d: $\epsilon = %.2f$" %(N,epsilon))
-
-ax.set_xscale("log")
-ax.set_yscale("log")
-
-ax.legend()
-plt.savefig("eps%.2f.pdf"%epsilon, bbox_inches='tight')
-plt.show()
-
-
-
-
-
-
-
-
+    filename = "Results/spec_N%d_e%.4f_d%d.txt" % (N, epsilon, dis)
+    head = "eigval eigvec[0] eigvec[1] ..." 
+    np.savetxt( filename, np.vstack((eigvals, eigvecs)).T, header=head )
 
 
 
