@@ -43,7 +43,7 @@
 #
 #[unconfig] #SBATCH --array=01-10    # Create a job array. Useful for multiple, similar jobs. To use, read this: https://slurm.schedmd.com/job_array.html
 #SBATCH --partition=regular1         # Partition (queue). Avail: regular1, regular2, long1, long2, wide1, wide2, gpu1, gpu2. Multiple partitions are possible.
-#SBATCH --time=00:05:00              # Time limit hrs:min:sec
+#SBATCH --time=12:00:00              # Time limit hrs:min:sec
 #SBATCH --output=%x.o%j              # Standard output log in TORQUE-style -- WARNING: %x requires a new enough SLURM. Use %j for regular jobs and %A-%a for array jobs
 #SBATCH --error=%x.e%j               # Standard error  log in TORQUE-style -- WARNING: %x requires a new enough SLURM. Use %j for regular jobs and %A-%a for array jobs
 #
@@ -116,8 +116,8 @@ dis_per_thread=$(( ($dis_num_fin-$dis_num_in) / $dis_threads ))
 for ((d=$dis_num_in; d<$dis_num_fin; d+=$dis_per_thread));
 do
     $(
-    echo $N $d $(( $d+$dis_per_thread )) | python3 buildDiagHam.py
-    echo $N $eps $eig_frac $d $(( $d+$dis_per_thread )) | python3 spectrum.py
+    echo $N $d $(( $d+$dis_per_thread )) | python3 buildDiagHam.py 1>>log.txt 2>>err.txt
+    echo $N $eps $eig_frac $d $(( $d+$dis_per_thread )) | python3 spectrum.py 1>>log.txt 2>>err.txt
     )&
 done
 
