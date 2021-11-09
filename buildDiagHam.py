@@ -19,7 +19,8 @@ rng = np.random.default_rng()
 instring = input("").split(' ')
 
 N = int( instring[0] )
-dis_num = int( instring[1] )
+dis_num_in = int( instring[1] )
+dis_num_fin = int( instring[2] )
 
 
 p = np.array((1, 1, 2, 3, 5, 7, 11, 15, 22, 30, 42, 56, 77, 101, 135, 176, 231, 297, 385, 490, 627, \
@@ -84,7 +85,7 @@ for n in range(1,N+1):
 
 #  --------------------------  build the diagonal of the Hamiltonian  --------------------------  #
 
-for dis in range(dis_num):
+for dis in range(dis_num_in, dis_num_fin):
     
     # extract the disorder
     square_dis = rng.uniform(-1,1,size=(N,N))

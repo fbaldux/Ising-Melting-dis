@@ -8,6 +8,11 @@
 #
 #  ---------------------------------------------------------------------------------------------  #
 
+import os
+os.environ["MKL_NUM_THREADS"] = "8"
+os.environ["NUMEXPR_NUM_THREADS"] = "8"
+os.environ["OMP_NUM_THREADS"] = "8"
+
 import numpy as np
 from scipy import sparse
 from scipy.linalg import eigh,expm
@@ -25,7 +30,8 @@ epsilon = float( instring[1] )
 eig_frac = int( instring[2] )
 
 # number of disorder instances
-dis_num = int( instring[3] )
+dis_num_in = int( instring[3] )
+dis_num_fin = int( instring[4] )
 
 
 p = np.array((1, 1, 2, 3, 5, 7, 11, 15, 22, 30, 42, 56, 77, 101, 135, 176, 231, 297, 385, 490, 627, \
@@ -53,7 +59,7 @@ H0 += H0.T
 
 #  -------------------------------------------  main  ------------------------------------------  #
 
-for dis in range(dis_num):
+for dis in range(dis_num_in,dis_num_fin):
     
     # load the disorder
     filename = "Hamiltonians/rand_N%d_d%d.txt" % (N,dis)
@@ -61,14 +67,14 @@ for dis in range(dis_num):
     H = H0 + epsilon * sparse.diags(diag)
  
     # dense
-    H = H.todense()
-    eigvals, eigvecs = eigh(H)
+    #H = H.todense()
+    #eigvals, eigvecs = eigh(H)
     #eigvecs = eigvecs.T
     
     # sparse
-    #eigvals, eigvecs = eigsh(H, k=dim[N]//eig_frac, which='SM')
-    #eigvecs = eigvecs.T
-    """
+    eigvals, eigvecs = eigsh(H, k=dim[N]//eig_frac, which='SM')
+    eigvecs = eigvecs.T
+    
     # compute the IPR
     IPRs = np.sum(eigvecs**4, axis=1)
 
@@ -82,12 +88,10 @@ for dis in range(dis_num):
     head = "eigenvalue IPR r"
     np.savetxt(filename, np.stack((eigvals, IPRs, r)).T, header=head)
     """
-    
     filename = "Results/spec_N%d_e%.4f_d%d.txt" % (N, epsilon, dis)
     head = "eigval eigvec[0] eigvec[1] ..." 
     np.savetxt( filename, np.vstack((eigvals, eigvecs)).T, header=head )
-
-
+    """
 
 
 
