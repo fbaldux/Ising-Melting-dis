@@ -67,7 +67,7 @@ H0 += H0.T
 for dis in range(dis_num_in,dis_num_fin):
     
     done = False
-    if overwrite and os.path.isfile("Results/spec_N%d_e%.4f_d%d.txt" % (N, epsilon, dis)):
+    if not overwrite and os.path.isfile("Results/spec_N%d_e%.4f_d%d.txt" % (N, epsilon, dis)):
         done = True
     
     if not done:

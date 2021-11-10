@@ -113,11 +113,13 @@ dis_num_fin=100
 dis_threads=5
 dis_per_thread=$(( ($dis_num_fin-$dis_num_in) / $dis_threads ))
 
+overwrite=0
+
 for ((d=$dis_num_in; d<$dis_num_fin; d+=$dis_per_thread));
 do
     $(
     echo $N $d $(( $d+$dis_per_thread )) | python3 buildDiagHam.py 1>>log_n${N}_e${eps}.txt 2>>err_n${N}_e${eps}.txt
-    echo $N $eps $eig_frac $d $(( $d+$dis_per_thread )) | python3 spectrum.py 1>>log_n${N}_e${eps}.txt 2>>err_n${N}_e${eps}.txt
+    echo $N $eps $eig_frac $d $(( $d+$dis_per_thread )) $overwrite | python3 spectrum.py 1>>log_n${N}_e${eps}.txt 2>>err_n${N}_e${eps}.txt
     )&
 done
 
