@@ -64,7 +64,7 @@ def height0(levels):
     h0 = np.zeros(dim[N], dtype=np.float_)
     
     # sum over all basis states (split in n and i)
-    for n in range(N):
+    for n in range(1,N):
         for i in range(p[n]):
             k = dim[n-1]+i
             

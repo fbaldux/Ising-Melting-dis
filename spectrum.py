@@ -77,13 +77,13 @@ for dis in range(dis_num_in,dis_num_fin):
         H = H0 + epsilon * sparse.diags(diag)
  
         # dense
-        #H = H.todense()
-        #eigvals, eigvecs = eigh(H)
-        #eigvecs = eigvecs.T
+        H = H.todense()
+        eigvals, eigvecs = eigh(H)
+        eigvecs = eigvecs.T
     
         # sparse
-        eigvals, eigvecs = eigsh(H, k=dim[N]//eig_frac, which='SM')
-        eigvecs = eigvecs.T
+        #eigvals, eigvecs = eigsh(H, k=dim[N]//eig_frac, which='SM')
+        #eigvecs = eigvecs.T
     
         # compute the IPR
         IPRs = np.sum(eigvecs**4, axis=1)
