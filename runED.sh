@@ -1,4 +1,4 @@
-Nmin=22
+Nmin=12
 Nmax=22
 dN=2
 
