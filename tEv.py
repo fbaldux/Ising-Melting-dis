@@ -31,7 +31,8 @@ save_dt = float( instring[4] )
 save_step = int( save_dt/dt )
 
 # number of disorder instances
-dis_num = int( instring[5] )
+dis_num_in = int( instring[5] )
+dis_num_fin = int( instring[6   ] )
 
 
 p = np.array((1, 1, 2, 3, 5, 7, 11, 15, 22, 30, 42, 56, 77, 101, 135, 176, 231, 297, 385, 490, 627, \
@@ -59,7 +60,7 @@ H0 += H0.T
 
 #  -------------------------------------------  main  ------------------------------------------  #
 
-for dis in range(dis_num):
+for dis in range(dis_num_in,dis_num_fin):
     
     # load the disorder
     filename = "Hamiltonians/rand_N%d_d%d.txt" % (N,dis)

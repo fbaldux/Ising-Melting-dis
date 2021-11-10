@@ -23,9 +23,9 @@ do
     do
         echo $N $dis_num_in $dis_num_fin | python3 buildDiagHam.py #1>>log.txt 2>>err.txt
     
-        echo $N $eps $eig_frac $dis_num_in $dis_num_fin $overwrite | python3 spectrum.py #1>>log.txt 2>>err.txt
+        #echo $N $eps $eig_frac $dis_num_in $dis_num_fin $overwrite | python3 spectrum.py #1>>log.txt 2>>err.txt
         
-        #echo $N $eps $Tfin $dt $save_dt $dis_num | python3 tEv.py 1>>log.txt 2>>err.txt
+        echo $N $eps $Tfin $dt $save_dt $dis_num_in $dis_num_fin | python3 tEv.py #1>>log.txt 2>>err.txt
         
         #echo $N $eps $dis_num | python3 plot_y0.py
     done
