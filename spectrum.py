@@ -103,7 +103,7 @@ for dis in range(dis_num_in,dis_num_fin):
         np.savetxt( filename, np.vstack((eigvals, eigvecs)).T, header=head )
         """
 
-
+print("End spec N%d e%.4f d%d-%d" % (N,epsilon,dis_num_in,dis_num_fin))
 
 
 

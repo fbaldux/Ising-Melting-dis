@@ -1,4 +1,4 @@
-for N in $(seq 24 2 26);
+for N in $(seq 28 2 28);
 do
     
     for eps in $(seq 1 12);
