@@ -14,7 +14,7 @@
 #
 # ---- Metadata configuration ----
 #
-#SBATCH --job-name=nENNE_eEPSILON       # The name of your job, you'll se it in squeue.
+#SBATCH --job-name=nENNE_eEPSILON_dDIS_FIN       # The name of your job, you'll se it in squeue.
 #SBATCH --mail-type=NONE              # Mail events (NONE, BEGIN, END, FAIL, ALL). Sends you an email when the job begins, ends, or fails; you can combine options.
 #SBATCH --mail-user=fbalducc@sissa.it    # Where to send the mail
 #
@@ -108,8 +108,8 @@ eps=EPSILON
 
 eig_frac=10
 
-dis_num_in=0
-dis_num_fin=100
+dis_num_in=DIS_IN
+dis_num_fin=DIS_FIN
 dis_threads=5
 dis_per_thread=$(( ($dis_num_fin-$dis_num_in) / $dis_threads ))
 

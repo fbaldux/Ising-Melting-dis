@@ -1,9 +1,12 @@
-for N in $(seq 28 2 28);
+DIS_IN=0
+DIS_FIN=100
+
+for N in $(seq 24 2 26);
 do
     
-    for eps in $(seq 1 12);
+    for eps in $(seq 13 14);
     do
-        sed "s/ENNE/$N/g;s/EPSILON/$eps/g" runUlysses.sh > temp.sh        
+        sed "s/ENNE/$N/g;s/EPSILON/$eps/g;s/DIS_IN/$DIS_IN/g;s/DIS_FIN/$DIS_FIN/g;" runUlysses.sh > temp.sh        
                 
         sbatch temp.sh
         
