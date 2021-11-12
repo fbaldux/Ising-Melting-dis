@@ -1,5 +1,5 @@
-Nmin=22
-Nmax=22
+Nmin=12
+Nmax=12
 dN=2
 
 epsMin=1
@@ -22,14 +22,17 @@ do
     $(
     for eps in $(seq $epsMin $dEps $epsMax);
     do
-        #echo $N $dis_num_in $dis_num_fin | python3 buildDiagHam.py 1>>log 2>>err
+        if [[ ! -f stop ]];
+        then
+            echo $N $dis_num_in $dis_num_fin | python3 buildDiagHam.py 1>>log 2>>err
     
-        echo $N $eps $dis_num_in $dis_num_fin $overwrite | python3 spectrum.py 1>>log 2>>err
-        #echo $N $eps $eig_frac $dis_num_in $dis_num_fin $overwrite | python3 spectrum_sparse.py 1>>log 2>>err
+            echo $N $eps $dis_num_in $dis_num_fin $overwrite | python3 spectrum.py 1>>log 2>>err
+            #echo $N $eps $eig_frac $dis_num_in $dis_num_fin $overwrite | python3 spectrum_sparse.py 1>>log 2>>err
         
-        #echo $N $eps $Tfin $dt $save_dt $dis_num_in $dis_num_fin | python3 tEv.py #1>>log.txt 2>>err.txt
+            #echo $N $eps $Tfin $dt $save_dt $dis_num_in $dis_num_fin | python3 tEv.py #1>>log.txt 2>>err.txt
         
-        #echo $N $eps $dis_num_fin | python3 plot_y0.py
+            #echo $N $eps $dis_num_fin | python3 plot_y0.py
+        fi
     done
     )&
 done
