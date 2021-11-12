@@ -80,16 +80,18 @@ for dis in range(dis_num_in,dis_num_fin):
     
         # compute the IPR
         IPRs = np.sum(eigvecs**4, axis=1)
-
+        
+        """
         # compute the r parameter
         diff = np.diff(eigvals)
         r = np.minimum(diff[:-1], diff[1:]) / np.maximum(diff[:-1], diff[1:])
         r = np.append(r, (0,0))
+        """
         
         # save to file
         filename = "Results/spec_N%d_e%.4f_d%d.txt" % (N, epsilon, dis)
-        head = "eigenvalue IPR r"
-        np.savetxt(filename, np.stack((eigvals, IPRs, r)).T, header=head)
+        head = "eigenvalue IPR"
+        np.savetxt(filename, np.stack((eigvals, IPRs)).T, header=head)
         """
         filename = "Results/spec_N%d_e%.4f_d%d.txt" % (N, epsilon, dis)
         head = "eigval eigvec[0] eigvec[1] ..." 
