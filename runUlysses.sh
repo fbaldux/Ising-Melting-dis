@@ -117,7 +117,8 @@ overwrite=1
 
 for ((d=$dis_num_in; d<$dis_num_fin; d+=$dis_per_thread));
 do
-    echo $N $eps $eig_frac $d $(( $d+$dis_per_thread )) $overwrite | python3 spectrum.py 1>>log_n${N}_e${eps}.txt 2>>err_n${N}_e${eps}.txt &
+    #echo $N $eps $d $(( $d+$dis_per_thread )) $overwrite | python3 spectrum.py 1>>log_n${N}_e${eps}.txt 2>>err_n${N}_e${eps}.txt &
+    echo $N $eps $eig_frac $d $(( $d+$dis_per_thread )) $overwrite | python3 spectrum_sparse.py 1>>log_n${N}_e${eps}.txt 2>>err_n${N}_e${eps}.txt &
 done
 
 

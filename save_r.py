@@ -1,26 +1,19 @@
-
 import numpy as np
 
-
-Ns = np.arange(12,20,2)
+Ns = np.arange(22,24,2)
 #Ns = np.array((12,))
 
-epsilon = np.arange(1,6.5,1)
+epsilon = np.arange(1,4,1)
 #epsilon = np.array((1.0,))
-
 
 dis_num = 1000
 
-p = np.array((1, 1, 2, 3, 5, 7, 11, 15, 22, 30, 42, 56, 77, 101, 135, 176, 231, 297, 385, 490, 627, \
-     792, 1002, 1255, 1575, 1958, 2436, 3010, 3718, 4565, 5604, 6842, 8349, 10143, 12310, 14883, 17977,\
-     21637, 26015, 31185, 37338, 44583, 53174, 63261, 75175, 89134, 105558, 124754, 147273, 173525))
 
-dim = np.cumsum(p)
+#  ---------------------------------------  load & save  ---------------------------------------  #
 
-
-#  -------------------------------------------  load  ------------------------------------------  #
-
-
+# full
+#fOut = open("Analysis/rAv_%d_full.txt" % dis_num, 'a')
+# center
 fOut = open("Analysis/rAv_%d.txt" % dis_num, 'a')
 
 r_av = np.zeros((len(Ns),len(epsilon)))
@@ -35,39 +28,31 @@ for iN in range(len(Ns)):
             # load all the r parameters
             filename = "Results/spec_N%d_e%.4f_d%d.txt" % (N,e,0)
             data = np.loadtxt(filename)[:-2,2]
-            rs = np.zeros((dis_num,len(data)))
+            
+            # full
+            #rs = np.zeros((dis_num,len(data)))
+            # center
+            frac = len(data)//5
+            rs = np.zeros((dis_num,frac))     
+
             del data
             
+
             for dis in range(dis_num):
                 filename = "Results/spec_N%d_e%.4f_d%d.txt" % (N,e,dis)
-                rs[dis] = np.loadtxt(filename)[:-2,2] 
-    
-            # take only the center of the spectrum?
+                
+                # full
+                #rs[dis] = np.loadtxt(filename)[:-2,2]
+                # center
+                data = np.loadtxt(filename)[:-2,2] 
+                rs[dis] = data[3*len(data)//10:3*len(data)//10+frac]
+
             r_av[iN,ie] = np.average(rs)
             
             fOut.write("%d %e %e\n" % (Ns[iN], epsilon[ie], r_av[iN,ie]))
         
         except:
             print("Error at N%d e%f" % (Ns[iN], epsilon[ie]))
-            #None
-
-
-#  -------------------------------------------  save  ------------------------------------------  #
-
-"""
-
-for iN in range(len(Ns)):
-    for ie in range(len(epsilon)):
-        if r_av[iN,ie] > 0:
-"""         
+            #None   
 
 fOut.close()
-
-
-
-
-
-
-
-
-

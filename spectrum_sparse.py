@@ -28,12 +28,15 @@ N = int( instring[0] )
 # disorder
 epsilon = float( instring[1] )
 
+# number of eigenvalues (for sparse diagonalization)
+eig_frac = int( instring[2] )
+
 # number of disorder instances
-dis_num_in = int( instring[2] )
-dis_num_fin = int( instring[3] )
+dis_num_in = int( instring[3] )
+dis_num_fin = int( instring[4] )
 
 # whether to overwrite existing files
-overwrite = int( instring[4] )
+overwrite = int( instring[5] )
 
 
 p = np.array((1, 1, 2, 3, 5, 7, 11, 15, 22, 30, 42, 56, 77, 101, 135, 176, 231, 297, 385, 490, 627, \
@@ -73,9 +76,8 @@ for dis in range(dis_num_in,dis_num_fin):
         diag = np.loadtxt(filename)
         H = H0 + epsilon * sparse.diags(diag)
  
-        # dense
-        H = H.todense()
-        eigvals, eigvecs = eigh(H)
+        # sparse
+        eigvals, eigvecs = eigsh(H, k=dim[N]//eig_frac, which='SM')
         eigvecs = eigvecs.T
     
         # compute the IPR
