@@ -1,5 +1,5 @@
-Nmin=12
-Nmax=12
+Nmin=24
+Nmax=26
 dN=2
 
 epsMin=1
@@ -12,21 +12,21 @@ save_dt=0.5
 
 eig_frac=10
 
-dis_num_in=0
-dis_num_fin=1
+dis_num_in=200
+dis_num_fin=1000
 
 overwrite=1
 
 for N in $(seq $Nmin $dN $Nmax);
-do
+do    
     $(
+    echo $N $dis_num_in $dis_num_fin | python3 buildDiagHam.py 1>>log 2>>err
+  
     for eps in $(seq $epsMin $dEps $epsMax);
     do
         if [[ ! -f stop ]];
         then
-            echo $N $dis_num_in $dis_num_fin | python3 buildDiagHam.py 1>>log 2>>err
-    
-            echo $N $eps $dis_num_in $dis_num_fin $overwrite | python3 spectrum.py 1>>log 2>>err
+            #echo $N $eps $dis_num_in $dis_num_fin $overwrite | python3 spectrum.py 1>>log 2>>err
             #echo $N $eps $eig_frac $dis_num_in $dis_num_fin $overwrite | python3 spectrum_sparse.py 1>>log 2>>err
         
             #echo $N $eps $Tfin $dt $save_dt $dis_num_in $dis_num_fin | python3 tEv.py #1>>log.txt 2>>err.txt
@@ -38,5 +38,4 @@ do
 done
 
 
-#echo $N | python3 buildHam.py
 #echo $N $eps $dis_num | python3 plot_mag_2d.py

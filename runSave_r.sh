@@ -14,7 +14,7 @@
 #
 # ---- Metadata configuration ----
 #
-#SBATCH --job-name=nENNE_eEPSILON_dDIS_FIN       # The name of your job, you'll se it in squeue.
+#SBATCH --job-name=save_r       # The name of your job, you'll se it in squeue.
 #SBATCH --mail-type=NONE              # Mail events (NONE, BEGIN, END, FAIL, ALL). Sends you an email when the job begins, ends, or fails; you can combine options.
 #SBATCH --mail-user=fbalducc@sissa.it    # Where to send the mail
 #
@@ -43,7 +43,7 @@
 #
 #[unconfig] #SBATCH --array=01-10    # Create a job array. Useful for multiple, similar jobs. To use, read this: https://slurm.schedmd.com/job_array.html
 #SBATCH --partition=regular1         # Partition (queue). Avail: regular1, regular2, long1, long2, wide1, wide2, gpu1, gpu2. Multiple partitions are possible.
-#SBATCH --time=12:00:00              # Time limit hrs:min:sec
+#SBATCH --time=02:00:00              # Time limit hrs:min:sec
 #SBATCH --output=%x.o%j              # Standard output log in TORQUE-style -- WARNING: %x requires a new enough SLURM. Use %j for regular jobs and %A-%a for array jobs
 #SBATCH --error=%x.e%j               # Standard error  log in TORQUE-style -- WARNING: %x requires a new enough SLURM. Use %j for regular jobs and %A-%a for array jobs
 #
@@ -102,26 +102,7 @@ cd $SLURM_SUBMIT_DIR
 #   Just fill this part as if it was a regular Bash script that you want to
 #   run on your computer.
 
-N=ENNE
-
-eps=EPSILON
-
-eig_frac=10
-
-dis_num_in=DIS_IN
-dis_num_fin=DIS_FIN
-dis_threads=5
-dis_per_thread=$(( ($dis_num_fin-$dis_num_in) / $dis_threads ))
-
-overwrite=1
-
-for ((d=$dis_num_in; d<$dis_num_fin; d+=$dis_per_thread));
-do
-    echo $N $d $(( $d+$dis_per_thread )) | python3 buildDiagHam.py 1>>log_n${N} 2>>err_n${N}
-    
-    #echo $N $eps $d $(( $d+$dis_per_thread )) $overwrite | python3 spectrum.py 1>>log_n${N}_e${eps}.txt 2>>err_n${N}_e${eps}.txt &
-    echo $N $eps $eig_frac $d $(( $d+$dis_per_thread )) $overwrite | python3 spectrum_sparse.py 1>>log_n${N}_e${eps}.txt 2>>err_n${N}_e${eps}.txt &
-done
+python3 save_r.py 1>>log 2>>err &
 
 
 # ==== END OF JOB COMMANDS ===== #
