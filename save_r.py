@@ -1,12 +1,15 @@
 import numpy as np
 
-Ns = np.arange(12,14,2)
-#Ns = np.array((12,))
+instring = input("").split(' ')
 
-epsilon = np.arange(1,3,1)
-#epsilon = np.array((1.0,))
+# system size
+N = int( instring[0] )
 
-dis_num = 10
+# disorder
+epsilon = float( instring[1] )
+
+# number of disorder instances
+dis_num = int( instring[2] )
 
 sparse = False
 
@@ -19,8 +22,7 @@ for iN in range(len(Ns)):
     for ie in range(len(epsilon)):
         e = epsilon[ie]
         
-        if 1:
-        #try:
+        try:
             r_av = 0.
             
             for dis in range(dis_num):
@@ -42,6 +44,6 @@ for iN in range(len(Ns)):
             fOut.write("%d %e %e\n" % (Ns[iN], epsilon[ie], r_av))
             fOut.close()
         
-        #except:
-        #    print("Error at N%d e%f" % (Ns[iN], epsilon[ie]))   
+        except:
+            print("Error at N%d e%f" % (Ns[iN], epsilon[ie]))   
 

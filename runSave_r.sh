@@ -102,8 +102,12 @@ cd $SLURM_SUBMIT_DIR
 #   Just fill this part as if it was a regular Bash script that you want to
 #   run on your computer.
 
-python3 save_r.py 1>>log 2>>err &
-
+for eps in $(seq 1 14);
+do
+    echo 22 $eps 10000 | python3 save_r.py 1>>log 2>>err &
+    echo 24 $eps 1100 | python3 save_r.py 1>>log 2>>err &
+    echo 26 $eps 1100 | python3 save_r.py 1>>log 2>>err &
+done
 
 # ==== END OF JOB COMMANDS ===== #
 
