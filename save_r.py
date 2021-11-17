@@ -1,3 +1,11 @@
+#  ---------------------------------------------------------------------------------------------  #
+#
+#   The program computes the average r parameter from the Results/spec\_{...} files,
+#   saving it in Analysis/.
+#
+#  ---------------------------------------------------------------------------------------------  #
+
+
 import numpy as np
 
 instring = input("").split(' ')

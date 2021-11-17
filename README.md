@@ -31,12 +31,6 @@ The program builds the diagonal part of the Hamiltonian for the partitions graph
 
 
 ---
-### diagonalize.py
-
-By Carlo Vanoni.
-
-
----
 ### ham_lengths.txt
 
 The file containing the number of non-zero entries of the sparse adjacency matrix, up to each level N. 
@@ -47,10 +41,17 @@ The file containing the number of non-zero entries of the sparse adjacency matri
 
 Program nicely given us from Vittorio Vitale & Alessadro Santini. It contains the Lanczos algorithm for matrix exponentiation with Krylov subspaces.
 
----
-### masterUlysses.sh
 
-Shell to send multiple jobs on Ulysses. It modifies and executes `runUlysses.py`.
+---
+### masterUlysses1.sh
+
+Shell to send multiple jobs on Ulysses, on partition regular 1. It modifies and executes `runUlysses1.py`.
+
+
+---
+### masterUlysses2.sh
+
+Shell to send multiple jobs on Ulysses, on partition regular 2. It modifies and executes `runUlysses2.py`.
 
 
 ---
@@ -72,14 +73,37 @@ Just to plot results.
 
 
 ---
+### save_\r.py
+
+The program computes the average r parameter from the Results/spec\_{...} files, saving it in Analysis/.
+
+
+---
+### sorter.py
+
+The program sorts the r parameter files in Analysis for later convenience.
+
+
+---
 ### spectrum.py
 
-The program diagonalizes the disordered, Young graph Hamiltonian
+The program diagonalizes the disordered, Young graph Hamiltonian.
+
+- It loads the non-zero entries of the adjacency matrix from the biggest Hamiltonian/clean_N#.txt file.
+- It loads the diagonal entries of the Hamiltonian matrix from the files Hamiltonian/rand...
+- It builds the sparse Hamiltonian from the entries, and converts it to a full matrix.
+- It saves to file the eigenvalues and IPRs (or the eigenvectors, but it takes a lot of space).
+
+
+---
+### spectrum\_sparse.py
+
+The program diagonalizes the disordered, Young graph Hamiltonian.
 
 - It loads the non-zero entries of the adjacency matrix from the biggest Hamiltonian/clean_N#.txt file.
 - It loads the diagonal entries of the Hamiltonian matrix from the files Hamiltonian/rand...
 - It builds the sparse Hamiltonian from the entries.
-- It saves to file the eigenvalues, IPR and r parameters (or the eigenvectors, but it takes a lot of space).
+- It saves to file a fraction the eigenvalues and IPRs at the center of the spectrum (or also the eigenvectors, but it takes a lot of space).
 
 
 ---
@@ -107,6 +131,18 @@ One shell to rule them all!
 
 
 ---
-### runUlysses.sh
+### runSave\_r.sh
 
-Shell to run the single job on Ulysses.
+Shell to run save\_r.py on Ulysses.
+
+
+---
+### runUlysses1.sh
+
+Shell to run the single job on Ulysses, partition regular 1.
+
+
+---
+### runUlysses2.sh
+
+Shell to run the single job on Ulysses, partition regular 2.

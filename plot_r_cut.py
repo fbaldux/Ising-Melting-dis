@@ -8,8 +8,8 @@ import cmasher as cmr
 
 #  -------------------------------------------  load  ------------------------------------------  #
 
-data1000 = np.loadtxt("Analysis/rAv_1000.txt").T
-data200 = np.loadtxt("Analysis/rAv_200.txt").T
+data10000 = np.loadtxt("Analysis/rAv_d10000.txt").T
+data1100 = np.loadtxt("Analysis/rAv_d1100.txt").T
 
 
 #  -----------------------------------------  analyze  -----------------------------------------  #
@@ -22,17 +22,18 @@ Ns = []
 cuts = []
 
 
-for N in range(12,22,2): 
-    which = data1000[0]==N
-    f = interp1d(data1000[1,which], data1000[2,which], kind='cubic')
-    f2 = lambda x: f(x) - cut
+for N in range(12,24,2): 
+    if N!=20:
+        which = data10000[0]==N
+        f = interp1d(data10000[1,which], data10000[2,which], kind='cubic')
+        f2 = lambda x: f(x) - cut
     
-    Ns.append(N)
-    cuts.append( fsolve(f2, 4) )
+        Ns.append(N)
+        cuts.append( fsolve(f2, 4) )
     
 for N in range(24,28,2): 
-    which = data200[0]==N
-    f = interp1d(data200[1,which], data200[2,which], kind='cubic')
+    which = data1100[0]==N
+    f = interp1d(data1100[1,which], data1100[2,which], kind='cubic')
     f2 = lambda x: f(x) - cut
     
     Ns.append(N)
@@ -50,14 +51,21 @@ cols = cm.get_cmap('cmr.ember', 9)
 dots = ('o', 'v', '^', '>', '<', 's', 'P', 'h', 'X', 'D')
 
 
-ax.plot(Ns, cuts, '.', c='black')
+ax.plot(Ns, cuts, '.', c='black', label="data")
+
+# fit
+fit = np.polyfit(Ns, cuts, 1)
+f = lambda x: fit[0]*x + fit[1]
+ax.plot(Ns, f(Ns), '--', c='gray', label="fit")
+
+
 
 ax.set_xlabel(r"$N$")
 ax.set_ylabel(r"$\varepsilon^*$")
 
 ax.set_title(r"$\varepsilon^*$ s.t. $r(\varepsilon^*) = $%.3f" % cut)
 
-#ax.legend(title=r"$N$")
+ax.legend()
 plt.show()
 
 

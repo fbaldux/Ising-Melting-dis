@@ -1,12 +1,11 @@
 #  ---------------------------------------------------------------------------------------------  #
 #
-#   The program diagonalizes the disordered, Young graph Hamiltonian
-#   - It loads the non-zero entries of the adjacency matrix from the biggest Hamiltonian/clean_N#.txt
-#     file.
+#   The program diagonalizes the disordered, Young graph Hamiltonian.
+#
+#   - It loads the non-zero entries of the adjacency matrix from the biggest Hamiltonian/clean_N#.txt file.
 #   - It loads the diagonal entries of the Hamiltonian matrix from the files Hamiltonian/rand...
-#   - It builds the sparse Hamiltonian from the entries.
-#   - It saves to file the eigenvalues, IPR and r parameters (or the eigenvectors, but it takes
-#     a lot of space).
+#   - It builds the sparse Hamiltonian from the entries, and converts it to a full matrix.
+#   - It saves to file the eigenvalues and IPRs (or the eigenvectors, but it takes a lot of space).
 #
 #  ---------------------------------------------------------------------------------------------  #
 
@@ -80,13 +79,6 @@ for dis in range(dis_num_in,dis_num_fin):
     
         # compute the IPR
         IPRs = np.sum(eigvecs**4, axis=1)
-        
-        """
-        # compute the r parameter
-        diff = np.diff(eigvals)
-        r = np.minimum(diff[:-1], diff[1:]) / np.maximum(diff[:-1], diff[1:])
-        r = np.append(r, (0,0))
-        """
         
         # save to file
         filename = "Results/spec_N%d_e%.4f_d%d.txt" % (N, epsilon, dis)
