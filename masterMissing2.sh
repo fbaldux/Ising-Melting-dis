@@ -9,9 +9,11 @@ do
     do
     
         sed "s/ENNE/$N/g;s/EPSILON/$eps/g;s/DIS_IN/$DIS_IN/g;s/DIS_FIN/$DIS_FIN/g;" runMissing2.sh > temp.sh        
-        
         sbatch temp.sh
     
+        sed "s/ENNE/$N/g;s/EPSILON/$eps/g;s/DIS_IN/$DIS_IN/g;s/DIS_FIN/$DIS_FIN/g;" runMissing2-ctrl.sh > temp.sh        
+        bash temp.sh
+        
         sleep 1
         
         DIS_IN=$(more final) 
