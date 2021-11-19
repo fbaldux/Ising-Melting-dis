@@ -73,7 +73,7 @@ Just to plot results.
 
 
 ---
-### save_\r.py
+### save\_r.py
 
 The program computes the average r parameter from the Results/spec\_{...} files, saving it in Analysis/.
 
@@ -125,9 +125,9 @@ Just to estimate how long computing times become.
 
 
 ---
-### run??.sh
+### runED.sh
 
-One shell to rule them all!
+Shell to run jobs on workstations.
 
 
 ---
