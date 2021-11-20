@@ -17,7 +17,6 @@ do
     then
         count=$(( $count+1 ))
         echo $d
-        echo $N $eps $eig_frac $d $(( $d+1 )) $overwrite | python3 spectrum_sparse.py 1>>log 2>>err_n${N}_e${eps} &
     fi
 done
 echo $d > final

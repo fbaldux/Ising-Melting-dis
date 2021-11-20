@@ -43,6 +43,12 @@ Program nicely given us from Vittorio Vitale & Alessadro Santini. It contains th
 
 
 ---
+### masterMissing2.sh
+
+Shell to send multiple jobs on Ulysses, on partition regular 2, to fill voids (i.e. jobs that haven't delivered the final output). It modifies and executes `runMissing2.py` and `runMissing2-ctrl.py`.
+
+
+---
 ### masterUlysses1.sh
 
 Shell to send multiple jobs on Ulysses, on partition regular 1. It modifies and executes `runUlysses1.py`.
@@ -52,6 +58,12 @@ Shell to send multiple jobs on Ulysses, on partition regular 1. It modifies and 
 ### masterUlysses2.sh
 
 Shell to send multiple jobs on Ulysses, on partition regular 2. It modifies and executes `runUlysses2.py`.
+
+
+---
+### mover.sh
+
+Shell to reorganize folders of results.
 
 
 ---
@@ -134,6 +146,18 @@ Shell to run jobs on workstations.
 ### runSave\_r.sh
 
 Shell to run save\_r.py on Ulysses.
+
+
+---
+### runMissing2.sh
+
+Shell to run the single job on Ulysses, partition regular 2, to fill voids (i.e. jobs that haven't delivered the final output).
+
+
+---
+### runMissing2-ctrl.sh
+
+Shell to help the correct functioning of `runMissing2.sh`.
 
 
 ---

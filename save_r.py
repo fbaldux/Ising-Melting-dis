@@ -29,7 +29,7 @@ try:
     r_av = 0.
     
     for dis in range(dis_num):
-        filename = "Results/spec_N%d_e%.4f_d%d.txt" % (N,eps,dis)
+        filename = "Results_N%d_e%.0f/spec_N%d_e%.4f_d%d.txt" % (N,eps,N,eps,dis)
         data = np.loadtxt(filename)[:-2,0] 
         
         # if full, take the center of the spectrum

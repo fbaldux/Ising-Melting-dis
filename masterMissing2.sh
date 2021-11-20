@@ -2,6 +2,7 @@ N=28
 
 for eps in $(seq 1 14);
 do
+    echo "Starting eps $eps"
     DIS_IN=0
     DIS_FIN=240
     
