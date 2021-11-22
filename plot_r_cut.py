@@ -8,8 +8,8 @@ import cmasher as cmr
 
 #  -------------------------------------------  load  ------------------------------------------  #
 
-data10000 = np.loadtxt("Analysis/rAv_d10000.txt").T
-data1100 = np.loadtxt("Analysis/rAv_d1100.txt").T
+data1 = np.loadtxt("Analysis/rAv_d10000.txt").T
+data2 = np.loadtxt("Analysis/rAv_d2000.txt").T
 
 
 #  -----------------------------------------  analyze  -----------------------------------------  #
@@ -23,17 +23,16 @@ cuts = []
 
 
 for N in range(12,24,2): 
-    if N!=20:
-        which = data10000[0]==N
-        f = interp1d(data10000[1,which], data10000[2,which], kind='cubic')
-        f2 = lambda x: f(x) - cut
-    
-        Ns.append(N)
-        cuts.append( fsolve(f2, 4) )
+    which = data1[0]==N
+    f = interp1d(data1[1,which], data1[2,which], kind='cubic')
+    f2 = lambda x: f(x) - cut
+
+    Ns.append(N)
+    cuts.append( fsolve(f2, 4) )
     
 for N in range(24,28,2): 
-    which = data1100[0]==N
-    f = interp1d(data1100[1,which], data1100[2,which], kind='cubic')
+    which = data2[0]==N
+    f = interp1d(data2[1,which], data2[2,which], kind='cubic')
     f2 = lambda x: f(x) - cut
     
     Ns.append(N)

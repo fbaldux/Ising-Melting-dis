@@ -9,7 +9,7 @@ import numpy as np
 
 #  -------------------------------------------  load  ------------------------------------------  #
 
-filename = "Analysis/rAv_d10000.txt"
+filename = "Analysis/rAv_d2000.txt"
 
 data = np.loadtxt(filename).T
 data = np.flip(data, axis=0)
