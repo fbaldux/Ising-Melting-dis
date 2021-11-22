@@ -9,16 +9,6 @@
 #
 #  ---------------------------------------------------------------------------------------------  #
 
-import os
-os.environ["MKL_NUM_THREADS"] = "8"
-os.environ["NUMEXPR_NUM_THREADS"] = "8"
-os.environ["OMP_NUM_THREADS"] = "8"
-
-import numpy as np
-from scipy import sparse
-from scipy.linalg import eigh,expm
-from scipy.sparse.linalg import eigsh
-
 instring = input("").split(' ')
 
 # system size
@@ -33,6 +23,19 @@ dis_num_fin = int( instring[3] )
 
 # whether to overwrite existing files
 overwrite = int( instring[4] )
+
+# number of processors to use
+nProc = int( instring[5] )
+
+
+import os
+os.environ["MKL_NUM_THREADS"] = str(nProc)
+os.environ["NUMEXPR_NUM_THREADS"] = str(nProc)
+os.environ["OMP_NUM_THREADS"] = str(nProc)
+
+import numpy as np
+from scipy import sparse
+from scipy.linalg import eigh
 
 
 p = np.array((1, 1, 2, 3, 5, 7, 11, 15, 22, 30, 42, 56, 77, 101, 135, 176, 231, 297, 385, 490, 627, \

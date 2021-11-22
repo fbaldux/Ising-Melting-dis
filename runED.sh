@@ -1,8 +1,8 @@
-Nmin=12
-Nmax=12
+Nmin=22
+Nmax=22
 dN=2
 
-epsMin=1
+epsMin=2
 epsMax=2
 dEps=1
 
@@ -10,12 +10,13 @@ Tfin=10
 dt=0.5
 save_dt=0.5
 
-eig_frac=10
+eig_frac=20
 
 dis_num_in=0
-dis_num_fin=10
+dis_num_fin=1
 
 overwrite=1
+nProc=8
 
 for N in $(seq $Nmin $dN $Nmax);
 do    
@@ -26,8 +27,8 @@ do
     do
         if [[ ! -f stop ]];
         then
-            echo $N $eps $dis_num_in $dis_num_fin $overwrite | python3 spectrum.py 1>>log 2>>err
-            #echo $N $eps $eig_frac $dis_num_in $dis_num_fin $overwrite | python3 spectrum_sparse.py 1>>log 2>>err
+            #echo $N $eps $dis_num_in $dis_num_fin $overwrite $nProc | python3 spectrum.py 1>>log 2>>err
+            echo $N $eps $eig_frac $dis_num_in $dis_num_fin $overwrite $nProc | python3 spectrum_sparse.py 1>>log 2>>err
         
             #echo $N $eps $Tfin $dt $save_dt $dis_num_in $dis_num_fin | python3 tEv.py #1>>log.txt 2>>err.txt
         

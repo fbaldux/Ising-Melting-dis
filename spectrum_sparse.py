@@ -10,16 +10,6 @@
 #
 #  ---------------------------------------------------------------------------------------------  #
 
-import os
-os.environ["MKL_NUM_THREADS"] = "8"
-os.environ["NUMEXPR_NUM_THREADS"] = "8"
-os.environ["OMP_NUM_THREADS"] = "8"
-
-import numpy as np
-from scipy import sparse
-from scipy.linalg import eigh,expm
-from scipy.sparse.linalg import eigsh
-
 instring = input("").split(' ')
 
 # system size
@@ -37,6 +27,20 @@ dis_num_fin = int( instring[4] )
 
 # whether to overwrite existing files
 overwrite = int( instring[5] )
+
+# number of processors to use
+nProc = int( instring[6] )
+
+
+import os
+os.environ["MKL_NUM_THREADS"] = str(nProc)
+os.environ["NUMEXPR_NUM_THREADS"] = str(nProc)
+os.environ["OMP_NUM_THREADS"] = str(nProc)
+
+import numpy as np
+from scipy import sparse
+from scipy.sparse.linalg import eigsh
+
 
 
 p = np.array((1, 1, 2, 3, 5, 7, 11, 15, 22, 30, 42, 56, 77, 101, 135, 176, 231, 297, 385, 490, 627, \
@@ -82,12 +86,6 @@ for dis in range(dis_num_in,dis_num_fin):
     
         # compute the IPR
         IPRs = np.sum(eigvecs**4, axis=1)
-        """
-        # compute the r parameter
-        diff = np.diff(eigvals)
-        r = np.minimum(diff[:-1], diff[1:]) / np.maximum(diff[:-1], diff[1:])
-        r = np.append(r, (0,0))
-        """
         
         # save to file
         filename = "Results/spec_N%d_e%.4f_d%d.txt" % (N, epsilon, dis)

@@ -114,13 +114,14 @@ dis_threads=8
 dis_per_thread=$(( ($dis_num_fin-$dis_num_in) / $dis_threads ))
 
 overwrite=1
+nProc=8
 
 for ((d=$dis_num_in; d<$dis_num_fin; d+=$dis_per_thread));
 do
     #echo $N $d $(( $d+$dis_per_thread )) | python3 buildDiagHam.py 1>>log 2>>err_n${N}
     
-    #echo $N $eps $d $(( $d+$dis_per_thread )) $overwrite | python3 spectrum.py 1>>log 2>>err_n${N}_e${eps} &
-    echo $N $eps $eig_frac $d $(( $d+$dis_per_thread )) $overwrite | python3 spectrum_sparse.py 1>>log 2>>err_n${N}_e${eps} &
+    #echo $N $eps $d $(( $d+$dis_per_thread )) $overwrite $nProc | python3 spectrum.py 1>>log 2>>err_n${N}_e${eps} &
+    echo $N $eps $eig_frac $d $(( $d+$dis_per_thread )) $overwrite $nProc | python3 spectrum_sparse.py 1>>log 2>>err_n${N}_e${eps} &
 done
 
 

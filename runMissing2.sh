@@ -113,6 +113,7 @@ dis_num_fin=DIS_FIN
 dis_threads=8
 
 overwrite=0
+nProc=8
 
 count=0
 for ((d=$dis_num_in; $count<$dis_threads && d<$dis_num_fin; d++));
@@ -120,7 +121,7 @@ do
     if [[ ! -f Results_N${N}_e${eps}/spec_N${N}_e${eps}.0000_d$d.txt ]];
     then
         count=$(( $count+1 ))
-        echo $N $eps $eig_frac $d $(( $d+1 )) $overwrite | python3 spectrum_sparse.py 1>>log 2>>err_n${N}_e${eps} &
+        echo $N $eps $eig_frac $d $(( $d+1 )) $overwrite $nProc | python3 spectrum_sparse.py 1>>log 2>>err_n${N}_e${eps} &
     fi
 done
 
