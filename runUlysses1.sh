@@ -106,15 +106,15 @@ N=ENNE
 
 eps=EPSILON
 
-eig_frac=10
+eig_frac=20
 
 dis_num_in=DIS_IN
 dis_num_fin=DIS_FIN
-dis_threads=8
+dis_threads=4
 dis_per_thread=$(( ($dis_num_fin-$dis_num_in) / $dis_threads ))
 
 overwrite=1
-nProc=8
+nProc=10
 
 for ((d=$dis_num_in; d<$dis_num_fin; d+=$dis_per_thread));
 do
