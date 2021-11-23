@@ -1,3 +1,10 @@
+#  ---------------------------------------------------------------------------------------------  #
+#
+#   The program evolves a state in the Hilbert space of domain walls with a single defect.
+#   Needed for some checks.
+#
+#  ---------------------------------------------------------------------------------------------  #
+
 import numpy as np
 from scipy.linalg import eigh,expm
 from matplotlib import pyplot as plt

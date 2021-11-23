@@ -8,6 +8,7 @@ import numpy as np
 from scipy import sparse
 from scipy.linalg import eigh
 from scipy.sparse.linalg import eigsh
+from partitions import *
 from matplotlib import pyplot as plt
 
 plt.rcParams["figure.figsize"] = [6,6]
@@ -19,13 +20,6 @@ instring = input("").split(' ')
 N = int( instring[0] )
 
 
-p = np.array((1, 1, 2, 3, 5, 7, 11, 15, 22, 30, 42, 56, 77, 101, 135, 176, 231, 297, 385, 490, 627, \
-     792, 1002, 1255, 1575, 1958, 2436, 3010, 3718, 4565, 5604, 6842, 8349, 10143, 12310, 14883, 17977,\
-     21637, 26015, 31185, 37338, 44583, 53174, 63261, 75175, 89134, 105558, 124754, 147273, 173525))
-
-dim = np.cumsum(p)
-
-    
 #  -------------------------------------  load Hamiltonian  ------------------------------------  #
 
 filename = "Hamiltonians/clean_N%d.txt" % N

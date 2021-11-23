@@ -13,7 +13,9 @@ import numpy as np
 from scipy import sparse
 from scipy.linalg import eigh,expm
 from scipy.sparse.linalg import eigsh
-#from LanczosRoutines import *
+import numba as nb
+from partitions import *
+from LanczosRoutines import *
 
 instring = input("").split(' ')
 
@@ -35,11 +37,13 @@ dis_num_in = int( instring[5] )
 dis_num_fin = int( instring[6] )
 
 
-p = np.array((1, 1, 2, 3, 5, 7, 11, 15, 22, 30, 42, 56, 77, 101, 135, 176, 231, 297, 385, 490, 627, \
-     792, 1002, 1255, 1575, 1958, 2436, 3010, 3718, 4565, 5604, 6842, 8349, 10143, 12310, 14883, 17977,\
-     21637, 26015, 31185, 37338, 44583, 53174, 63261, 75175, 89134, 105558, 124754, 147273, 173525))
+#  ---------------------------------  build all the partitions  --------------------------------  #
 
-dim = np.cumsum(p)
+levels = [np.array(((0,),))]
+for n in range(1,N+1):
+    levels.append( np.array( [x for x in generate_partitions(n)] ) )
+
+levels = tuple(levels)
 
 
 #  ------------------------------------  load hopping terms  -----------------------------------  #
@@ -58,6 +62,84 @@ H0 = sparse.csr_matrix((np.ones(len(row_ind)), (row_ind, col_ind)), shape=(dim[N
 H0 += H0.T
 
 
+#  ------------------------  operators for quantifying the removed area  -----------------------  #
+
+# (diagonal) operator that gives the height on the vertical line for the tilted Young diagrams
+@nb.njit
+def vertical_height():
+    vh = np.zeros(dim[N], dtype=np.float_)
+    
+    # sum over all basis states (split in n and i)
+    for n in range(1,N+1):
+        for i in range(p[n]):
+            k = dim[n-1]+i
+            
+            # check how many rows are longer than their index (i.e. one can fit in a square)
+            r = 0
+            while r<n and levels[n][i,r]>r:
+                r += 1
+            
+            vh[k] = r
+            
+    return vh
+
+vh_op = vertical_height()
+
+
+# (diagonal) operator that gives the length on the left side for the tilted Young diagrams
+@nb.njit
+def side1_length():
+    sl = np.zeros(dim[N], dtype=np.float_)
+    
+    # sum over all basis states (split in n and i)
+    for n in range(1,N+1):
+        for i in range(p[n]):
+            k = dim[n-1]+i
+            
+            # the lateral length is the 0th entry of the level
+            sl[k] = levels[n][i,0]
+            
+    return sl
+
+sl1_op = side1_length()
+
+
+# (diagonal) operator that gives the length on the right side for the tilted Young diagrams
+@nb.njit
+def side2_length():
+    sl = np.zeros(dim[N], dtype=np.float_)
+    
+    # sum over all basis states (split in n and i)
+    for n in range(1,N+1):
+        for i in range(p[n]):
+            k = dim[n-1]+i
+            
+            # the lateral length is the first 0 entry
+            sl[k] = np.where(levels[n][i]==0)[0][0]
+     
+    return sl
+
+sl2_op = side2_length()
+
+
+# (diagonal) operator that gives the area of the Young diagrams
+area_op = np.zeros(dim[N], dtype=np.float_)
+for n in range(1,N+1):
+    area_op[dim[n-1]:dim[n]] = n
+
+
+#  ---------------------------  store stuff in the array of results  ---------------------------  #
+
+def store(it,v):
+    toSave[it//save_step,0] = it*dt
+    
+    v2 = np.abs(v)**2
+    toSave[it//save_step,1] = np.dot(v2, sl1_op)
+    toSave[it//save_step,2] = np.dot(v2, vh_op)
+    toSave[it//save_step,3] = np.dot(v2, sl2_op)
+    toSave[it//save_step,4] = np.dot(v2, area_op)
+
+
 #  -------------------------------------------  main  ------------------------------------------  #
 
 for dis in range(dis_num_in,dis_num_fin):
@@ -73,15 +155,17 @@ for dis in range(dis_num_in,dis_num_fin):
     v[0] = 1
  
  
-    # time evolve the Hamiltonian
+    # evolutor from the Hamiltonian
     # sparse
     #applyH = lambda v: 1j * H.dot(v)
     # dense
     H = H.todense()
     U = expm(-1j*H*dt)
     
-    # array to store the evolved array
-    vStore = np.zeros((t_steps//save_step,dim[N]+1))
+    
+    # array to save observables
+    toSave = np.zeros((int(Tfin/save_dt),5)) # t lateral1 vertical lateral2 area 
+    store(0,v)
 
     for it in range(1,t_steps):
         # sparse
@@ -89,19 +173,14 @@ for dis in range(dis_num_in,dis_num_fin):
         # dense
         v = U.dot(v)
         
-    
         if it%save_step == 0:
-            vStore[it//save_step-1,0] = it*dt
-            vStore[it//save_step-1,1:] = np.abs(v)**2
-    
-    vStore[t_steps//save_step-1,0] = Tfin
-    vStore[t_steps//save_step-1,1:] = np.abs(v)**2
-
+            store(it,v)
+            
 
     # save to file
     filename = "Results/tEv_N%d_e%.4f_d%d.txt" % (N, epsilon, dis)
-    head = "t |v[0]|^2 |v[1]|^2 ..."
-    np.savetxt(filename, vStore, header=head)
+    head = "t lat1 vert lat2 area"
+    np.savetxt(filename, toSave, header=head)
 
     
 

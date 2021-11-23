@@ -45,19 +45,13 @@ Program nicely given us from Vittorio Vitale & Alessadro Santini. It contains th
 ---
 ### masterMissing2.sh
 
-Shell to send multiple jobs on Ulysses, on partition regular 2, to fill voids (i.e. jobs that haven't delivered the final output). It modifies and executes `runMissing2.py` and `runMissing2-ctrl.py`.
+Shell to send multiple jobs on Ulysses, on partition regular {1,2}, to fill voids (i.e. jobs that haven't delivered the final output). It modifies and executes `runMissing{1,2}.py` and `runMissing{1,2}-ctrl.py`.
 
 
 ---
-### masterUlysses1.sh
+### masterUlysses{1,2}.sh
 
-Shell to send multiple jobs on Ulysses, on partition regular 1. It modifies and executes `runUlysses1.py`.
-
-
----
-### masterUlysses2.sh
-
-Shell to send multiple jobs on Ulysses, on partition regular 2. It modifies and executes `runUlysses2.py`.
+Shell to send multiple jobs on Ulysses, on partition regular {1,2}. It modifies and executes `runUlysses{1,2}.py`.
 
 
 ---
@@ -75,13 +69,43 @@ The program samples Young diagrams by successively adding/removing boxes. The pr
 ---
 ### partitions.py
 
-Various trials on the partition adjacency matrix
+The program contains routines for building the Young diagrams.
 
 
 ---
 ### plot\_{...}.py
 
 Just to plot results.
+
+
+---
+### runED.sh
+
+Shell to run jobs on workstations.
+
+
+---
+### runSave\_r.sh
+
+Shell to run save\_r.py on Ulysses.
+
+
+---
+### runMissing{1,2}.sh
+
+Shell to run the single job on Ulysses, partition regular {1,2}, to fill voids (i.e. jobs that haven't delivered the final output).
+
+
+---
+### runMissing{1,2}-ctrl.sh
+
+Shell to help the correct functioning of `runMissing{1,2}.sh`.
+
+
+---
+### runUlysses{1,2}.sh
+
+Shell to run the single job on Ulysses, partition regular {1,2}.
 
 
 ---
@@ -129,7 +153,6 @@ The program evolves a state on the Young diagram lattice.
 - It evolves an initial state via Krylov (from LanczosRoutines.py), or full exact diagonalization.
 
 
-
 ---
 ### time_fit.py
 
@@ -137,36 +160,6 @@ Just to estimate how long computing times become.
 
 
 ---
-### runED.sh
+### vertical\_domain.py
 
-Shell to run jobs on workstations.
-
-
----
-### runSave\_r.sh
-
-Shell to run save\_r.py on Ulysses.
-
-
----
-### runMissing2.sh
-
-Shell to run the single job on Ulysses, partition regular 2, to fill voids (i.e. jobs that haven't delivered the final output).
-
-
----
-### runMissing2-ctrl.sh
-
-Shell to help the correct functioning of `runMissing2.sh`.
-
-
----
-### runUlysses1.sh
-
-Shell to run the single job on Ulysses, partition regular 1.
-
-
----
-### runUlysses2.sh
-
-Shell to run the single job on Ulysses, partition regular 2.
+The program evolves a state in the Hilbert space of domain walls with a single defect. Needed for some checks.
