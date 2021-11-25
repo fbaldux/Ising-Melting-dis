@@ -121,7 +121,7 @@ do
     if [[ ! -f Results_N${N}_e${eps}/spec_N${N}_e${eps}.0000_d$d.txt ]];
     then
         count=$(( $count+1 ))
-        echo $N $eps $eig_frac $d $(( $d+1 )) $overwrite $nProc | python3 spectrum_sparse.py 1>>log 2>>err_n${N}_e${eps} &
+        python3 spectrum_sparse.py $N $eps $eig_frac $d $(( $d+1 )) $overwrite $nProc 1>>log 2>>err_n${N}_e${eps} &
     fi
 done
 

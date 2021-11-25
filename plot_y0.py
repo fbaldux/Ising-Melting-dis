@@ -2,6 +2,7 @@
 #   ...
 #  ---------------------------------------------------------------------------------------------  #
 
+import sys
 import numpy as np
 import numba as nb
 from partitions import *
@@ -9,11 +10,9 @@ from matplotlib import pyplot as plt
 from matplotlib import cm
 
 
-instring = input("").split(' ')
-
-N = int( instring[0] )
-epsilon = float( instring[1] )
-dis_num = int( instring[2] )
+N = int( sys.argv[1] )
+epsilon = float( sys.argv[2] )
+dis_num = int( sys.argv[3] )
 
 
 #  ---------------------------------  build all the partitions  --------------------------------  #

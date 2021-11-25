@@ -9,6 +9,7 @@
 #
 #  ---------------------------------------------------------------------------------------------  #
 
+import sys
 import numpy as np
 from scipy import sparse
 from scipy.linalg import eigh,expm
@@ -17,24 +18,24 @@ import numba as nb
 from partitions import *
 from LanczosRoutines import *
 
-instring = input("").split(' ')
+sys.argv = input("").split(' ')
 
 # system size
-N = int( instring[0] )
+N = int( sys.argv[1] )
 
 # disorder
-epsilon = float( instring[1] )
+epsilon = float( sys.argv[2] )
 
 # time evolution parameters
-Tfin = float( instring[2] )
-dt = float( instring[3] )
+Tfin = float( sys.argv[3] )
+dt = float( sys.argv[4] )
 t_steps = int( Tfin/dt )
-save_dt = float( instring[4] )
+save_dt = float( sys.argv[5] )
 save_step = int( save_dt/dt )
 
 # number of disorder instances
-dis_num_in = int( instring[5] )
-dis_num_fin = int( instring[6] )
+dis_num_in = int( sys.argv[6] )
+dis_num_fin = int( sys.argv[7] )
 
 
 #  ---------------------------------  build all the partitions  --------------------------------  #

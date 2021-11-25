@@ -13,13 +13,12 @@
 #
 #  ---------------------------------------------------------------------------------------------  #
 
+import sys
 import numpy as np
 import numba as nb
 from partitions import *
 
-instring = input("").split(' ')
-
-N = int( instring[0] )
+N = int( sys.argv[1] )
 
 
 #  ----------------------------------  build adjacency matrix  ---------------------------------  #

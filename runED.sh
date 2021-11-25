@@ -27,16 +27,14 @@ do
     do
         if [[ ! -f stop ]];
         then
-            #echo $N $eps $dis_num_in $dis_num_fin $overwrite $nProc | python3 spectrum.py 1>>log 2>>err
-            #echo $N $eps $eig_frac $dis_num_in $dis_num_fin $overwrite $nProc | python3 spectrum_sparse.py 1>>log 2>>err
+            #python3 spectrum.py $N $eps $dis_num_in $dis_num_fin $overwrite $nProc 1>>log 2>>err
+            #python3 spectrum_sparse.py $N $eps $eig_frac $dis_num_in $dis_num_fin $overwrite $nProc 1>>log 2>>err
         
-            echo $N $eps $Tfin $dt $save_dt $dis_num_in $dis_num_fin | python3 tEv.py #1>>log.txt 2>>err.txt
+            python3 tEv.py $N $eps $Tfin $dt $save_dt $dis_num_in $dis_num_fin #1>>log.txt 2>>err.txt
         
-            #echo $N $eps $dis_num_fin | python3 plot_y0.py
         fi
     done
     #)&
 done
 
 
-#echo $N $eps $dis_num | python3 plot_mag_2d.py

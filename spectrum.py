@@ -9,23 +9,23 @@
 #
 #  ---------------------------------------------------------------------------------------------  #
 
-instring = input("").split(' ')
+import sys
 
 # system size
-N = int( instring[0] )
+N = int( sys.argv[1] )
 
 # disorder
-epsilon = float( instring[1] )
+epsilon = float( sys.argv[2] )
 
 # number of disorder instances
-dis_num_in = int( instring[2] )
-dis_num_fin = int( instring[3] )
+dis_num_in = int( sys.argv[3] )
+dis_num_fin = int( sys.argv[4] )
 
 # whether to overwrite existing files
-overwrite = int( instring[4] )
+overwrite = int( sys.argv[5] )
 
 # number of processors to use
-nProc = int( instring[5] )
+nProc = int( sys.argv[6] )
 
 
 import os

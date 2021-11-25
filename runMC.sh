@@ -14,12 +14,12 @@ then
     #done
     #wait
     
-    echo $N $p $rep_num | python3 MC.py
+    python3 MC.py $N $p $rep_num
 fi
 
 if (( $plot == 1 ))
 then
-    echo $N $p $rep_num | python3 plot_MC.py &
+    python3 plot_MC.py $N $p $rep_num &
 fi
 
 #echo $N $p $rep_num | python3 plot_MC.py &

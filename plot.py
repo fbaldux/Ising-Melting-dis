@@ -4,6 +4,7 @@
 #
 #  ---------------------------------------------------------------------------------------------  #
 
+import sys
 import numpy as np
 from scipy import sparse
 from scipy.linalg import eigh
@@ -15,9 +16,7 @@ plt.rcParams["figure.figsize"] = [6,6]
 
 fig, ax = plt.subplots()
 
-instring = input("").split(' ')
-
-N = int( instring[0] )
+N = int( sys.argv[1] )
 
 
 #  -------------------------------------  load Hamiltonian  ------------------------------------  #

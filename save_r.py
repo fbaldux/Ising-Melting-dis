@@ -5,19 +5,17 @@
 #
 #  ---------------------------------------------------------------------------------------------  #
 
-
+import sys
 import numpy as np
 
-instring = input("").split(' ')
-
 # system size
-N = int( instring[0] )
+N = int( sys.argv[1] )
 
 # disorder
-eps = float( instring[1] )
+eps = float( sys.argv[2] )
 
 # number of disorder instances
-dis_num = int( instring[2] )
+dis_num = int( sys.argv[3] )
 
 sparse = False
 

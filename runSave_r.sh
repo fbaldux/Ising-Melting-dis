@@ -104,9 +104,7 @@ cd $SLURM_SUBMIT_DIR
 
 for eps in $(seq 1 14);
 do
-    echo 22 $eps 10000 | python3 save_r.py 1>>log 2>>err &
-    echo 24 $eps 1100 | python3 save_r.py 1>>log 2>>err &
-    echo 26 $eps 1100 | python3 save_r.py 1>>log 2>>err &
+    python3 save_r.py 22 $eps 10000 1>>log 2>>err &
 done
 
 # ==== END OF JOB COMMANDS ===== #

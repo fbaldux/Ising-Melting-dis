@@ -4,6 +4,7 @@
 #
 #  ---------------------------------------------------------------------------------------------  #
 
+import sys
 import numpy as np
 import numba as nb
 from scipy.special import erf
@@ -13,17 +14,14 @@ from matplotlib import cm
 
 plt.rcParams["figure.figsize"] = [8,4]
 
-instring = input("").split(' ')
-
-
 # system size
-N = int( float(instring[0]) )
+N = int( float(sys.argv[1]) )
 
 # probability to add a box
-pForw = float( instring[1] )
+pForw = float( sys.argv[2] )
 
 # average over disorder
-rep_num = int( instring[2] )
+rep_num = int( sys.argv[3] )
 
 cols = cm.get_cmap('turbo', 10)
 

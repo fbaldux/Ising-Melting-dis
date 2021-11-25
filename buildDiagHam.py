@@ -12,16 +12,15 @@
 #
 #  ---------------------------------------------------------------------------------------------  #
 
+import sys
 import numpy as np
 import numba as nb
 rng = np.random.default_rng()
 from partitions import *
 
-instring = input("").split(' ')
-
-N = int( instring[0] )
-dis_num_in = int( instring[1] )
-dis_num_fin = int( instring[2] )
+N = int( sys.argv[1] )
+dis_num_in = int( sys.argv[2] )
+dis_num_fin = int( sys.argv[3] )
 
 
 #  -------------------------------  compute the matrix elements  -------------------------------  #
