@@ -41,7 +41,7 @@ import numpy as np
 from scipy import sparse
 from scipy.sparse.linalg import eigsh
 from partitions import *
-
+from time import time
 
 #  ------------------------------------  load hopping terms  -----------------------------------  #
 
@@ -72,10 +72,14 @@ for dis in range(dis_num_in,dis_num_fin):
         filename = "Hamiltonians/rand_N%d_d%d.txt" % (N,dis)
         diag = np.loadtxt(filename)
         H = H0 + epsilon * sparse.diags(diag)
- 
+        
+        start = time()
+        
         # sparse
         eigvals, eigvecs = eigsh(H, k=dim[N]//eig_frac, which='SM')
         eigvecs = eigvecs.T
+        
+        print(dim[N]//eig_frac, time()-start)
     
         # compute the IPR
         IPRs = np.sum(eigvecs**4, axis=1)
@@ -91,7 +95,7 @@ for dis in range(dis_num_in,dis_num_fin):
         np.savetxt( filename, np.vstack((eigvals, eigvecs)).T, header=head )
         """
 
-print("End spec N%d e%.4f d%d-%d" % (N,epsilon,dis_num_in,dis_num_fin))
+#print("End spec N%d e%.4f d%d-%d" % (N,epsilon,dis_num_in,dis_num_fin))
 
 
 
