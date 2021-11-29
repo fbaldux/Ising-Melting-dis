@@ -41,18 +41,8 @@ from partitions import *
 
 #  ------------------------------------  load hopping terms  -----------------------------------  #
 
-Ham_lens = np.loadtxt("ham_lengths.txt", dtype=np.int_).T
-try:
-    my_len = Ham_lens[1,Ham_lens[0]==N][0]
-except:
-    print("\nError! Hamiltonian for N=%d not built\n" % N)
-    exit(0)
-    
-filename = "Hamiltonians/clean_N38.txt"
-row_ind, col_ind = np.loadtxt(filename)[:my_len].T
-
-H0 = sparse.csr_matrix((np.ones(len(row_ind)), (row_ind, col_ind)), shape=(dim[N], dim[N]))
-H0 += H0.T
+# from partitions.py
+H0 = load_adjacency(N)
 
 
 #  -------------------------------------------  main  ------------------------------------------  #
@@ -81,6 +71,7 @@ for dis in range(dis_num_in,dis_num_fin):
         filename = "Results/spec_N%d_e%.4f_d%d.txt" % (N, epsilon, dis)
         head = "eigenvalue IPR"
         np.savetxt(filename, np.stack((eigvals, IPRs)).T, header=head)
+        
         """
         filename = "Results/spec_N%d_e%.4f_d%d.txt" % (N, epsilon, dis)
         head = "eigval eigvec[0] eigvec[1] ..." 

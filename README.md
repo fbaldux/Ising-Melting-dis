@@ -14,7 +14,13 @@ The program builds the adjacency matrix of the partitions graph as follows:
 4. In the meanwhile, it saves how many matrix elements are needed at each level n<N: in this way, all the Hamiltonians for smaller N can be loaded from the same file. 
 
 - The program uses Numba to speed up calculations.
-- The row indices and column indices are saved to a .txt file.
+- The row indices and column indices are saved to a .txt file for each level.
+
+
+---
+### buildAdj\_old?.py
+
+Old versions of buildAdj.py, to be kept only temporarily.
 
 
 ---
@@ -28,12 +34,6 @@ The program builds the diagonal part of the Hamiltonian for the partitions graph
 
 - The program uses Numba to speed up calculations.
 - The matrix elements are saved to a .txt file.
-
-
----
-### ham_lengths.txt
-
-The file containing the number of non-zero entries of the sparse adjacency matrix, up to each level N. 
 
 
 ---
@@ -99,7 +99,7 @@ Shell to run the single job on Ulysses, partition regular {1,2}, to fill voids (
 ---
 ### runMissing{1,2}-ctrl.sh
 
-Shell to help the correct functioning of `runMissing{1,2}.sh`.
+Shell to help the correct functioning of runMissing{1,2}.sh.
 
 
 ---

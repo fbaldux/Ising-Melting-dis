@@ -71,7 +71,7 @@ for n in range(1,N):
     
 #  ---------------------------------------  save to file  --------------------------------------  #
 
-filename = "Hamiltonians/clean_N%d.txt" % (n+1)
+filename = "Hamiltonians2/clean_N%d.txt" % (n+1)
 toSave = np.array((row_ind,col_ind)).T
 head = "row col"
 np.savetxt(filename, toSave, header=head, fmt='%d')
