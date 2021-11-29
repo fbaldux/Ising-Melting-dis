@@ -1,3 +1,0 @@
-# N nonzero_elements
-2 3
-3 7

@@ -13,18 +13,15 @@ from matplotlib import cm
 #import numba as nb
 
 
-N = 160
+N = 320
 dim = N*(N-1)//2
 
-Tfin = 500.
+Tfin = 2.
 dt = 0.2
 t_steps = int( Tfin/dt ) + 1
 
-save_dt = 2
+save_dt = 0.2
 save_step = int( save_dt/dt )
-
-fig, ax = plt.subplots()
-#cols = cm.get_cmap('magma', 10)
 
 
 #  ------------------------------------  build Hamiltonian  ------------------------------------  #
@@ -49,11 +46,6 @@ for k in range(dim):
 applyH = lambda v: 1j * H.dot(v)
 #U = expm(-1j*H*dt)
 
-"""
-ax.imshow(H, cmap='magma_r')
-plt.show()
-exit(0)
-"""
 
 #  ---------------------------------------  time evolve  ---------------------------------------  #
 
@@ -84,6 +76,9 @@ for it in range(1,t_steps):
 np.savetxt("Results/DW_N%d.txt" % (N), np.stack((np.arange(len(IPR))*save_dt,IPR)).T, header="t IPR")
 
 """
+fig, ax = plt.subplots()
+#cols = cm.get_cmap('magma', 10)
+
 ax.plot(np.arange(t_steps)*dt, IPR, '-', c='black')
 
 ax.set_xlabel(r"$t$")

@@ -3,11 +3,11 @@ from matplotlib import pyplot as plt
 
 
 ###########################################  BUILD ADJ  ###########################################
-"""
-#  --------------------  Python  --------------------  #
-nP, tP = np.loadtxt("a.txt").T
 
-plt.plot(nP, tP, '.', c='black', label="Python")
+#  --------------------  stupid  --------------------  #
+nP, tP = np.loadtxt("t2.txt").T
+
+plt.plot(nP, tP, '.', c='black', label="no hash")
 
 cut = -9
 fit = np.polyfit(nP[cut:], np.log(tP[cut:]), 1)
@@ -16,13 +16,13 @@ x = np.arange(nP[cut], nP[-1], 0.1)
 y = np.exp( fit[0]*x + fit[1])
 plt.plot(x, y, '--', c='black')
 
-print("Python:  time ~ %.2e exp( %.2f n ) seconds" % (np.exp(fit[1]), fit[0]))
+print("stupid:  time ~ %.2e exp( %.2f n ) seconds" % (np.exp(fit[1]), fit[0]))
 
-#  --------------------  Numba  --------------------  #
+#  --------------------  hash  --------------------  #
 
-nN, tN = np.loadtxt("b.txt").T
+nN, tN = np.loadtxt("t3.txt").T
 
-plt.plot(nN, tN, '+', c='red', label="Numba")
+plt.plot(nN, tN, '+', c='red', label="hash")
 
 cut = -9
 fit = np.polyfit(nN[cut:], np.log(tN[cut:]), 1)
@@ -31,7 +31,7 @@ x = np.arange(nN[cut], nN[-1], 0.1)
 y = np.exp( fit[0]*x + fit[1])
 plt.plot(x, y, '--', c='red')
 
-print("Numba:  time ~ %.2e exp( %.2f n ) seconds" % (np.exp(fit[1]), fit[0]))
+print("hash:  time ~ %.2e exp( %.2f n ) seconds" % (np.exp(fit[1]), fit[0]))
 
 
 #plt.title("time ~ %.2e exp( %.2f n ) seconds" % (np.exp(fit[1]), fit[0]))
@@ -43,7 +43,7 @@ plt.yscale("log")
 
 plt.legend()
 plt.show()
-"""
+
 
 #############################################  KRYLOV  ############################################
 """
@@ -69,7 +69,7 @@ plt.show()
 
 
 ###############################################  ED  ##############################################
-
+"""
 
 # 100 t_steps
 data = np.loadtxt("ts_ED.txt").T
@@ -83,7 +83,7 @@ plt.yscale("log")
 
 plt.show()
 
-
+"""
 
 
 
