@@ -150,7 +150,18 @@ The program evolves a state on the Young diagram lattice.
 - It loads the non-zero entries of the adjacency matrix from the biggest Hamiltonian/clean_N#.txt file.
 - It loads the diagonal entries of the Hamiltonian matrix from the files Hamiltonian/rand...
 - It builds sparse Hamiltonian from the entries.
-- It evolves an initial state via Krylov (from LanczosRoutines.py), or full exact diagonalization.
+- It evolves an initial state via full exact diagonalization.
+
+
+---
+### tEv\_sparse.py
+
+The program evolves a state on the Young diagram lattice.
+
+- It loads the non-zero entries of the adjacency matrix from the biggest Hamiltonian/clean_N#.txt file.
+- It loads the diagonal entries of the Hamiltonian matrix from the files Hamiltonian/rand...
+- It builds sparse Hamiltonian from the entries.
+- It evolves an initial state via Krylov (from LanczosRoutines.py).
 
 
 ---

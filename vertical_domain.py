@@ -7,20 +7,21 @@
 
 import numpy as np
 from scipy.linalg import eigh,expm
+from LanczosRoutines import *
 from matplotlib import pyplot as plt
 from matplotlib import cm
 #import numba as nb
 
 
-N = 40
+N = 160
 dim = N*(N-1)//2
 
-Tfin = 100.
-dt = 0.5
+Tfin = 500.
+dt = 0.2
 t_steps = int( Tfin/dt ) + 1
 
-#save_dt = 2
-#save_step = int( save_dt/dt )
+save_dt = 2
+save_step = int( save_dt/dt )
 
 fig, ax = plt.subplots()
 #cols = cm.get_cmap('magma', 10)
@@ -32,9 +33,9 @@ fig, ax = plt.subplots()
 states = []
 for a in range(N-1):
     for b in range(a+1,N):
-        states += [(a,b)]
-    
-states = np.array(states)
+        states.append( (a,b) )
+
+states = np.array(states, dtype=np.int_)
 
 
 # build the adjacency matrix
@@ -45,7 +46,8 @@ for k in range(dim):
             H[k,l] = 1.
             H[l,k] = 1.
 
-U = expm(-1j*H*dt)
+applyH = lambda v: 1j * H.dot(v)
+#U = expm(-1j*H*dt)
 
 """
 ax.imshow(H, cmap='magma_r')
@@ -57,25 +59,29 @@ exit(0)
 
 
 v = np.zeros(dim)
-v[1] = 1
+k = 0
+while k < dim:
+    if states[k,0]==N//2 and states[k,1]==N//2+1:
+        break
+    else:
+        k += 1
+v[k] = 1
 
-IPR = np.zeros(t_steps)
+IPR = np.zeros(t_steps//save_step + 1)
 IPR[0] = 1.
 
-c = 0
+c = 1
 for it in range(1,t_steps):
-    v = U.dot(v)
-    
-    IPR[it] = np.sum(np.abs(v)**4)
-    
-    #if it%save_step == 0:
-        #ax.plot(np.arange(dim), np.abs(v)**2, '.', c=cols(c), label=it*dt)
-    #    c += 1
+    #v = U.dot(v)
+    v = expm_krylov_lanczos(applyH, v, dt, numiter=100)
+        
+    if it%save_step == 0:
+        IPR[c] = np.sum(np.abs(v)**4)
+        
+        c += 1
 
-# final time
-#ax.plot(np.arange(dim), np.abs(v)**2, '.', c=cols(c), label=it*dt)
 
-np.savetxt("Results/DW_N%d.txt" % (N), np.stack((np.arange(t_steps)*dt,IPR)).T, header="t IPR")
+np.savetxt("Results/DW_N%d.txt" % (N), np.stack((np.arange(len(IPR))*save_dt,IPR)).T, header="t IPR")
 
 """
 ax.plot(np.arange(t_steps)*dt, IPR, '-', c='black')
@@ -90,7 +96,6 @@ ax.legend()
 plt.show()
 
 """
-
 
 
 

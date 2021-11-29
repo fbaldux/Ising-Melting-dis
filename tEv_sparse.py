@@ -5,7 +5,7 @@
 #     file.
 #   - It loads the diagonal entries of the Hamiltonian matrix from the files Hamiltonian/rand...
 #   - It builds the sparse Hamiltonian from the entries.
-#   - It evolves an initial state via full exact diagonalization.
+#   - It evolves an initial state via Krylov (from LanczosRoutines.py).
 #
 #  ---------------------------------------------------------------------------------------------  #
 
@@ -134,14 +134,11 @@ def side2_length():
 sl2_op = side2_length()
 
 
-
 # (diagonal) operator that gives the area of the Young diagrams
 area_op = np.zeros(dim[N], dtype=np.float_)
 for n in range(1,N+1):
     area_op[dim[n-1]:dim[n]] = n
 
-print(time()-start)
-exit(0)
 
 #  ---------------------------  store stuff in the array of results  ---------------------------  #
 
@@ -170,9 +167,8 @@ for dis in range(dis_num_in,dis_num_fin):
     v[0] = 1
  
  
-    # evolutor from the Hamiltonian
-    H = H.todense()
-    U = expm(-1j*H*dt)
+    # to evolve the Hamiltonian we need the abstract function that applies H to a vector
+    applyH = lambda v: 1j * H.dot(v)
     
     
     # array to save observables
@@ -180,8 +176,8 @@ for dis in range(dis_num_in,dis_num_fin):
     store(0,v)
 
     for it in range(1,t_steps):
-        v = U.dot(v)
-        
+        v = expm_krylov_lanczos(applyH, v, dt, numiter=100)
+      
         if it%save_step == 0:
             store(it,v)
             
@@ -192,7 +188,8 @@ for dis in range(dis_num_in,dis_num_fin):
     np.savetxt(filename, toSave, header=head)
 
     
-
+#print("N %d t_steps %d time %f" % (N, t_steps, time()-start))
+print(N, t_steps, time()-start)
 
 
 

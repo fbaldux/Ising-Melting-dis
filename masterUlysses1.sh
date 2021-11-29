@@ -1,7 +1,7 @@
 # NB: dis_per_thread deve essere divisibile per il numero di core etc.
-dis_num_in=240
-dis_num_fin=480
-dis_per_thread=12
+dis_num_in=0
+dis_num_fin=4
+dis_per_thread=4
 
 for ((d=$dis_num_in; d<$dis_num_fin; d+=$dis_per_thread));
 do

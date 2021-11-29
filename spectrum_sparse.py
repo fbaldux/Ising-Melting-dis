@@ -10,7 +10,7 @@
 #
 #  ---------------------------------------------------------------------------------------------  #
 
-import sys
+import sys, os
 
 # system size
 N = int( sys.argv[1] )
@@ -32,7 +32,6 @@ overwrite = int( sys.argv[6] )
 nProc = int( sys.argv[7] )
 
 
-import os
 os.environ["MKL_NUM_THREADS"] = str(nProc)
 os.environ["NUMEXPR_NUM_THREADS"] = str(nProc)
 os.environ["OMP_NUM_THREADS"] = str(nProc)
