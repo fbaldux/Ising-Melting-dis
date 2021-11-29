@@ -4,7 +4,7 @@ from matplotlib import cm
 #import numba as nb
 
 
-Ns = np.array((20,40,80,))
+Ns = np.array((20,40,80,160,320))
 
 fig, ax = plt.subplots()
 cols = cm.get_cmap('magma', len(Ns)+1)

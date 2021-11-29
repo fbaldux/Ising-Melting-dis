@@ -9,7 +9,8 @@ import sys
 import numpy as np
 from scipy.linalg import expm
 from scipy import sparse
-from LanczosRoutines import *
+from scipy.sparse.linalg import expm_multiply
+#from LanczosRoutines import *
 from time import time
 
 #  ------------------------------------  program constants  ------------------------------------  #
@@ -28,6 +29,7 @@ dt = float( sys.argv[3] )
 t_steps = int( Tfin/dt )
 save_dt = float( sys.argv[4] )
 save_step = int( save_dt/dt )
+save_steps = int(Tfin/save_dt)
 
 start = time()
 
@@ -132,22 +134,16 @@ applyH = lambda v: 1j * H.dot(v)
 v = np.zeros(dim)
 v[0] = 1.
 
-# array to save observables
-toSave = np.zeros((int(Tfin/save_dt)+1,L+1)) # t m[0] m[1] ... m[L-1]
-toSave[0,1:] = np.einsum('ab,b->a', m, np.abs(v)**2)
+# time evolve
+vt = expm_multiply(-1j*H*dt, v, start=0, stop=t_steps, num=int(Tfin/save_dt)+1)
 
-c = 1
-for it in range(1,t_steps+1):
-    # dense
-    #v = U.dot(v)
-    # sparse
-    v = expm_krylov_lanczos(applyH, v, dt, numiter=100)
-    
-    
-    if it%save_step == 0:
-        toSave[c,0] = it*dt
-        toSave[c,1:] = np.einsum('ab,b->a', m, np.abs(v)**2)
-        c += 1
+
+# array to save observables
+toSave = np.zeros((save_steps+1,L+1)) # t m[0] m[1] ... m[L-1]
+
+for it in range(save_steps+1):
+    toSave[it,0] = it*save_dt
+    toSave[it,1:] = np.einsum('ab,b->a', m, np.abs(vt[it])**2)
 
 
 # save to file
