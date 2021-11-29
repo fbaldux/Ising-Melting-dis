@@ -15,7 +15,7 @@ do
         sed "s/ENNE/$N/g;s/EPSILON/$eps/g;s/DIS_IN/$DIS_IN/g;s/DIS_FIN/$DIS_FIN/g;" runMissing1-ctrl.sh > temp.sh        
         bash temp.sh
         
-        sleep 1
+        #sleep 1
         
         DIS_IN=$(more final) 
         

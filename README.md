@@ -18,12 +18,6 @@ The program builds the adjacency matrix of the partitions graph as follows:
 
 
 ---
-### buildAdj\_old?.py
-
-Old versions of buildAdj.py, to be kept only temporarily.
-
-
----
 ### buildDiagHam.py
 
 The program builds the diagonal part of the Hamiltonian for the partitions graph. It proceeds as follows:
@@ -143,6 +137,20 @@ The program diagonalizes the disordered, Young graph Hamiltonian.
 
 
 ---
+### strip.py
+
+The program evolves a state in the Hilbert space of a strip of length L.  
+Needed for some checks.
+
+
+---
+### strip\_full.py
+
+The program evolves a state in the Hilbert space of a strip of length L.  
+Needed for some checks.
+
+
+---
 ### tEv.py
 
 The program evolves a state on the Young diagram lattice.
@@ -171,6 +179,7 @@ Just to estimate how long computing times become.
 
 
 ---
-### vertical\_domain.py
+### Clean/vertical\_domain.py
 
-The program evolves a state in the Hilbert space of domain walls with a single defect. Needed for some checks.
+The program evolves a state in the Hilbert space of domain walls with a single defect.  
+Needed for some checks.

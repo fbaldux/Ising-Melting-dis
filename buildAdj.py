@@ -31,7 +31,7 @@ if Nin == 0:
 #  ------------------------------------  create dictionary  ------------------------------------  #
 
 def create_dict(l):
-    l_string = [''.join([str(num) for num in x]) for x in l]
+    l_string = [','.join([str(num) for num in x]) for x in l]
     
     d = {l_string[i]:i for i in range(len(l_string))}
 
@@ -70,7 +70,7 @@ def update_adj(l, d_next, n):
         NN = [x for x in nearest_neigh(l[i])]
         
         # convert NN into strings for hashing
-        NN_string = [''.join([str(y) for y in x]) for x in NN]
+        NN_string = [','.join([str(y) for y in x]) for x in NN]
         
         for s in NN_string:
             row_ind.append(dim[n-1]+i)
@@ -83,7 +83,7 @@ def update_adj(l, d_next, n):
 
 def save_adj(n,row_ind,col_ind):
     
-    filename = "Hamiltonians/clean_N%d.txt" % n
+    filename = "Hamiltonians2/clean_N%d.txt" % n
     toSave = np.array((row_ind,col_ind)).T
     head = "row col"
     np.savetxt(filename, toSave, header=head, fmt='%d')

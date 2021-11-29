@@ -14,17 +14,17 @@ nProc=7
 for N in $(seq 11 2 11);
 do    
     #(
-    #python3 buildDiagHam.py $N $dis_num_in $dis_num_fin 1>>log 2>>err
+    python3 buildDiagHam.py $N $dis_num_in $dis_num_fin 1>>log 2>>err
   
     for eps in $(seq 6 1 6);
     do
         if [[ ! -f stop ]];
         then
             #python3 spectrum.py $N $eps $dis_num_in $dis_num_fin $overwrite $nProc 1>>log 2>>err
-            #python3 spectrum_sparse.py $N $eps $eig_frac $dis_num_in $dis_num_fin $overwrite $nProc 1>>log 2>>err
+            python3 spectrum_sparse.py $N $eps $eig_frac $dis_num_in $dis_num_fin $overwrite $nProc 1>>log 2>>err
             
             #python3 tEv.py $N $eps $Tfin $dt $save_dt $dis_num_in $dis_num_fin $nProc #1>>log 2>>err
-            python3 tEv_sparse.py $N $eps $Tfin $dt $save_dt $dis_num_in $dis_num_fin $nProc #1>>log #2>>err
+            #python3 tEv_sparse.py $N $eps $Tfin $dt $save_dt $dis_num_in $dis_num_fin $nProc #1>>log #2>>err
                         
         fi
         
