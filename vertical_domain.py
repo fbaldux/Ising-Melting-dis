@@ -125,7 +125,7 @@ for it in range(1,t_steps):
 """
 
 # sparse
-vt = expm_multiply(-1j*H*dt, v, start=0, stop=t_steps, num=int(Tfin/save_dt)+1)
+vt = expm_multiply(-1j*H*dt, v, start=0, stop=t_steps, num=save_steps+1)
 
 for it in range(save_steps+1):
     IPR[it] = np.sum( np.abs(vt[it])**4 )
@@ -134,7 +134,7 @@ for it in range(save_steps+1):
 #  ---------------------------------------  save to file  --------------------------------------  #
 
 filename = "Results/DW_N%d.txt" % N
-toSave = np.stack((np.arange(save_steps+1)*save_dt,IPR)).T
+toSave = np.stack( (np.arange(save_steps+1)*save_dt, IPR) ).T
 head = "t IPR"
 np.savetxt(filename, toSave, header=head)
 

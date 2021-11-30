@@ -23,6 +23,7 @@ dt = float( sys.argv[4] )
 t_steps = int( Tfin/dt )
 save_dt = float( sys.argv[5] )
 save_step = int( save_dt/dt )
+save_steps = int( Tfin/save_dt )
 
 # number of disorder instances
 dis_num_in = int( sys.argv[6] )
@@ -37,9 +38,10 @@ os.environ["OMP_NUM_THREADS"] = str(nProc)
 
 import numpy as np
 from scipy import sparse
+from scipy.sparse.linalg import expm_multiply
 import numba as nb
 from partitions import *
-from LanczosRoutines import *
+#from LanczosRoutines import *
 from time import time
 
 start = time()
@@ -158,18 +160,21 @@ for dis in range(dis_num_in,dis_num_fin):
  
  
     # to evolve the Hamiltonian we need the abstract function that applies H to a vector
-    applyH = lambda v: 1j * H.dot(v)
+    #applyH = lambda v: 1j * H.dot(v)
+    vt = expm_multiply(-1j*H*dt, v, start=0, stop=t_steps, num=save_steps+1)
     
     
-    # array to save observables
-    toSave = np.zeros((int(Tfin/save_dt),5)) # t lateral1 vertical lateral2 area 
-    store(0,v)
-
-    for it in range(1,t_steps):
-        v = expm_krylov_lanczos(applyH, v, dt, numiter=100)
-      
-        if it%save_step == 0:
-            store(it,v)
+    # store the observables
+    toSave = np.zeros((save_steps+1,5)) # t lateral1 vertical lateral2 area 
+    
+    for it in range(save_steps+1):
+        toSave[it,0] = it*save_dt
+    
+        v2 = np.abs(vt[it])**2
+        toSave[it,1] = np.dot(v2, sl1_op)
+        toSave[it,2] = np.dot(v2, vh_op)
+        toSave[it,3] = np.dot(v2, sl2_op)
+        toSave[it,4] = np.dot(v2, area_op)
             
 
     # save to file
