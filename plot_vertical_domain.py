@@ -7,8 +7,8 @@ fig, ax = plt.subplots()
 
 ##########################  ALL N  ##########################
 
-"""
-Ns = np.array((20,40,80,160,320))
+
+Ns = np.array((20,40,80,160,320,640))
 
 cols = cm.get_cmap('magma', len(Ns)+1)
 
@@ -28,10 +28,9 @@ ax.set_yscale('log')
 
 ax.legend()
 plt.show()
-"""
 
 ##########################  FIT DECAY  ##########################
-
+"""
 data = np.loadtxt("Results/DW_N320.txt").T
 
 which = (data[0]>10) & (data[0]<75)
@@ -57,7 +56,7 @@ ax.set_yscale('log')
 ax.legend()
 plt.show()
 
-
+"""
 
 
 
