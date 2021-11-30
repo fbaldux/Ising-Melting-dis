@@ -19,7 +19,8 @@ N = int( sys.argv[1] )
 epsilon = float( sys.argv[2] )
 
 # number of eigenvalues (for sparse diagonalization)
-eig_frac = int( sys.argv[3] )
+#eig_frac = int( sys.argv[3] )
+eig_num = int( sys.argv[3] )
 
 # number of disorder instances
 dis_num_in = int( sys.argv[4] )
@@ -40,6 +41,8 @@ import numpy as np
 from scipy import sparse
 from scipy.sparse.linalg import eigsh
 from partitions import *
+
+#eig_num = dim[N]//eig_frac
 
 
 #  ------------------------------------  load hopping terms  -----------------------------------  #
@@ -64,7 +67,7 @@ for dis in range(dis_num_in,dis_num_fin):
                 
         # sparse
         center = np.sum(H.diagonal())
-        eigvals, eigvecs = eigsh(H, k=dim[N]//eig_frac, which='LM', sigma=center)
+        eigvals, eigvecs = eigsh(H, k=eig_num, which='LM', sigma=center)
         eigvecs = eigvecs.T
             
         # compute the IPR

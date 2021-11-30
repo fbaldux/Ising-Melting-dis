@@ -83,7 +83,7 @@ def update_adj(l, d_next, n):
 
 def save_adj(n,row_ind,col_ind):
     
-    filename = "Hamiltonians2/clean_N%d.txt" % n
+    filename = "Hamiltonians/clean_N%d.txt" % n
     toSave = np.array((row_ind,col_ind)).T
     head = "row col"
     np.savetxt(filename, toSave, header=head, fmt='%d')
