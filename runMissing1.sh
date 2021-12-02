@@ -106,7 +106,7 @@ N=ENNE
 
 eps=EPSILON
 
-eig_frac=10
+eig_num=2000
 
 dis_num_in=DIS_IN
 dis_num_fin=DIS_FIN
@@ -121,7 +121,7 @@ do
     if [[ ! -f Results_N${N}_e${eps}/spec_N${N}_e${eps}.0000_d$d.txt ]];
     then
         count=$(( $count+1 ))
-        python3 spectrum_sparse.py $N $eps $eig_frac $d $(( $d+1 )) $overwrite $nProc 1>>log 2>>err_n${N}_e${eps} &
+        python3 spectrum_sparse.py $N $eps $eig_num $d $(( $d+1 )) $overwrite $nProc 1>>log 2>>err_n${N}_e${eps} &
     fi
 done
 

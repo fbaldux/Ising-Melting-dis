@@ -41,9 +41,10 @@ import numpy as np
 from scipy import sparse
 from scipy.sparse.linalg import eigsh
 from partitions import *
+from time import time
 
 #eig_num = dim[N]//eig_frac
-
+start = time()
 
 #  ------------------------------------  load hopping terms  -----------------------------------  #
 
@@ -62,21 +63,31 @@ for dis in range(dis_num_in,dis_num_fin):
     if not done:
         # load the disorder
         filename = "Hamiltonians/rand_N%d_d%d.txt" % (N,dis)
-        diag = np.loadtxt(filename)
-        H = H0 + epsilon * sparse.diags(diag)
+        H = H0 + epsilon * sparse.diags(np.loadtxt(filename))
                 
         # sparse
         center = np.sum(H.diagonal())
         eigvals, eigvecs = eigsh(H, k=eig_num, which='LM', sigma=center)
         eigvecs = eigvecs.T
+        eigvecs2 = eigvecs**2
+        del eigvecs, H
             
         # compute the IPR
-        IPRs = np.sum(eigvecs**4, axis=1)
+        IPRs = np.sum(eigvecs2**2, axis=1)
+        
+        # compute the KL divergence of neighbouring states
+        KL = np.zeros(eig_num)
+        KL[:-1] = np.einsum( "ab,ab->a", eigvecs2[:-1], np.log(eigvecs2[:-1]/eigvecs2[1:]) )
+        
+        # compute the participaton entropies
+        PE = - np.einsum( "ab,ab->a", eigvecs2, np.log(eigvecs2) )
+        
         
         # save to file
         filename = "Results/spec_N%d_e%.4f_d%d.txt" % (N, epsilon, dis)
-        head = "eigenvalue IPR"
-        np.savetxt(filename, np.stack((eigvals, IPRs)).T, header=head)
+        toSave = np.stack((eigvals, IPRs, KL, PE)).T
+        head = "eigenvalue IPR KL PE"
+        np.savetxt(filename, toSave, header=head)
         
         """
         filename = "Results/spec_N%d_e%.4f_d%d.txt" % (N, epsilon, dis)
@@ -85,7 +96,7 @@ for dis in range(dis_num_in,dis_num_fin):
         """
 
 print("End spec N%d e%.4f d%d-%d" % (N,epsilon,dis_num_in,dis_num_fin))
-
+#print(N, time()-start)
 
 
 

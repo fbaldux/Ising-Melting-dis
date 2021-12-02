@@ -106,22 +106,22 @@ N=ENNE
 
 eps=EPSILON
 
-eig_frac=10
+eig_num=2000
 
 dis_num_in=DIS_IN
 dis_num_fin=DIS_FIN
-dis_threads=8
+dis_threads=6
 dis_per_thread=$(( ($dis_num_fin-$dis_num_in) / $dis_threads ))
 
 overwrite=1
-nProc=8
+nProc=10
 
 for ((d=$dis_num_in; d<$dis_num_fin; d+=$dis_per_thread));
 do
     #python3 buildDiagHam.py $N $d $(( $d+$dis_per_thread )) 1>>log 2>>err_n${N}
     
     #python3 spectrum.py $N $eps $d $(( $d+$dis_per_thread )) $overwrite $nProc 1>>log 2>>err_n${N}_e${eps} &
-    python3 spectrum_sparse.py $N $eps $eig_frac $d $(( $d+$dis_per_thread )) $overwrite $nProc 1>>log 2>>err_n${N}_e${eps} &
+    python3 spectrum_sparse.py $N $eps $eig_num $d $(( $d+$dis_per_thread )) $overwrite $nProc 1>>log 2>>err_n${N}_e${eps} &
 done
 
 

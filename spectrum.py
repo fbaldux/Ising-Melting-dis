@@ -9,7 +9,7 @@
 #
 #  ---------------------------------------------------------------------------------------------  #
 
-import sys
+import sys, os
 
 # system size
 N = int( sys.argv[1] )
@@ -28,7 +28,6 @@ overwrite = int( sys.argv[5] )
 nProc = int( sys.argv[6] )
 
 
-import os
 os.environ["MKL_NUM_THREADS"] = str(nProc)
 os.environ["NUMEXPR_NUM_THREADS"] = str(nProc)
 os.environ["OMP_NUM_THREADS"] = str(nProc)
@@ -56,21 +55,30 @@ for dis in range(dis_num_in,dis_num_fin):
     if not done:
         # load the disorder
         filename = "Hamiltonians/rand_N%d_d%d.txt" % (N,dis)
-        diag = np.loadtxt(filename)
-        H = H0 + epsilon * sparse.diags(diag)
+        H = H0 + epsilon * sparse.diags(np.loadtxt(filename))
  
         # dense
-        H = H.todense()
-        eigvals, eigvecs = eigh(H)
+        eigvals, eigvecs = eigh(H.todense())
         eigvecs = eigvecs.T
+        eigvecs2 = eigvecs**2
+        del eigvecs, H
     
         # compute the IPR
-        IPRs = np.sum(eigvecs**4, axis=1)
+        IPRs = np.sum(eigvecs2**2, axis=1)
+        
+        # compute the KL divergence of neighbouring states
+        KL = np.zeros(dim[N])
+        KL[:-1] = np.einsum( "ab,ab->a", eigvecs2[:-1], np.log(eigvecs2[:-1]/eigvecs2[1:]) )
+        
+        # compute the participaton entropies
+        PE = - np.einsum( "ab,ab->a", eigvecs2, np.log(eigvecs2) )
+        
         
         # save to file
         filename = "Results/spec_N%d_e%.4f_d%d.txt" % (N, epsilon, dis)
-        head = "eigenvalue IPR"
-        np.savetxt(filename, np.stack((eigvals, IPRs)).T, header=head)
+        toSave = np.stack((eigvals, IPRs, KL, PE)).T
+        head = "eigenvalue IPR KL PE"
+        np.savetxt(filename, toSave, header=head)
         
         """
         filename = "Results/spec_N%d_e%.4f_d%d.txt" % (N, epsilon, dis)
