@@ -1,12 +1,12 @@
-# NB: dis_per_thread deve essere divisibile per il numero di core etc.
+# NB: dis_per_run deve essere divisibile per il numero di core etc.
 dis_num_in=0
 dis_num_fin=4
-dis_per_thread=4
+dis_per_run=4
 
-for ((d=$dis_num_in; d<$dis_num_fin; d+=$dis_per_thread));
+for ((d=$dis_num_in; d<$dis_num_fin; d+=$dis_per_run));
 do
     DIS_IN=$d 
-    DIS_FIN=$(( $d+$dis_per_thread ))
+    DIS_FIN=$(( $d+$dis_per_run ))
 
     for N in $(seq 28 2 28);
     do

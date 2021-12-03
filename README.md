@@ -34,10 +34,11 @@ The program builds the diagonal part of the Hamiltonian for the partitions graph
 ### LanczosRoutines.py
 
 Program nicely given us from Vittorio Vitale & Alessadro Santini. It contains the Lanczos algorithm for matrix exponentiation with Krylov subspaces.
+NOTE: performs worse than scipy.sparse!
 
 
 ---
-### masterMissing2.sh
+### masterMissing{1,2}.sh
 
 Shell to send multiple jobs on Ulysses, on partition regular {1,2}, to fill voids (i.e. jobs that haven't delivered the final output). It modifies and executes `runMissing{1,2}.py` and `runMissing{1,2}-ctrl.py`.
 
@@ -52,12 +53,6 @@ Shell to send multiple jobs on Ulysses, on partition regular {1,2}. It modifies 
 ### mover.sh
 
 Shell to reorganize folders of results.
-
-
----
-### MC.py
-
-The program samples Young diagrams by successively adding/removing boxes. The probability of adding a box is pForw, therefore of removing one is 1-pForw.
 
 
 ---
@@ -122,7 +117,13 @@ The program diagonalizes the disordered, Young graph Hamiltonian.
 - It loads the non-zero entries of the adjacency matrix from the biggest Hamiltonian/clean_N#.txt file.
 - It loads the diagonal entries of the Hamiltonian matrix from the files Hamiltonian/rand...
 - It builds the sparse Hamiltonian from the entries, and converts it to a full matrix.
-- It saves to file the eigenvalues and IPRs (or the eigenvectors, but it takes a lot of space).
+- It saves to Results/spec_{...} the
+    - eigenvalues
+    - IPR
+    - Kullback-Leibler divergence of neighbouring eigenstates
+    - participation entropy of the eigenstates (in the graph basis)
+- It saves to Results/magDiff_{...} the magnetization difference of neighbouring eigenstates, for each site of the 2d Ising model.
+- It optionally saves the eigenvectors, but it takes a HUGE amount of space.
 
 
 ---
@@ -133,7 +134,13 @@ The program diagonalizes the disordered, Young graph Hamiltonian.
 - It loads the non-zero entries of the adjacency matrix from the biggest Hamiltonian/clean_N#.txt file.
 - It loads the diagonal entries of the Hamiltonian matrix from the files Hamiltonian/rand...
 - It builds the sparse Hamiltonian from the entries.
-- It saves to file a fraction the eigenvalues and IPRs at the center of the spectrum (or also the eigenvectors, but it takes a lot of space).
+- It saves to Results/spec_{...} a fraction, at the center of the spectrum, of the
+    - eigenvalues
+    - IPR
+    - Kullback-Leibler divergence of neighbouring eigenstates
+    - participation entropy of the eigenstates (in the graph basis)
+- It saves to Results/magDiff_{...} the magnetization difference of neighbouring eigenstates, for each site of the 2d Ising model.
+- It optionally saves the eigenvectors, but it takes a HUGE amount of space.
 
 
 ---
@@ -177,9 +184,3 @@ The program evolves a state on the Young diagram lattice.
 
 Just to estimate how long computing times become.
 
-
----
-### Clean/vertical\_domain.py
-
-The program evolves a state in the Hilbert space of domain walls with a single defect.  
-Needed for some checks.

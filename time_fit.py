@@ -3,7 +3,7 @@ from matplotlib import pyplot as plt
 
 
 ###########################################  BUILD ADJ  ###########################################
-
+"""
 #  --------------------  stupid  --------------------  #
 nP, tP = np.loadtxt("t2.txt").T
 
@@ -43,20 +43,20 @@ plt.yscale("log")
 
 plt.legend()
 plt.show()
-
+"""
 
 #############################################  KRYLOV  ############################################
-"""
-# 100 t_steps
+
+# 20 t_steps
 data = np.loadtxt("ts_tEv.txt").T
-data = data[:,data[1]==100]
-plt.plot(data[0], data[2], '.', label="t_steps=100")
+data = data[:,data[1]==20]
+plt.plot(data[0], data[2], '.', label="t_steps=20")
 
 
-# 1000 t_steps
-data = np.loadtxt("log").T
-data = data[:,data[1]==1000]
-plt.plot(data[0], data[2], '.', label="t_steps=100")
+# 200 t_steps
+data = np.loadtxt("ts_tEv.txt").T
+data = data[:,data[1]==200]
+plt.plot(data[0], data[2], '.', label="t_steps=200")
 
 plt.xlabel("N")
 plt.ylabel("t [s]")
@@ -64,8 +64,9 @@ plt.ylabel("t [s]")
 #plt.xscale("log")
 plt.yscale("log")
 
+plt.legend()
 plt.show()
-"""
+
 
 
 ###############################################  ED  ##############################################

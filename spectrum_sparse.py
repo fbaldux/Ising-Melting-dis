@@ -5,8 +5,14 @@
 #   - It loads the non-zero entries of the adjacency matrix from the biggest Hamiltonian/clean_N#.txt file.
 #   - It loads the diagonal entries of the Hamiltonian matrix from the files Hamiltonian/rand...
 #   - It builds the sparse Hamiltonian from the entries.
-#   - It saves to file a fraction the eigenvalues and IPRs at the center of the spectrum (or also
-#     the eigenvectors, but it takes a lot of space).
+#   - It saves to Results/spec_{...} a fraction, at the center of the spectrum, of the
+#       - eigenvalues
+#       - IPR
+#       - Kullback-Leibler divergence of neighbouring eigenstates
+#       - participation entropy of the eigenstates (in the graph basis)
+#   - It saves to Results/magDiff_{...} the magnetization difference of neighbouring eigenstates, 
+#     for each site of the 2d Ising model.
+#   - It optionally saves the eigenvectors, but it takes a HUGE amount of space.
 #
 #  ---------------------------------------------------------------------------------------------  #
 
@@ -42,6 +48,8 @@ from scipy import sparse
 from scipy.sparse.linalg import eigsh
 from partitions import *
 from time import time
+
+np.seterr(divide='ignore')
 
 #eig_num = dim[N]//eig_frac
 start = time()
@@ -82,11 +90,15 @@ for dis in range(dis_num_in,dis_num_fin):
         # compute the participaton entropies
         PE = - np.einsum( "ab,ab->a", eigvecs2, np.log(eigvecs2) )
         
+        # compute the magnetization difference in the corner of neighbouring states
+        magDiff = np.zeros(eig_num)
+        magDiff[:-1] = 2 * (eigvecs2[1:,0] - eigvecs2[:1,0])
+        
         
         # save to file
         filename = "Results/spec_N%d_e%.4f_d%d.txt" % (N, epsilon, dis)
-        toSave = np.stack((eigvals, IPRs, KL, PE)).T
-        head = "eigenvalue IPR KL PE"
+        toSave = np.stack((eigvals, IPRs, KL, PE, magDiff)).T
+        head = "eigenvalue IPR KL PE magDiff"
         np.savetxt(filename, toSave, header=head)
         
         """
