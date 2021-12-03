@@ -118,6 +118,7 @@ for dis in range(dis_num_in,dis_num_fin):
         argLog = eigvecs2[:-1]/eigvecs2[1:]
         argLog[argLog==0] = 1.
         KL[:-1] = np.einsum( "ab,ab->a", eigvecs2[:-1], np.log(argLog) )
+        KL[-1] = -1.
         np.seterr(all='warn')
         
         

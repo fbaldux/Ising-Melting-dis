@@ -144,20 +144,6 @@ The program diagonalizes the disordered, Young graph Hamiltonian.
 
 
 ---
-### strip.py
-
-The program evolves a state in the Hilbert space of a strip of length L.  
-Needed for some checks.
-
-
----
-### strip\_full.py
-
-The program evolves a state in the Hilbert space of a strip of length L.  
-Needed for some checks.
-
-
----
 ### tEv.py
 
 The program evolves a state on the Young diagram lattice.
