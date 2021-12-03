@@ -5,7 +5,7 @@
 #     file.
 #   - It loads the diagonal entries of the Hamiltonian matrix from the files Hamiltonian/rand...
 #   - It builds the sparse Hamiltonian from the entries.
-#   - It evolves an initial state via full exact diagonalization.
+#   - It evolves an initial state via Krylov (from LanczosRoutines.py).
 #
 #  ---------------------------------------------------------------------------------------------  #
 
@@ -23,23 +23,32 @@ dt = float( sys.argv[4] )
 t_steps = int( Tfin/dt )
 save_dt = float( sys.argv[5] )
 save_step = int( save_dt/dt )
+save_steps = int( Tfin/save_dt )
 
 # number of disorder instances
 dis_num_in = int( sys.argv[6] )
 dis_num_fin = int( sys.argv[7] )
 
+# whether to use sparse exponentiation
+use_sparse = int( sys.argv[8] )
+
+# whether to overwrite existing files
+overwrite = int( sys.argv[9] )
+
 # number of processors to use
-nProc = int( sys.argv[8] )
+nProc = int( sys.argv[10] )
+
 
 os.environ["MKL_NUM_THREADS"] = str(nProc)
 os.environ["NUMEXPR_NUM_THREADS"] = str(nProc)
 os.environ["OMP_NUM_THREADS"] = str(nProc)
 
 import numpy as np
+from scipy.linalg import expm
 from scipy import sparse
+from scipy.sparse.linalg import expm_multiply
 import numba as nb
 from partitions import *
-from LanczosRoutines import *
 from time import time
 
 start = time()
@@ -124,7 +133,6 @@ def side2_length():
 sl2_op = side2_length()
 
 
-
 # (diagonal) operator that gives the area of the Young diagrams
 area_op = np.zeros(dim[N], dtype=np.float_)
 for n in range(1,N+1):
@@ -133,54 +141,62 @@ for n in range(1,N+1):
 
 #  ---------------------------  store stuff in the array of results  ---------------------------  #
 
-def store(it,v):
-    toSave[it//save_step,0] = it*dt
+def store(it,v2):
+    toSave[it,0] = it*save_dt
     
-    v2 = np.abs(v)**2
-    toSave[it//save_step,1] = np.dot(v2, sl1_op)
-    toSave[it//save_step,2] = np.dot(v2, vh_op)
-    toSave[it//save_step,3] = np.dot(v2, sl2_op)
-    toSave[it//save_step,4] = np.dot(v2, area_op)
+    toSave[it,1] = np.dot(v2, sl1_op)
+    toSave[it,2] = np.dot(v2, vh_op)
+    toSave[it,3] = np.dot(v2, sl2_op)
+    toSave[it,4] = np.dot(v2, area_op)
 
 
 #  -------------------------------------------  main  ------------------------------------------  #
 
 for dis in range(dis_num_in,dis_num_fin):
     
-    # load the disorder
-    filename = "Hamiltonians/rand_N%d_d%d.txt" % (N,dis)
-    diag = np.loadtxt(filename)
-    H = H0 + epsilon * sparse.diags(diag)
- 
- 
-    # initial state
-    v = np.zeros(dim[N])
-    v[0] = 1
- 
- 
-    # evolutor from the Hamiltonian
-    H = H.todense()
-    U = expm(-1j*H*dt)
+    done = False
+    if not overwrite and os.path.isfile("Results/tEv_N%d_e%.4f_T%.1f_d%d.txt" % (N,epsilon,Tfin,dis)):
+        done = True
     
+    if not done:
     
-    # array to save observables
-    toSave = np.zeros((int(Tfin/save_dt),5)) # t lateral1 vertical lateral2 area 
-    store(0,v)
-
-    for it in range(1,t_steps):
-        v = U.dot(v)
-        
-        if it%save_step == 0:
-            store(it,v)
+        # load the disorder
+        filename = "Hamiltonians/rand_N%d_d%d.txt" % (N,dis)
+        diag = np.loadtxt(filename)
+        H = H0 + epsilon * sparse.diags(diag)
+ 
+        # array to store the observables
+        toSave = np.zeros((save_steps+1,5)) # t lateral1 vertical lateral2 area
+ 
+        # initial state
+        v = np.zeros(dim[N])
+        v[0] = 1
+        store(0,np.abs(v)**2)
+ 
+        if use_sparse:
+            vt = expm_multiply(-1j*H*dt, v, start=0, stop=t_steps, num=save_steps+1)
+    
+            for it in range(1,save_steps+1):
+                store(it,np.abs(vt[it])**2)
+                
+        else:
+            # evolutor from the Hamiltonian
+            U = expm(-1j * H.todense() * dt)
             
-
-    # save to file
-    filename = "Results/tEv_N%d_e%.4f_d%d.txt" % (N, epsilon, dis)
-    head = "t lat1 vert lat2 area"
-    np.savetxt(filename, toSave, header=head)
+            for it in range(1,t_steps+1):
+                v = U.dot(v)
+        
+                if it%save_step == 0:
+                    store(it//save_step,np.abs(v)**2)
+        
+        # save to file
+        filename = "Results/tEv_N%d_e%.4f_T%.1f_d%d.txt" % (N,epsilon,Tfin,dis)
+        head = "t lat1 vert lat2 area"
+        np.savetxt(filename, toSave, header=head)
 
     
-
+#print("N %d t_steps %d time %f" % (N, t_steps, time()-start))
+print(N, t_steps, time()-start)
 
 
 

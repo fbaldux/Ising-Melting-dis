@@ -106,7 +106,14 @@ N=ENNE
 
 eps=EPSILON
 
+# for ED
 eig_num=2000
+
+# for tEv
+Tfin=20
+dt=1
+save_dt=2
+sparse=1
 
 dis_num_in=DIS_IN
 dis_num_fin=DIS_FIN
@@ -121,7 +128,9 @@ do
     #python3 buildDiagHam.py $N $d $(( $d+$dis_per_thread )) 1>>log 2>>err_n${N}
     
     #python3 spectrum.py $N $eps $d $(( $d+$dis_per_thread )) $overwrite $nProc 1>>log 2>>err_n${N}_e${eps} &
-    python3 spectrum_sparse.py $N $eps $eig_num $d $(( $d+$dis_per_thread )) $overwrite $nProc 1>>log 2>>err_n${N}_e${eps} &
+    #python3 spectrum_sparse.py $N $eps $eig_num $d $(( $d+$dis_per_thread )) $overwrite $nProc 1>>log 2>>err_n${N}_e${eps} &
+    
+    python3 tEv.py $N $eps $Tfin $dt $save_dt $d $(( $d+$dis_per_thread )) $sparse $overwrite $nProc  1>>log 2>>err_n${N}_e${eps} &
 done
 
 
