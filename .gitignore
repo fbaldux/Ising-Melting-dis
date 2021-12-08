@@ -1,0 +1,9 @@
+*.pdf
+Analysis/*.txt
+Hamiltonians/*.txt
+Results/*.txt
+**/.DS_store
+log
+err
+__pycache__/
+*.zip

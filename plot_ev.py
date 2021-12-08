@@ -12,12 +12,13 @@ from matplotlib import cm
 
 N = int( sys.argv[1] )
 epsilon = float( sys.argv[2] )
-dis_num = int( sys.argv[3] )
+T = float( sys.argv[3] )
+dis_num = int( sys.argv[4] )
 
 
 #  -------------------------------------------  load  ------------------------------------------  #
 
-filename = "Results/tEv_N%d_e%.4f_d%d.txt" % (N,epsilon,0)
+filename = "Results/tEv_N%d_e%.4f_T%.1f_d%d.txt" % (N,epsilon,T,0)
 data = np.loadtxt(filename).T
 
 ts = data[0]
@@ -26,8 +27,8 @@ data = data[1:]
 for dis in range(1,dis_num):
 
     #  load the results
-    filename = "Results/tEv_N%d_e%.4f_d%d.txt" % (N, epsilon, dis)
-    data += np.loadtxt(filename)[:,1:]
+    filename = "Results/tEv_N%d_e%.4f_T%.1f_d%d.txt" % (N,epsilon,T,dis)
+    data += np.loadtxt(filename)[:,1:].T
     
 data /= dis_num
 
@@ -44,14 +45,14 @@ ax.plot(ts, data[1], '-', label="central", c='firebrick')
 
 # clean case
 #ax.plot(ts, np.sqrt(2)*ts, '--', c='black')
-ax.plot(ts, 2*ts/np.pi, '--', c='firebrick')
+#ax.plot(ts, 2*ts/np.pi, '--', c='firebrick')
 
 
 lat_clean = lambda t: sum([2 * (t-k) * jv(k, 2*t)**2 for k in range(-50,int(t))]) - t
 lat_clean2 = np.vectorize(lat_clean)
 
 ts2 = np.linspace(0,15,100)
-ax.plot(ts2, lat_clean2(ts2), '--', c='black')
+#ax.plot(ts2, lat_clean2(ts2), '--', c='black')
 
 
 ax.set_xlabel(r"$t$")

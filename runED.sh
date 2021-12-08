@@ -3,19 +3,19 @@
 eig_num=10
 
 # for tEv
-Tfin=20
-dt=1
-save_dt=2
-sparse=0
+Tfin=1000
+dt=10
+save_dt=50
+sparse=1
 
 
 dis_num_in=0
 dis_num_fin=1
 
 overwrite=1
-nProc=7
+nProc=1
 
-for N in $(seq 14 2 14);
+for N in $(seq 24 2 24);
 do    
     #(
     #python3 buildDiagHam.py $N $dis_num_in $dis_num_fin 1>>log 2>>err

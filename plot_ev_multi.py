@@ -10,24 +10,30 @@ from matplotlib import pyplot as plt
 from matplotlib import cm
 
 
-Ns = np.arange(34,50,2)
-epsilon = 3.5
-dis_num = 1
+N = 34
+eps = np.array((1.,7.))
+T = 10000
+dis_num = 6
 
 
 #plt.rcParams["figure.figsize"] = [6,6]
 
 fig, ax = plt.subplots()
 
-cols = cm.get_cmap("inferno", len(Ns)+1)
+#cols = cm.get_cmap("inferno", len(Ns)+1)
+cols = cm.get_cmap("inferno", len(eps)+1)
 
 
 #  -------------------------------------------  load  ------------------------------------------  #
 
-for iN in range(len(Ns)):
-    N = Ns[iN]
+c = 0
 
-    filename = "Results/tEv_N%d_e%.4f_d%d.txt" % (N,epsilon,0)
+#for iN in range(len(Ns)):
+#    N = Ns[iN]
+for ie in range(len(eps)):
+    e = eps[ie]
+    
+    filename = "Results/tEv_N%d_e%.4f_T%.1f_d%d.txt" % (N,e,T,0)
     data = np.loadtxt(filename).T
 
     ts = data[0]
@@ -36,19 +42,24 @@ for iN in range(len(Ns)):
     for dis in range(1,dis_num):
 
         #  load the results
-        filename = "Results/tEv_N%d_e%.4f_d%d.txt" % (N, epsilon, dis)
-        data += np.loadtxt(filename)[:,1:]
+        filename = "Results/tEv_N%d_e%.4f_T%.1f_d%d.txt" % (N,e,T,dis)
+        data += np.loadtxt(filename)[:,1:].T
     
     data /= dis_num
 
 
 #  -------------------------------------------  plot  ------------------------------------------  #
 
-    lab = r"$N=%d$" % N
+    #lab = r"$N=%d$" % N
+    lab = r"$\varepsilon=%.2f$" % e
+    
     #ax.plot(ts, 0.5*(data[0]+data[2]), '-', label="lateral", c='black')
-    ax.plot(ts, data[1], '-', label=lab, c=cols(iN))
-    #ax.plot(ts, data[3], '-', label="area", c='darkblue')
+    
+    #ax.plot(ts, data[1], '-', label=lab, c=cols(c))
+    ax.plot(ts, np.sqrt(data[3]), '-', label=lab, c=cols(c))
+    
 
+    c += 1
 
 #  -------------------------------------------  clean  ------------------------------------------  #
 """

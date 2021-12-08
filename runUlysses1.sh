@@ -128,9 +128,9 @@ do
     #python3 buildDiagHam.py $N $d $(( $d+$dis_per_thread )) 1>>log 2>>err_n${N}
     
     #python3 spectrum.py $N $eps $d $(( $d+$dis_per_thread )) $overwrite $nProc 1>>log 2>>err_n${N}_e${eps} &
-    #python3 spectrum_sparse.py $N $eps $eig_num $d $(( $d+$dis_per_thread )) $overwrite $nProc 1>>log 2>>err_n${N}_e${eps} &
+    python3 spectrum_sparse.py $N $eps $eig_num $d $(( $d+$dis_per_thread )) $overwrite $nProc 1>>log 2>>err_n${N}_e${eps} &
     
-    python3 tEv.py $N $eps $Tfin $dt $save_dt $d $(( $d+$dis_per_thread )) $sparse $overwrite $nProc  1>>log 2>>err_n${N}_e${eps} &
+    #python3 tEv.py $N $eps $Tfin $dt $save_dt $d $(( $d+$dis_per_thread )) $sparse $overwrite $nProc  1>>log 2>>err_n${N}_e${eps} &
 done
 
 
