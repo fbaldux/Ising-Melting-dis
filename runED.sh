@@ -3,12 +3,13 @@
 eig_num=10
 
 # for tEv
-Tin=10
-Tfin=20
+Tin=0
+Tfin=1000
 dt=1
 save_dt=1
-sparse=0
+sparse=1
 
+ts_per_decade=50
 
 dis_num_in=0
 dis_num_fin=1
@@ -16,10 +17,10 @@ dis_num_fin=1
 overwrite=1
 nProc=1
 
-for N in $(seq 14 2 14);
+for N in $(seq 20 2 28);
 do    
-    #(
-    #python3 buildDiagHam.py $N $dis_num_in $dis_num_fin 1>>log 2>>err
+    (
+    python3 buildDiagHam.py $N $dis_num_in $dis_num_fin 1>>log 2>>err
   
     for eps in $(seq 5 1 5);
     do
@@ -28,12 +29,13 @@ do
             #python3 spectrum.py $N $eps $dis_num_in $dis_num_fin $overwrite $nProc 1>>log 2>>err
             #python3 spectrum_sparse.py $N $eps $eig_num $dis_num_in $dis_num_fin $overwrite $nProc 1>>log 2>>err
             
-            python3 tEv.py $N $eps $Tin $Tfin $dt $save_dt $d $dis_num_in $dis_num_fin $sparse $overwrite $nProc #1>>log 2>>err
+            python3 tEv.py $N $eps $Tin $Tfin $dt $save_dt $dis_num_in $dis_num_fin $sparse $overwrite $nProc 1>>log 2>>err
+            python3 tEv_log.py $N $eps $Tfin $ts_per_decade $dis_num_in $dis_num_fin $overwrite $nProc 1>>log 2>>err
         fi
         
         #python3 plot_ev.py $N $eps $dis_num_fin &
     done
-    #)&
+    )&
 done
 
 

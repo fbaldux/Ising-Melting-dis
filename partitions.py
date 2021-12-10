@@ -74,62 +74,71 @@ def load_adjacency(N):
     return H0
 
 
-#  ----------------------------  CONTROLLARE  ---------------------------  #
-"""
-# A utility function to print an
-# array p[] of size 'n'
-def printArray(p, n):
-    for i in range(0, n):
-        print(p[i], end = " ")
-    print()
- 
-def printAllUniqueParts(n):
-    p = [0] * n     # An array to store a partition
-    k = 0         # Index of last element in a partition
-    p[k] = n     # Initialize first partition
-                 # as number itself
- 
-    # This loop first prints current partition,
-    # then generates next partition.The loop
-    # stops when the current partition has all 1s
-    while True:
-         
-            # print current partition
-            printArray(p, k + 1)
- 
-            # Generate next partition
- 
-            # Find the rightmost non-one value in p[].
-            # Also, update the rem_val so that we know
-            # how much value can be accommodated
-            rem_val = 0
-            while k >= 0 and p[k] == 1:
-                rem_val += p[k]
-                k -= 1
- 
-            # if k < 0, all the values are 1 so
-            # there are no more partitions
-            if k < 0:
-                print()
-                return
- 
-            # Decrease the p[k] found above
-            # and adjust the rem_val
-            p[k] -= 1
-            rem_val += 1
- 
-            # If rem_val is more, then the sorted
-            # order is violated. Divide rem_val in
-            # different values of size p[k] and copy
-            # these values at different positions after p[k]
-            while rem_val > p[k]:
-                p[k + 1] = p[k]
-                rem_val = rem_val - p[k]
-                k += 1
- 
-            # Copy rem_val to next position
-            # and increment position
-            p[k + 1] = rem_val
-            k += 1
- 
-"""
+#  ------------------------  operators for quantifying the removed area  -----------------------  #
+
+# (diagonal) operator that gives the height on the vertical line for the tilted Young diagrams
+@nb.njit
+def vertical_height(N,levels):
+    vh = np.zeros(dim[N], dtype=np.float_)
+    
+    # sum over all basis states (split in n and i)
+    for n in range(1,N+1):
+        for i in range(p[n]):
+            k = dim[n-1]+i
+            
+            # check how many rows are longer than their index (i.e. one can fit in a square)
+            r = 0
+            while r<n and levels[n][i,r]>r:
+                r += 1
+            
+            vh[k] = r
+            
+    return vh
+
+
+# (diagonal) operator that gives the length on the left side for the tilted Young diagrams
+@nb.njit
+def side1_length(N,levels):
+    sl = np.zeros(dim[N], dtype=np.float_)
+    
+    # sum over all basis states (split in n and i)
+    for n in range(1,N+1):
+        for i in range(p[n]):
+            k = dim[n-1]+i
+            
+            # the lateral length is the 0th entry of the level
+            sl[k] = levels[n][i,0]
+            
+    return sl
+
+
+# (diagonal) operator that gives the length on the right side for the tilted Young diagrams
+@nb.njit
+def side2_length(N,levels):
+    sl = np.zeros(dim[N], dtype=np.float_)
+    
+    # sum over all basis states (split in n and i)
+    for n in range(1,N+1):
+        for i in range(p[n]):
+            k = dim[n-1]+i
+            
+            # the lateral length is the first 0 entry
+            temp = np.where(levels[n][i]==0)[0]
+            if len(temp)>0:
+                sl[k] = temp[0]
+            else:
+                sl[k] = n
+     
+    return sl
+
+
+# (diagonal) operator that gives the area of the Young diagrams
+def area(N):
+    area_op = np.zeros(dim[N], dtype=np.float_)
+    
+    for n in range(1,N+1):
+        area_op[dim[n-1]:dim[n]] = n
+    
+    return area_op
+
+
