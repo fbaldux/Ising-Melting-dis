@@ -16,9 +16,6 @@ dis_num = int( sys.argv[4] )
 filename = "Results/tEv_N%d_e%.4f_T%.1f_d%d.txt" % (N,epsilon,T,0)
 data = np.loadtxt(filename).T
 
-ts = data[0]
-data = data[1:]
-
 for dis in range(1,dis_num):
 
     #  load the results
