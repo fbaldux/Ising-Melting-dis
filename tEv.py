@@ -5,7 +5,8 @@
 #     file.
 #   - It loads the diagonal entries of the Hamiltonian matrix from the files Hamiltonian/rand...
 #   - It builds the sparse Hamiltonian from the entries.
-#   - It evolves an initial state via Krylov (from LanczosRoutines.py).
+#   - It evolves an initial state via full exponentiation / Krylov (expm_multiply).
+#   - It saves to file...
 #
 #  ---------------------------------------------------------------------------------------------  #
 
@@ -161,9 +162,12 @@ for dis in range(dis_num_in,dis_num_fin):
     if not done:
     
         # load the disorder
-        filename = "Hamiltonians/rand_N%d_d%d.txt" % (N,dis)
-        diag = np.loadtxt(filename)
-        H = H0 + epsilon * sparse.diags(diag)
+        if epsilon != 0:
+            filename = "Hamiltonians/rand_N%d_d%d.txt" % (N,dis)
+            diag = np.loadtxt(filename)
+            H = H0 + epsilon * sparse.diags(diag)
+        else:
+            H = np.copy(H0)
  
         # array to store the observables
         toSave = np.zeros((save_steps+1,5)) # t lateral1 vertical lateral2 area

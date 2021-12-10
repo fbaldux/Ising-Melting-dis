@@ -11,9 +11,9 @@ from matplotlib import cm
 
 
 N = 34
-eps = np.array((1.,7.))
-T = 10000
-dis_num = 6
+eps = np.arange(0,9,2)
+T = 100
+dis_num = 1
 
 
 #plt.rcParams["figure.figsize"] = [6,6]
@@ -56,7 +56,8 @@ for ie in range(len(eps)):
     #ax.plot(ts, 0.5*(data[0]+data[2]), '-', label="lateral", c='black')
     
     #ax.plot(ts, data[1], '-', label=lab, c=cols(c))
-    ax.plot(ts, np.sqrt(data[3]), '-', label=lab, c=cols(c))
+    #ax.plot(ts, np.sqrt(data[3]), '-', label=lab, c=cols(c))
+    ax.plot(ts, data[3], '-', label=lab, c=cols(c))
     
 
     c += 1
@@ -78,11 +79,13 @@ ax.plot(ts2, lat_clean2(ts2), '--', c='black')
 #  ----------------------------------------  parameters  ---------------------------------------  #
 
 ax.set_xlabel(r"$t$")
-ax.set_ylabel(r"$\ell$")
+#ax.set_ylabel(r"$\ell$")
+ax.set_ylabel(r"$N(t)$")
 
 #plt.clim((0,1))
 
 #ax.set_title(r"$N=%d$, $\epsilon = %.2f$" %(N,epsilon))
+ax.set_title(r"$N=%d$" %(N))
 
 #ax.set_xscale("log")
 #ax.set_yscale("log")
