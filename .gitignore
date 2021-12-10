@@ -1,9 +1,9 @@
 *.pdf
-Analysis/*.txt
-Averages/*.txt
-Hamiltonians/*.txt
-Results/*.txt
-States/*.txt
+Analysis/*.*
+Averages/*.*
+Hamiltonians/*.*
+Results/*.*
+States/*.*
 **/.DS_store
 log
 err
