@@ -1,7 +1,9 @@
 *.pdf
 Analysis/*.txt
+Averages/*.txt
 Hamiltonians/*.txt
 Results/*.txt
+States/*.txt
 **/.DS_store
 log
 err

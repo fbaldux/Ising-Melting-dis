@@ -82,7 +82,7 @@ Shell to run jobs on workstations.
 ---
 ### runSave.sh
 
-Shell to run `save\_r.py` or `average_ev.py` on Ulysses.
+Shell to run `save_r.py` or `average_ev.py` on Ulysses.
 
 
 ---
