@@ -4,6 +4,12 @@ Melting of "solid" initial condition in 2d quantum Ising model.
 
 
 ---
+### average\_ev.py
+
+The program averages the output of `tEv.py` from Results/ to Averages/
+
+
+---
 ### buildAdj.py
 
 The program builds the adjacency matrix of the partitions graph as follows:
@@ -74,9 +80,9 @@ Shell to run jobs on workstations.
 
 
 ---
-### runSave\_r.sh
+### runSave.sh
 
-Shell to run save\_r.py on Ulysses.
+Shell to run `save\_r.py` or `average_ev.py` on Ulysses.
 
 
 ---
@@ -88,7 +94,7 @@ Shell to run the single job on Ulysses, partition regular {1,2}, to fill voids (
 ---
 ### runMissing{1,2}-ctrl.sh
 
-Shell to help the correct functioning of runMissing{1,2}.sh.
+Shell to help the correct functioning of `runMissing{1,2}.sh`.
 
 
 ---
@@ -151,8 +157,8 @@ The program evolves a state on the Young diagram lattice.
 - It loads the non-zero entries of the adjacency matrix from the biggest Hamiltonian/clean_N#.txt file.
 - It loads the diagonal entries of the Hamiltonian matrix from the files Hamiltonian/rand...
 - It builds sparse Hamiltonian from the entries.
-- It evolves an initial state via full exponentiation / Krylov (expm_multiply).
-- It saves to file...
+- It evolves an initial state via full exponentiation or sparse Krylov (expm_multiply).
+- It saves to file the linear dimensions of the state and the area.
 
 
 ---

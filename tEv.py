@@ -1,12 +1,12 @@
 #  ---------------------------------------------------------------------------------------------  #
 #
-#   The program evolves a state on the Young diagram graph.
-#   - It loads the non-zero entries of the adjacency matrix from the biggest Hamiltonian/clean_N#.txt
-#     file.
+#   The program evolves a state on the Young diagram lattice.
+#
+#   - It loads the non-zero entries of the adjacency matrix from the biggest Hamiltonian/clean_N#.txt file.
 #   - It loads the diagonal entries of the Hamiltonian matrix from the files Hamiltonian/rand...
-#   - It builds the sparse Hamiltonian from the entries.
-#   - It evolves an initial state via full exponentiation / Krylov (expm_multiply).
-#   - It saves to file...
+#   - It builds sparse Hamiltonian from the entries.
+#   - It evolves an initial state via full exponentiation or sparse Krylov (expm_multiply).
+#   - It saves to file the linear dimensions of the state and the area.
 #
 #  ---------------------------------------------------------------------------------------------  #
 
