@@ -14,7 +14,7 @@
 #
 # ---- Metadata configuration ----
 #
-#SBATCH --job-name=save_r       # The name of your job, you'll se it in squeue.
+#SBATCH --job-name=save       # The name of your job, you'll se it in squeue.
 #SBATCH --mail-type=NONE              # Mail events (NONE, BEGIN, END, FAIL, ALL). Sends you an email when the job begins, ends, or fails; you can combine options.
 #SBATCH --mail-user=fbalducc@sissa.it    # Where to send the mail
 #
@@ -107,7 +107,8 @@ do
     for eps in 0.5 1 1.5 2 2.5 3; #$(seq 1 14);
     do
         #python3 save_r.py 22 $eps 10000 1>>log 2>>err &
-        python average_ev.py $N $eps 1000 300 1>>log 2>>err &
+        #python average_ev.py $N $eps 1000 300 1>>log 2>>err &
+        python ground_state.py $N $eps 10000 1>>log 2>>err &
     done
     wait
 done

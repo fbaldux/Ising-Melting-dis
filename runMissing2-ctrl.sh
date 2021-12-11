@@ -2,13 +2,9 @@ N=ENNE
 
 eps=EPSILON
 
-eig_frac=10
-
 dis_num_in=DIS_IN
 dis_num_fin=DIS_FIN
-dis_threads=8
-
-overwrite=0
+dis_threads=6
 
 count=0
 for ((d=$dis_num_in; $count<$dis_threads && d<$dis_num_fin; d++));

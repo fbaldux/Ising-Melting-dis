@@ -1,26 +1,5 @@
 import numpy as np
-
-def generate_partitions(n):
-    a = np.zeros(n+1, dtype=np.int_)
-    k = 1
-    y = n - 1
-    while k!=0:
-        x = a[k-1] + 1
-        k -= 1
-        while 2*x <= y:
-            a[k] = x
-            y -= x
-            k += 1
-        l = k + 1
-        while x <= y:
-            a[k] = x
-            a[l] = y
-            yield np.concatenate(( np.flip(a[:k+2]), np.zeros(n-k-2,dtype=np.int_) ))
-            x += 1
-            y -= 1
-        a[k] = x + y
-        y = x + y - 1
-        yield np.concatenate(( np.flip(a[:k+1]), np.zeros(n-k-1,dtype=np.int_) ))
+from partitions import *
 
 
 def mckay(n):
@@ -77,13 +56,19 @@ def revlex_partitions(n):
         yield p
         p.pop()
 
+N = 6
 
-a = [[y for y in x] for x in revlex_partitions(6)]
-
-for b in a:
-    print(b)
-#print([x for x in generate_partitions(4)])
+good = [x for x in generate_partitions(N)]
 #print([[y for y in x] for x in mckay(4)])
+parts = [[y for y in x] for x in revlex_partitions(N)]
+
+
+for i in range(p[N]):
+    #print(i,good[i],parts[i])
+    temp = parts[i]
+    temp = [p[k-1] for k in temp]
+    print( i, sum(temp) )
+
 
 
 

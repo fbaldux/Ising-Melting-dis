@@ -25,9 +25,17 @@ try:
     GS2_av = 0.
 
     for dis in range(dis_num):
+        filename = "OldGood/Results_N%d_e%.0f/spec_N%d_e%.4f_d%d.txt" % (N,eps,N,eps,dis)
         #filename = "Results_N%d_e%.0f/spec_N%d_e%.4f_d%d.txt" % (N,eps,N,eps,dis)
-        filename = "Results/spec_N%d_e%.4f_d%d.txt" % (N,eps,dis)
-        E = np.loadtxt(filename)[0,0] 
+        #filename = "Results/spec_N%d_e%.4f_d%d.txt" % (N,eps,dis)
+        
+        f = open(filename, 'r')
+        l = f.readline()
+        l = f.readline().split(' ')
+        f.close()
+
+        E = float(l[0])
+        #E = np.loadtxt(filename)[0,0] 
 
         GS_av += E
         GS2_av += E**2

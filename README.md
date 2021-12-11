@@ -37,6 +37,12 @@ The program builds the diagonal part of the Hamiltonian for the partitions graph
 
 
 ---
+### ground\_state.py
+
+The program computes the average and standard deviation for the GS energy. It loads the files from the Results/spec\_{...} and saves to Analysis/.
+
+
+---
 ### LanczosRoutines.py
 
 Program nicely given us from Vittorio Vitale & Alessadro Santini. It contains the Lanczos algorithm for matrix exponentiation with Krylov subspaces.
