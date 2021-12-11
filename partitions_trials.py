@@ -78,9 +78,12 @@ def revlex_partitions(n):
         p.pop()
 
 
-print([[y for y in x] for x in revlex_partitions(4)])
-print([x for x in generate_partitions(4)])
-print([[y for y in x] for x in mckay(4)])
+a = [[y for y in x] for x in revlex_partitions(6)]
+
+for b in a:
+    print(b)
+#print([x for x in generate_partitions(4)])
+#print([[y for y in x] for x in mckay(4)])
 
 
 

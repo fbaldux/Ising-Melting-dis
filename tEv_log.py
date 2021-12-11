@@ -139,6 +139,7 @@ for dis in range(dis_num_in,dis_num_fin):
         
         # last step
         store(Tfin, c, np.abs(v)**2)
+        toSave = toSave[:c+1]
         
         
         # save to file

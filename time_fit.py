@@ -46,7 +46,7 @@ plt.show()
 """
 
 #############################################  KRYLOV  ############################################
-
+"""
 # 20 t_steps
 data = np.loadtxt("ts_tEv.txt").T
 data = data[:,data[1]==20]
@@ -66,7 +66,7 @@ plt.yscale("log")
 
 plt.legend()
 plt.show()
-
+"""
 
 
 ###############################################  ED  ##############################################
@@ -88,6 +88,27 @@ plt.show()
 
 
 
+#############################################  KRYLOV AGAIN  ############################################
+
+# linear time steps
+data = np.loadtxt("ts_lin.txt").T
+data = data[:,data[1]==10000]
+plt.plot(data[0], data[2], '.', label="lin")
+
+
+# log time steps
+data = np.loadtxt("ts_log.txt").T
+data = data[:,data[1]==10000]
+plt.plot(data[0], data[2], '.', label="log")
+
+plt.xlabel("N")
+plt.ylabel("t [s]")
+
+#plt.xscale("log")
+plt.yscale("log")
+
+plt.legend()
+plt.show()
 
 
 
