@@ -1,10 +1,10 @@
-N=28
+N=30
 
 for eps in $(seq 1 17);
 do
     echo "Starting eps $eps"
     DIS_IN=0
-    DIS_FIN=240
+    DIS_FIN=480
     
     while (( DIS_IN<DIS_FIN ));
     do

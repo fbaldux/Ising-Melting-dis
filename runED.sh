@@ -17,7 +17,7 @@ dis_num_fin=10
 overwrite=1
 nProc=7
 
-for N in $(seq 5 2 5);
+for N in $(seq 10 2 20);
 do    
     #(
     python3 buildDiagHam.py $N $dis_num_in $dis_num_fin 1>>log 2>>err
@@ -26,9 +26,9 @@ do
     do
         if [[ ! -f stop ]];
         then
-            python3 spectrum.py $N $eps $dis_num_in $dis_num_fin $overwrite $nProc 1>>log 2>>err
+            #python3 spectrum.py $N $eps $dis_num_in $dis_num_fin $overwrite $nProc 1>>log 2>>err
             #python3 spectrum_sparse.py $N $eps $eig_num $dis_num_in $dis_num_fin $overwrite $nProc 1>>log 2>>err
-            
+            echo
             #python3 tEv.py $N $eps $Tin $Tfin $dt $save_dt $dis_num_in $dis_num_fin $sparse $overwrite $nProc 1>>log 2>>err
             #python3 tEv_log.py $N $eps $Tfin $ts_per_decade $dis_num_in $dis_num_fin $overwrite $nProc 1>>log 2>>err
         fi
