@@ -34,9 +34,10 @@ if 1:
         data = np.loadtxt(filename)[:,0] 
         
         eig_num = len(data)
+        pos0 = np.where(data>0)[0][0]
         
-        start = eig_num//2 - int(0.5*frac*eig_num)
-        stop = eig_num//2 + int(0.5*frac*eig_num)        
+        start = max(pos0 - int(0.5*frac*eig_num), 0)
+        stop = pos0 + int(0.5*frac*eig_num)
         data = data[start:stop]
                         
         diff = np.diff(data)
@@ -46,7 +47,7 @@ if 1:
         
     r_av /= dis_num
     
-    fOut = open("Analysis/rAv_d%d.txt" % dis_num, 'a')
+    fOut = open("Analysis/rAv0_d%d.txt" % dis_num, 'a')
     fOut.write("%d %f %e\n" % (N, eps, r_av))
     fOut.close()
     
