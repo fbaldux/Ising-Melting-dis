@@ -149,7 +149,7 @@ for dis in range(dis_num_in,dis_num_fin):
         np.save(filename, v)
 
     
-print(sys.argv[0] + " N %d Tfin %d time %f" % (N, Tfin, time()-start))
+print(' '.join(sys.argv), "time", time()-start)
 
 
 

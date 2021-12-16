@@ -28,11 +28,14 @@ ts_per_decade = int( sys.argv[4] )
 dis_num_in = int( sys.argv[5] )
 dis_num_fin = int( sys.argv[6] )
 
+# whether to use sparse exponentiation
+use_sparse = int( sys.argv[7] )
+
 # whether to overwrite existing files
-overwrite = int( sys.argv[7] )
+overwrite = int( sys.argv[8] )
 
 # number of processors to use
-nProc = int( sys.argv[8] )
+nProc = int( sys.argv[9] )
 
 
 os.environ["MKL_NUM_THREADS"] = str(nProc)
@@ -40,7 +43,7 @@ os.environ["NUMEXPR_NUM_THREADS"] = str(nProc)
 os.environ["OMP_NUM_THREADS"] = str(nProc)
 
 import numpy as np
-from scipy.linalg import expm
+from scipy.linalg import eigh,expm
 from scipy import sparse
 from scipy.sparse.linalg import expm_multiply
 import numba as nb
@@ -102,9 +105,9 @@ for dis in range(dis_num_in,dis_num_fin):
         if epsilon != 0:
             filename = "Hamiltonians/rand_N%d_d%d.txt" % (N,dis)
             diag = np.loadtxt(filename)
-            Him = -1j*( H0 + epsilon * sparse.diags(diag) )
+            H = H0 + epsilon * sparse.diags(diag)
         else:
-            Him = -1j * H0
+            H = H0
  
  
         # array to store the observables
@@ -118,29 +121,47 @@ for dis in range(dis_num_in,dis_num_fin):
         
  
         # time evolution
-        # first step
-        v = expm_multiply(Him, v, start=0, stop=0.1, num=2, endpoint=True)[-1]
-        store(0.1, 1, np.abs(v)**2)
+        if use_sparse:
+            Him = -1j*H
+            del H
+            
+            # first step
+            v = expm_multiply(Him, v, start=0, stop=0.1, num=2, endpoint=True)[-1]
+            store(0.1, 1, np.abs(v)**2)
         
-        # bulk
-        c = 2
-        for p in range(-1,int(np.log10(Tfin))):
+            # bulk
+            c = 2
+            for p in range(-1,int(np.log10(Tfin))):
     
-            start = 10**p
-            stop = 10**(p+1)
-            dt = (stop-start) / (ts_per_decade-1)
-            vt = expm_multiply(Him, v, start=0, stop=stop-start, num=ts_per_decade, endpoint=True)
+                start = 10**p
+                stop = 10**(p+1)
+                dt = (stop-start) / (ts_per_decade-1)
+                vt = expm_multiply(Him, v, start=0, stop=stop-start, num=ts_per_decade, endpoint=True)
     
-            for it in range(ts_per_decade-1):
-                store(start+it*dt, c, np.abs(vt[it])**2)
-                c += 1
+                for it in range(ts_per_decade-1):
+                    store(start+it*dt, c, np.abs(vt[it])**2)
+                    c += 1
     
-            v = vt[-1]
+                v = vt[-1]
         
-        # last step
-        store(Tfin, c, np.abs(v)**2)
-        toSave = toSave[:c+1]
+            # last step
+            store(Tfin, c, np.abs(v)**2)
+            toSave = toSave[:c+1]
         
+        else:
+            ts = np.exp( np.linspace(np.log(0.1), np.log(Tfin), save_steps) )
+            
+            # it holds H = U @ Hdiag @ U.H
+            Hdiag, U = eigh(H.todense())
+            
+            vrot = np.dot(np.conj(U.T), v)
+            
+            for it in range(save_steps):
+                vt = np.einsum("ab,b,b", U, np.exp(-1j*Hdiag*ts[it]), vrot)
+                store(ts[it], it+1, np.abs(vt)**2)
+            
+            v = vt
+            
         
         # save to file
         filename = "Results/tEv_N%d_e%.4f_T%.2e_d%d.txt" % (N,epsilon,Tfin,dis)
@@ -150,8 +171,7 @@ for dis in range(dis_num_in,dis_num_fin):
         filename = "States/N%d_e%.4f_T%.2e_d%d.npy" % (N,epsilon,Tfin,dis)
         np.save(filename, v)
 
-    
-print(sys.argv[0] + " N %d Tfin %d time %f" % (N, Tfin, time()-startTime))
+print(' '.join(sys.argv), "time", time()-startTime)
 
 
 

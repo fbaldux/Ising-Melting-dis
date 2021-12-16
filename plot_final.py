@@ -13,7 +13,7 @@ from matplotlib import cm
 Ns = np.arange(18,28,2)
 #Ns = np.array((34,))
 #eps = np.arange(0.5,3.5,0.5)
-eps = np.array((2.,))
+eps = np.arange(2,5.5,0.5)
 T = 10000
 dis_num = 10
 
@@ -22,19 +22,17 @@ dis_num = 10
 
 fig, ax = plt.subplots()
 
-cols = cm.get_cmap("inferno", len(Ns)+1)
-#cols = cm.get_cmap("inferno", len(eps)+1)
+#cols = cm.get_cmap("inferno", len(Ns)+1)
+cols = cm.get_cmap("inferno", len(eps)+1)
 #cmaps = ["Greys", "Purples", "Blues", "Oranges", "Reds"]
 #cmaps = ["viridis", "plasma", "cividis", "Greys", "Purples", "Blues", "Oranges", "Reds"]
 
 #  -------------------------------------------  load  ------------------------------------------  #
 
-c = 0
-
+final = np.zeros((len(Ns),len(eps)))
+c=0
 for ie in range(len(eps)):
     e = eps[ie]
-    
-    #cols = cm.get_cmap(cmaps[ie], len(Ns)+1)
     
     for iN in range(len(Ns)):
         N = Ns[iN]
@@ -44,21 +42,18 @@ for ie in range(len(eps)):
         filename = "Averages/tEv_N%d_e%.4f_T%.2e_av%d.txt" % (N,e,T,dis_num)
         data = np.loadtxt(filename).T  # t lat1 vert lat2 area
         
+        final[iN,ie] = np.average(data[4,-10:])
 
 #  -------------------------------------------  plot  ------------------------------------------  #
 
-        #lab = r"$N=%d$" % N
-        #lab = r"$\varepsilon=%.2f$" % e
-        lab = r"$N=%d$, $\varepsilon=%.2f$" % (N,e)
-    
-        #ax.plot(ts, 0.5*(data[1]+data[3]), '-', label="lateral", c='black')
-    
-        #ax.plot(data[0], data[2], '-', label=lab, c=cols(c))
-        #ax.plot(data[0], np.sqrt(data[4]), '-', label=lab, c=cols(c))
-        ax.plot(data[0], data[4], '-', label=lab, c=cols(c))
-    
+    #lab = r"$N=%d$" % N
+    lab = r"$\varepsilon=%.2f$" % e
+    #lab = r"$N=%d$, $\varepsilon=%.2f$" % (N,e)
 
-        c += 1
+    ax.plot(Ns, final[:,ie], '.', label=lab, c=cols(c))
+
+
+    c += 1
 
 #  -------------------------------------------  clean  ------------------------------------------  #
 """
@@ -76,9 +71,9 @@ ax.plot(ts2, lat_clean2(ts2), '--', c='black')
 """
 #  ----------------------------------------  parameters  ---------------------------------------  #
 
-ax.set_xlabel(r"$t$")
+ax.set_xlabel(r"$N$")
 #ax.set_ylabel(r"$\ell$")
-ax.set_ylabel(r"$N(t)$")
+ax.set_ylabel(r"$N(t_{fin})$")
 #ax.set_ylabel(r"$\ell$")
 
 #plt.clim((0,1))
@@ -86,11 +81,11 @@ ax.set_ylabel(r"$N(t)$")
 #ax.set_title(r"$N=%d$, $\epsilon = %.2f$" %(N,epsilon))
 #ax.set_title(r"$N=%d$" %(N))
 
-ax.set_xscale("log")
-ax.set_yscale("log")
+#ax.set_xscale("log")
+#ax.set_yscale("log")
 
 ax.legend()
-plt.savefig("plot.pdf", bbox_inches='tight')
+#plt.savefig("plot.pdf", bbox_inches='tight')
 plt.show()
 
 
