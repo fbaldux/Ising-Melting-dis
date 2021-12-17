@@ -9,9 +9,9 @@ import numpy as np
 
 #  -------------------------------------------  load  ------------------------------------------  #
 
-filename = "Analysis/rAv0_d10000.txt"
+filename = "Analysis/rAv0_d2000.txt"
 #filename = "Analysis/GS_d2000.txt"
-#filename = "Analysis/a.txt"
+#filename = "a"
 
 data = np.loadtxt(filename).T
 data = np.flip(data, axis=0)

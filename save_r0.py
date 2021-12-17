@@ -27,7 +27,8 @@ r_av = 0.
 
 for dis in range(dis_num):
     #filename = "Results/spec_N%d_e%.4f_d%d.txt" % (N,eps,dis)
-    filename = "Results_N%d_e%.0f/spec_N%d_e%.4f_d%d.txt" % (N,eps,N,eps,dis)
+    #filename = "Results_N%d_e%.0f/spec_N%d_e%.4f_d%d.txt" % (N,eps,N,eps,dis)
+    filename = "OldGood/Results_N%d_e%.0f/spec_N%d_e%.4f_d%d.txt" % (N,eps,N,eps,dis)
     data = np.loadtxt(filename)[:,0] 
     
     eig_num = len(data)
@@ -48,7 +49,7 @@ fOut = open("Analysis/rAv0_d%d.txt" % dis_num, 'a')
 fOut.write("%d %f %e\n" % (N, eps, r_av))
 fOut.close()
 
-print("Done N%d e%f" % (N, eps))   
+print(' '.join(sys.argv))   
 
 
 

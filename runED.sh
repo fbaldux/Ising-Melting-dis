@@ -4,12 +4,12 @@ eig_num=10
 
 # for tEv
 Tin=0
-Tfin=100
+Tfin=10000
 dt=1
 save_dt=1
-sparse=1
+sparse=0
 
-ts_per_decade=50
+ts_per_decade=20
 
 dis_num_in=0
 dis_num_fin=1
@@ -17,10 +17,10 @@ dis_num_fin=1
 overwrite=1
 nProc=7
 
-for N in $(seq 10 2 10);
+for N in $(seq 24 2 24);
 do    
     #(
-    #python3 buildDiagHam.py $N $dis_num_in $dis_num_fin 1>>log 2>>err
+    python3 buildDiagHam.py $N $dis_num_in $dis_num_fin 1>>log 2>>err
   
     for eps in $(seq 5 1 5);
     do

@@ -10,7 +10,7 @@ from matplotlib import pyplot as plt
 from matplotlib import cm
 
 
-Ns = np.arange(18,28,2)
+Ns = np.arange(18,32,2)
 #Ns = np.array((34,))
 #eps = np.arange(0.5,3.5,0.5)
 eps = np.arange(2,5.5,0.5)
