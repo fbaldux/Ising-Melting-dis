@@ -21,21 +21,22 @@ N = int( sys.argv[1] )
 epsilon = float( sys.argv[2] )
 
 # time evolution parameters
-Tfin = float( sys.argv[3] )
-ts_per_decade = int( sys.argv[4] )
+Tin = float( sys.argv[3] )
+Tfin = float( sys.argv[4] )
+ts_per_decade = int( sys.argv[5] )
 
 # number of disorder instances
-dis_num_in = int( sys.argv[5] )
-dis_num_fin = int( sys.argv[6] )
+dis_num_in = int( sys.argv[6] )
+dis_num_fin = int( sys.argv[7] )
 
 # whether to use sparse exponentiation
-use_sparse = int( sys.argv[7] )
+use_sparse = int( sys.argv[8] )
 
 # whether to overwrite existing files
-overwrite = int( sys.argv[8] )
+overwrite = int( sys.argv[9] )
 
 # number of processors to use
-nProc = int( sys.argv[9] )
+nProc = int( sys.argv[10] )
 
 
 os.environ["MKL_NUM_THREADS"] = str(nProc)
@@ -51,7 +52,7 @@ from partitions import *
 from time import time
 
 
-save_steps = int( (np.log10(Tfin)+1)*ts_per_decade )
+save_steps = int( (np.log10(Tfin/Tin))*ts_per_decade )
 
 startTime = time()
 
@@ -126,12 +127,12 @@ for dis in range(dis_num_in,dis_num_fin):
             del H
             
             # first step
-            v = expm_multiply(Him, v, start=0, stop=0.1, num=2, endpoint=True)[-1]
-            store(0.1, 1, np.abs(v)**2)
+            v = expm_multiply(Him, v, start=0, stop=Tin, num=2, endpoint=True)[-1]
+            store(Tin, 1, np.abs(v)**2)
         
             # bulk
             c = 2
-            for p in range(-1,int(np.log10(Tfin))):
+            for p in range( int(np.log10(Tin)), int(np.log10(Tfin)) ):
     
                 start = 10**p
                 stop = 10**(p+1)
@@ -149,7 +150,7 @@ for dis in range(dis_num_in,dis_num_fin):
             toSave = toSave[:c+1]
         
         else:
-            ts = np.exp( np.linspace(np.log(0.1), np.log(Tfin), save_steps) )
+            ts = np.exp( np.linspace(np.log(Tin), np.log(Tfin), save_steps) )
             
             # it holds H = U @ Hdiag @ U.H
             Hdiag, U = eigh(H.todense())
