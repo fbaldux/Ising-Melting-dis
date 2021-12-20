@@ -110,7 +110,7 @@ for dis in range(dis_num_in,dis_num_fin):
         H = H0 + epsilon * sparse.diags(np.loadtxt(filename))
                 
         # sparse
-        center = np.sum(H.diagonal())
+        center = np.sum(H.diagonal()) / dim[N]
         eigvals, eigvecs = eigsh(H, k=eig_num, which='LM', sigma=center)
         eigvecs = eigvecs.T
         eigvecs2 = eigvecs**2

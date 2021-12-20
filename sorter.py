@@ -9,7 +9,7 @@ import numpy as np
 
 #  -------------------------------------------  load  ------------------------------------------  #
 
-filename = "Analysis/rAv0_d2000.txt"
+filename = "Analysis/rAv_d330.txt"
 #filename = "Analysis/GS_d2000.txt"
 #filename = "a"
 

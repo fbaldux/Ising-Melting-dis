@@ -7,6 +7,7 @@
 
 import sys
 import numpy as np
+np.seterr(all='raise')
 
 # system size
 N = int( sys.argv[1] )
@@ -29,8 +30,8 @@ dis_num_true = dis_num
 for dis in range(dis_num):
     
     try:
-        #filename = "Results/spec_N%d_e%.4f_d%d.txt" % (N,eps,dis)
-        filename = "Results_N%d_e%.0f/spec_N%d_e%.4f_d%d.txt" % (N,eps,N,eps,dis)
+        filename = "Results/spec_N%d_e%.4f_d%d.txt" % (N,eps,dis)
+        #filename = "Results_N%d_e%.0f/spec_N%d_e%.4f_d%d.txt" % (N,eps,N,eps,dis)
         data = np.loadtxt(filename)[:,0] 
     
         eig_num = len(data)
@@ -46,7 +47,7 @@ for dis in range(dis_num):
         r_av += np.average(rs)
     
     except:
-        sys.stderr.write("Error at " + filename)
+        sys.stderr.write("Error at " + filename + "\n")
         dis_num_true -= 1
         
 r_av /= dis_num_true
