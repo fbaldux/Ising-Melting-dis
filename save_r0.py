@@ -1,7 +1,7 @@
 #  ---------------------------------------------------------------------------------------------  #
 #
-#   The program computes the average r parameter from the Results/spec\_{...} files,
-#   saving it in Analysis/.
+#   The program computes the average r parameter around the energy E=0. 
+#   It loads the Results/spec\_{...} files, and saves to Analysis/
 #
 #  ---------------------------------------------------------------------------------------------  #
 

@@ -7,10 +7,14 @@ import cmasher as cmr
 
 #  -------------------------------------------  load  ------------------------------------------  #
 
-data1 = np.loadtxt("Analysis/rAv_d10000.txt").T
-data2 = np.loadtxt("Analysis/rAv_d2000.txt").T
-data3 = np.loadtxt("Analysis/rAv_d780.txt").T
-data4 = np.loadtxt("Analysis/rAv_d330.txt").T
+data1 = np.loadtxt("Analysis/rAv_d10000.txt")
+data2 = np.loadtxt("Analysis/rAv_d2000.txt")
+data3 = np.loadtxt("Analysis/rAv_d3200.txt")[:,:-1]
+data4 = np.loadtxt("Analysis/rAv_d960.txt")[:,:-1]
+data5 = np.loadtxt("Analysis/rAv_d880.txt")[:,:-1]
+data6 = np.loadtxt("Analysis/rAv_d600.txt")[:,:-1]
+
+data = np.vstack((data1,data2,data3,data4,data5,data6)).T
 
 
 #  -------------------------------------------  plot  ------------------------------------------  #
@@ -20,25 +24,12 @@ cols = cm.get_cmap('cmr.ember', 11)
 dots = ('o', 'v', '^', '>', '<', 's', 'P', 'h', 'X', 'D')
 
 c = 0
-for N in range(12,24,2): 
-    which = data1[0]==N
-    ax.plot(data1[1,which], data1[2,which], '-', marker=dots[c], ms=4, c=cols(c), label=N)
+for N in range(18,36,2): 
+    which = data[0]==N
+    ax.plot(data[1,which], data[2,which], '-', marker=dots[c], ms=4, c=cols(c), label=N)
     c += 1
 
-for N in range(24,28,2): 
-    which = data2[0]==N
-    ax.plot(data2[1,which], data2[2,which], '-', marker=dots[c], ms=4, c=cols(c), label=N)
-    c += 1
 
-for N in range(30,32,2): 
-    which = data3[0]==N
-    ax.plot(data3[1,which], data3[2,which], '-', marker=dots[c], ms=4, c=cols(c), label=N)
-    c += 1
-
-for N in range(32,34,2): 
-    which = data4[0]==N
-    ax.plot(data4[1,which], data4[2,which], '-', marker=dots[c], ms=4, c=cols(c), label=N)
-    c += 1
 
 ax.set_xlabel(r"$\varepsilon$")
 ax.set_ylabel(r"$r$")

@@ -1,7 +1,7 @@
 #  ---------------------------------------------------------------------------------------------  #
 #
-#   The program computes the average r parameter from the Results/spec\_{...} files,
-#   saving it in Analysis/.
+#   The program computes the average r parameter around the center of the spectrum. 
+#   It loads the Results/spec\_{...} files, and saves to Analysis/
 #
 #  ---------------------------------------------------------------------------------------------  #
 
@@ -30,8 +30,8 @@ dis_num_true = dis_num
 for dis in range(dis_num):
     
     try:
-        filename = "Results/spec_N%d_e%.4f_d%d.txt" % (N,eps,dis)
-        #filename = "Results_N%d_e%.0f/spec_N%d_e%.4f_d%d.txt" % (N,eps,N,eps,dis)
+        #filename = "Results/spec_N%d_e%.4f_d%d.txt" % (N,eps,dis)
+        filename = "Results_N%d_e%.0f/spec_N%d_e%.4f_d%d.txt" % (N,eps,N,eps,dis)
         data = np.loadtxt(filename)[:,0] 
     
         eig_num = len(data)
@@ -53,7 +53,7 @@ for dis in range(dis_num):
 r_av /= dis_num_true
 
 fOut = open("Analysis/rAv_d%d.txt" % dis_num, 'a')
-fOut.write("%d %f %e\n" % (N, eps, r_av))
+fOut.write("%d %f %e %d\n" % (N, eps, r_av, dis_num_true))
 fOut.close()
 
 print(' '.join(sys.argv))   

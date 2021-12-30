@@ -2,7 +2,7 @@
 #
 #   The program diagonalizes the disordered, Young graph Hamiltonian.
 #
-#   - It loads the non-zero entries of the adjacency matrix from the biggest Hamiltonian/clean_N#.txt file.
+#   - It loads the non-zero entries of the adjacency matrix from the Hamiltonian/clean_N#.txt files.
 #   - It loads the diagonal entries of the Hamiltonian matrix from the files Hamiltonian/rand...
 #   - It builds the sparse Hamiltonian from the entries.
 #   - It saves to Results/spec_{...} a fraction, at the center of the spectrum, of the

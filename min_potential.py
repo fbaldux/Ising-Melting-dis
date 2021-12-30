@@ -1,7 +1,7 @@
 #  ---------------------------------------------------------------------------------------------  #
 #
-#   The program computes the average and standard deviation for the GS energy. It loads the files
-#   from the Results/spec\_{...} and saves to Analysis/.
+#   The program computes the average and standard deviation for the minimum of the potential.
+#   It loads the files from the Results/spec\_{...} and saves to Analysis/.
 #
 #  ---------------------------------------------------------------------------------------------  #
 

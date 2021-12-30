@@ -1,6 +1,6 @@
 import numpy as np
 from scipy.interpolate import interp1d
-from scipy.optimize import fsolve
+from scipy.optimize import fsolve, curve_fit
 from matplotlib import pyplot as plt
 from matplotlib import cm
 import cmasher as cmr
@@ -18,6 +18,9 @@ data = np.vstack((data1,data2,data3,data4,data5,data6)).T
 
 
 #  -----------------------------------------  analyze  -----------------------------------------  #
+
+def fitfunc(x,a,b,c):
+    return a*np.exp(-b*x) + c
 
 xmin = 6
 deg = 5
@@ -39,19 +42,27 @@ for N in range(12,36,2):
     
     # interpolation
     #f = interp1d(x, y, kind='cubic')
-    # fit
+    
+    # polynomial fit
+    """
     fit = np.polyfit(x, y, deg)
     f1 = lambda x: np.dot( x**np.arange(deg+1), fit[::-1] )
     f = np.vectorize(f1)
+    """
+    # exp fit
+    #bds = ((0,2,0),(np.inf,2.2,np.inf))
+    guess = (0.2,0.2,0.3)
+    fit, cov = curve_fit(fitfunc, x, y, p0=guess) #, bounds=bds)
+    f = lambda x: fitfunc(x, *fit)
     
     # plot
-    
+    """
     plt.plot(x, y, '.', c=cols(c), label=N)
     x2 = np.linspace(min(x),max(x),100)
     plt.plot(x2, f(x2), '--', c=cols(c))
     plt.title(N)
     plt.show()
-    
+    """
     # store the results
     Ns.append(N)
     fs.append(fit)
@@ -61,7 +72,8 @@ for N in range(12,36,2):
 Ns = np.array(Ns)
 
 def f1(iN,x):
-    return np.dot( x**np.arange(deg+1), fs[iN][::-1] )
+    return fitfunc(x, *fs[iN])
+    #return np.dot( x**np.arange(deg+1), fs[iN][::-1] )
 
 f = np.vectorize(f1)
 
@@ -76,7 +88,7 @@ for iN in range(1,len(Ns)):
 crosses = np.array(crosses)
 
 #  -------------------------------------------  plot  ------------------------------------------  #
-"""
+
 fig, ax = plt.subplots()
 cols = cm.get_cmap('cmr.ember', 9)
 dots = ('o', 'v', '^', '>', '<', 's', 'P', 'h', 'X', 'D')
@@ -117,6 +129,6 @@ ax.set_ylabel(r"$r$")
 
 ax.legend()
 plt.show()
-
+"""
 
 

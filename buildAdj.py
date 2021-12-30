@@ -2,7 +2,7 @@
 #
 #   The program builds the adjacency matrix of the partitions graph as follows:
 #   - It generates all partitions of n and n+1 w/ the accelerated ruleAsc algorithm 
-#   - It runs through both arrays and finds what couples are linked by a "hook move"
+#   - It runs through both arrays and finds what couples are at a "single square" distance
 #   - It saves the sparse adjacency matrix entry by entry (i.e. row indices and column indices
 #     that are non-zero) 
 #

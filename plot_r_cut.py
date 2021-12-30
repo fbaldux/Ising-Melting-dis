@@ -8,8 +8,14 @@ import cmasher as cmr
 
 #  -------------------------------------------  load  ------------------------------------------  #
 
-data1 = np.loadtxt("Analysis/rAv_d10000.txt").T
-data2 = np.loadtxt("Analysis/rAv_d2000.txt").T
+data1 = np.loadtxt("Analysis/rAv_d10000.txt")
+data2 = np.loadtxt("Analysis/rAv_d2000.txt")
+data3 = np.loadtxt("Analysis/rAv_d3200.txt")[:,:-1]
+data4 = np.loadtxt("Analysis/rAv_d960.txt")[:,:-1]
+data5 = np.loadtxt("Analysis/rAv_d880.txt")[:,:-1]
+data6 = np.loadtxt("Analysis/rAv_d600.txt")[:,:-1]
+
+data = np.vstack((data1,data2,data3,data4,data5,data6)).T
 
 
 #  -----------------------------------------  analyze  -----------------------------------------  #
@@ -22,22 +28,14 @@ Ns = []
 cuts = []
 
 
-for N in range(12,24,2): 
-    which = data1[0]==N
-    f = interp1d(data1[1,which], data1[2,which], kind='cubic')
+for N in range(12,36,2): 
+    which = data[0]==N
+    f = interp1d(data[1,which], data[2,which], kind='cubic')
     f2 = lambda x: f(x) - cut
 
     Ns.append(N)
     cuts.append( fsolve(f2, 4) )
     
-for N in range(24,28,2): 
-    which = data2[0]==N
-    f = interp1d(data2[1,which], data2[2,which], kind='cubic')
-    f2 = lambda x: f(x) - cut
-    
-    Ns.append(N)
-    cuts.append( fsolve(f2, 4) )
-
 
 Ns = np.array(Ns)
 cuts = np.array(cuts)

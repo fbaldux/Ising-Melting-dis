@@ -102,13 +102,16 @@ cd $SLURM_SUBMIT_DIR
 #   Just fill this part as if it was a regular Bash script that you want to
 #   run on your computer.
 
-for N in $(seq 28 2 34);
+Ns=(         28   30   32  34 )
+dis_nums=( 4800 1440 1800 780 )
+
+for iN in $(seq 0 3);
 do
-    for eps in 0.5 1 1.5 2 2.5 3; #$(seq 1 14);
+    for eps in $(seq 1 17);
     do
-        #python3 save_r.py 22 $eps 10000 1>>log 2>>err &
+        python3 save_r.py ${Ns[$iN]} $eps ${dis_nums[$iN]} 1>>log 2>>err &
         #python average_ev.py $N $eps 1000 300 1>>log 2>>err &
-        python ground_state.py $N $eps 10000 1>>log 2>>err &
+        #python ground_state.py $N $eps 10000 1>>log 2>>err &
     done
     wait
 done
