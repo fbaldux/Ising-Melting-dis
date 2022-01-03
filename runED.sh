@@ -1,6 +1,6 @@
 
 # for ED
-eig_num=10
+eig_num=100
 
 # for tEv
 Tin=1e-3
@@ -12,7 +12,7 @@ sparse=1
 ts_per_decade=10
 
 dis_num_in=0
-dis_num_fin=1
+dis_num_fin=50
 
 overwrite=1
 nProc=7
@@ -22,7 +22,7 @@ do
     #(
     python3 buildDiagHam.py $N $dis_num_in $dis_num_fin 1>>log 2>>err
   
-    for eps in $(seq 5 1 5);
+    for eps in $(seq 1 1 1);
     do
         if [[ ! -f stop ]];
         then

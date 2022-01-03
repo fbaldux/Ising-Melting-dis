@@ -8,6 +8,11 @@ Melting of "solid" initial condition in 2d disordered quantum Ising model.
 The program averages the output of `tEv.py` from Results/ to Averages/
 
 
+## average\_spec.py
+
+The program averages the data in the Results/spec\_{...} files, saving them to Analysis/
+
+
 ## buildAdj.py
 
 The program builds the adjacency matrix of the partitions graph as follows:
@@ -40,6 +45,12 @@ The shell removes empty files (coming from failed jobs).
 ## ground\_state.py
 
 The program computes the average and standard deviation for the GS energy. It loads the files from the Results/spec\_{...} and saves to Analysis/.
+
+
+## histo\_s.py
+
+The program computes the histogram of the level spacing $s = E_n - E_{n-1}$
+It loads the Results/spec\_{...} files, and saves to Analysis/
 
 
 ## LanczosRoutines.py

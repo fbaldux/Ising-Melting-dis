@@ -9,10 +9,10 @@ import cmasher as cmr
 
 data1 = np.loadtxt("Analysis/rAv_d10000.txt")
 data2 = np.loadtxt("Analysis/rAv_d2000.txt")
-data3 = np.loadtxt("Analysis/rAv_d3200.txt")[:,:-1]
-data4 = np.loadtxt("Analysis/rAv_d960.txt")[:,:-1]
-data5 = np.loadtxt("Analysis/rAv_d880.txt")[:,:-1]
-data6 = np.loadtxt("Analysis/rAv_d600.txt")[:,:-1]
+data3 = np.loadtxt("Analysis/rAv_d4800.txt")[:,:-1]
+data4 = np.loadtxt("Analysis/rAv_d1440.txt")[:,:-1]
+data5 = np.loadtxt("Analysis/rAv_d1800.txt")[:,:-1]
+data6 = np.loadtxt("Analysis/rAv_d780.txt")[:,:-1]
 
 data = np.vstack((data1,data2,data3,data4,data5,data6)).T
 
@@ -34,7 +34,7 @@ for N in range(18,36,2):
 ax.set_xlabel(r"$\varepsilon$")
 ax.set_ylabel(r"$r$")
 
-ax.set_title(r"disorder realizations: 10000 ($N$=12...22) to 2000 ($N$=24...26)")
+ax.set_title(r"disorder realizations: 10000 ($N$=12) to 700 ($N$=34)")
 
 ax.legend(title=r"$N$")
 plt.show()

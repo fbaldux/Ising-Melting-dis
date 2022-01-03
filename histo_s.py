@@ -1,6 +1,6 @@
 #  ---------------------------------------------------------------------------------------------  #
 #
-#   The program computes the average r parameter around the center of the spectrum. 
+#   The program computes the histogram of the level spacing $s = E_n - E_{n-1}$
 #   It loads the Results/spec\_{...} files, and saves to Analysis/
 #
 #  ---------------------------------------------------------------------------------------------  #
@@ -21,18 +21,19 @@ dis_num = int( sys.argv[3] )
 # fraction of the spectrum to consider
 frac = float( sys.argv[4] )
 
+# number of bins
+N_bins = int( sys.argv[5] )
 
-#  ---------------------------------------  load & save  ---------------------------------------  #
 
-r_av = 0.
-dis_num_true = dis_num
+#  -------------------------------------------  load  ------------------------------------------  #
+
+s = []
 
 for dis in range(dis_num):
     
     try:
         #filename = "Results/spec_N%d_e%.4f_d%d.txt" % (N,eps,dis)
         filename = "Results_N%d_e%.0f/spec_N%d_e%.4f_d%d.txt" % (N,eps,N,eps,dis)
-        #filename = "OldGood/Results_N%d_e%.0f/spec_N%d_e%.4f_d%d.txt" % (N,eps,N,eps,dis)
         data = np.loadtxt(filename)[:,0] 
     
         eig_num = len(data)
@@ -43,20 +44,27 @@ for dis in range(dis_num):
             data = data[start:stop]
                     
         diff = np.diff(data)
-        rs = np.minimum(diff[:-1], diff[1:]) / np.maximum(diff[:-1], diff[1:])
-    
-        r_av += np.average(rs)
-    
+        s.extend(list(diff))
+        
     except:
         sys.stderr.write("Error at " + filename + "\n")
-        dis_num_true -= 1
-        
-r_av /= dis_num_true
 
-fOut = open("Analysis/rAv.txt", 'a')
-fOut.write("%d %f %e %d\n" % (N, eps, r_av, dis_num_true))
-fOut.close()
+s = np.array(s)
+
+#  --------------------------------------  make histogram  -------------------------------------  #
+
+histo,bins = np.histogram(s, bins=N_bins, density=True)
+bins = 0.5 * ( bins[1:] + bins[:-1] )
+
+
+#  -------------------------------------------  save  ------------------------------------------  #
+     
+filename = "Analysis/sHisto_N%d_e%.4f_d%d.txt" % (N,eps,dis_num)
+head = "bins histo"
+np.savetxt(filename, np.stack((bins,histo)).T, header=head)
 
 print(' '.join(sys.argv))   
    
+
+
 
