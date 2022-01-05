@@ -104,8 +104,7 @@ cd $SLURM_SUBMIT_DIR
 
 Ns=(          22   24   26   28   30   32  34 )
 dis_nums=( 10000 2000 2000 4800 1920 1800 800 )
-
-frac=1
+fracs=(      0.1  0.1  0.1    1    1    1   1 )
 Nbins=50
 
 for iN in $(seq 1 5);
@@ -113,12 +112,12 @@ do
     for eps in $(seq 1 18);
     do
         (
-        python3 save_r.py ${Ns[$iN]} $eps ${dis_nums[$iN]} $frac 1>>log 2>>err
-        python3 save_IPR.py ${Ns[$iN]} $eps ${dis_nums[$iN]} $frac 1>>log 2>>err
-        python3 save_KL.py ${Ns[$iN]} $eps ${dis_nums[$iN]} $frac 1>>log 2>>err
-        python3 save_PE.py ${Ns[$iN]} $eps ${dis_nums[$iN]} $frac 1>>log 2>>err
+        python3 save_r.py ${Ns[$iN]} $eps ${dis_nums[$iN]} ${fracs[$iN]} 1>>log 2>>err
+        python3 save_IPR.py ${Ns[$iN]} $eps ${dis_nums[$iN]} ${fracs[$iN]} 1>>log 2>>err
+        python3 save_KL.py ${Ns[$iN]} $eps ${dis_nums[$iN]} ${fracs[$iN]} 1>>log 2>>err
+        python3 save_PE.py ${Ns[$iN]} $eps ${dis_nums[$iN]} ${fracs[$iN]} 1>>log 2>>err
         
-        python3 histo_s.py ${Ns[$iN]} $eps ${dis_nums[$iN]} $frac $Nbins 1>>log 2>>err
+        python3 histo_s.py ${Ns[$iN]} $eps ${dis_nums[$iN]} ${fracs[$iN]} $Nbins 1>>log 2>>err
         
         #python average_ev.py $N $eps 1000 300 1>>log 2>>err &
         #python ground_state.py $N $eps 10000 1>>log 2>>err &
