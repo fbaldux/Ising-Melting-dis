@@ -110,9 +110,9 @@ Nbins=50
 
 for iN in $(seq 1 5);
 do
-    (
     for eps in $(seq 1 18);
     do
+        (
         python3 save_r.py ${Ns[$iN]} $eps ${dis_nums[$iN]} $frac 1>>log 2>>err
         python3 save_IPR.py ${Ns[$iN]} $eps ${dis_nums[$iN]} $frac 1>>log 2>>err
         python3 save_KL.py ${Ns[$iN]} $eps ${dis_nums[$iN]} $frac 1>>log 2>>err
@@ -122,9 +122,9 @@ do
         
         #python average_ev.py $N $eps 1000 300 1>>log 2>>err &
         #python ground_state.py $N $eps 10000 1>>log 2>>err &
+        )&
     done
     wait
-    )&
 done
 
 # ==== END OF JOB COMMANDS ===== #

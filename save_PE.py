@@ -31,7 +31,7 @@ for dis in range(dis_num):
     try:
         #filename = "Results/spec_N%d_e%.4f_d%d.txt" % (N,eps,dis)
         filename = "Results_N%d_e%.0f/spec_N%d_e%.4f_d%d.txt" % (N,eps,N,eps,dis)
-        data = np.loadtxt(filename)[:,3].T
+        data = np.loadtxt(filename)[:,3]
     
         eig_num = len(data)
     
@@ -40,11 +40,9 @@ for dis in range(dis_num):
             stop = eig_num//2 + int(0.5*frac*eig_num)        
             data = data[start:stop]
         
-        av_data = np.average(data)
-        if (not np.isnan(av_data)) and av_data!=np.inf:
-            PE += av_data
-        else:
-            raise ValueError("inf or nan encountered")
+        data = data[(~np.isnan(data)) & (data<np.inf)]
+        
+        PE += np.average(data)
     
     except:
         sys.stderr.write("Error at " + filename + "\n")
