@@ -14,7 +14,7 @@
 #
 # ---- Metadata configuration ----
 #
-#SBATCH --job-name=save       # The name of your job, you'll se it in squeue.
+#SBATCH --job-name=saver       # The name of your job, you'll se it in squeue.
 #SBATCH --mail-type=END              # Mail events (NONE, BEGIN, END, FAIL, ALL). Sends you an email when the job begins, ends, or fails; you can combine options.
 #SBATCH --mail-user=fbalducc@sissa.it    # Where to send the mail
 #
@@ -106,20 +106,25 @@ Ns=(          22   24   26   28   30   32  34 )
 dis_nums=( 10000 2000 2000 4800 1920 1800 800 )
 
 frac=1
-N_bins=50
+Nbins=50
 
-for iN in $(seq 3 5);
+for iN in $(seq 1 5);
 do
+    (
     for eps in $(seq 1 18);
     do
-        python3 save_r.py ${Ns[$iN]} $eps ${dis_nums[$iN]} $frac 1>>log 2>>err &
-        python3 histo_s.py ${Ns[$iN]} $eps ${dis_nums[$iN]} $frac $Nbins 1>>log 2>>err &
-        python3 average_spec.py ${Ns[$iN]} $eps ${dis_nums[$iN]} $frac 1>>log 2>>err &
+        python3 save_r.py ${Ns[$iN]} $eps ${dis_nums[$iN]} $frac 1>>log 2>>err
+        python3 save_IPR.py ${Ns[$iN]} $eps ${dis_nums[$iN]} $frac 1>>log 2>>err
+        python3 save_KL.py ${Ns[$iN]} $eps ${dis_nums[$iN]} $frac 1>>log 2>>err
+        python3 save_PE.py ${Ns[$iN]} $eps ${dis_nums[$iN]} $frac 1>>log 2>>err
+        
+        python3 histo_s.py ${Ns[$iN]} $eps ${dis_nums[$iN]} $frac $Nbins 1>>log 2>>err
         
         #python average_ev.py $N $eps 1000 300 1>>log 2>>err &
         #python ground_state.py $N $eps 10000 1>>log 2>>err &
     done
     wait
+    )&
 done
 
 # ==== END OF JOB COMMANDS ===== #

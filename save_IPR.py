@@ -1,7 +1,6 @@
 #  ---------------------------------------------------------------------------------------------  #
 #
-#   The program computes the average r parameter around the center of the spectrum. 
-#   It loads the Results/spec\_{...} files, and saves to Analysis/
+#   The program averages the data in the Results/spec\_{...} files, saving them to Analysis/
 #
 #  ---------------------------------------------------------------------------------------------  #
 
@@ -22,9 +21,9 @@ dis_num = int( sys.argv[3] )
 frac = float( sys.argv[4] )
 
 
-#  ---------------------------------------  load & save  ---------------------------------------  #
+#  -------------------------------------------  load  ------------------------------------------  #
 
-r_av = 0.
+IPR = 0
 dis_num_true = dis_num
 
 for dis in range(dis_num):
@@ -32,7 +31,7 @@ for dis in range(dis_num):
     try:
         #filename = "Results/spec_N%d_e%.4f_d%d.txt" % (N,eps,dis)
         filename = "Results_N%d_e%.0f/spec_N%d_e%.4f_d%d.txt" % (N,eps,N,eps,dis)
-        data = np.loadtxt(filename)[:,0] 
+        data = np.loadtxt(filename)[:,1].T
     
         eig_num = len(data)
     
@@ -40,20 +39,24 @@ for dis in range(dis_num):
             start = eig_num//2 - int(0.5*frac*eig_num)
             stop = eig_num//2 + int(0.5*frac*eig_num)        
             data = data[start:stop]
-                    
-        diff = np.diff(data)
-        rs = np.minimum(diff[:-1], diff[1:]) / np.maximum(diff[:-1], diff[1:])
-    
-        r_av += np.average(rs)
+        
+        av_data = np.average(data)
+        if (not np.isnan(av_data)) and av_data!=np.inf:
+            IPR += av_data
+        else:
+            raise ValueError("inf or nan encountered")
     
     except:
         sys.stderr.write("Error at " + filename + "\n")
         dis_num_true -= 1
         
-r_av /= dis_num_true
+IPR /= dis_num_true
 
-fOut = open("Analysis/rAv.txt", 'a')
-fOut.write("%d %f %e %d\n" % (N, eps, r_av, dis_num_true))
+
+#  -------------------------------------------  save  ------------------------------------------  #
+
+fOut = open("Analysis/IPR.txt", 'a')
+fOut.write("%d %f %e %d\n" % (N, eps, IPR, dis_num_true))
 fOut.close()
 
 print(' '.join(sys.argv))   

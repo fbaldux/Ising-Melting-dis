@@ -20,11 +20,11 @@ data = np.vstack((data1,data2,data3,data4,data5,data6)).T
 #  -------------------------------------------  plot  ------------------------------------------  #
 
 fig, ax = plt.subplots()
-cols = cm.get_cmap('cmr.ember', 11)
+cols = cm.get_cmap('cmr.ember', 10)
 dots = ('o', 'v', '^', '>', '<', 's', 'P', 'h', 'X', 'D')
 
 c = 0
-for N in range(18,36,2): 
+for N in range(14,32,2): 
     which = data[0]==N
     ax.plot(data[1,which], data[2,which], '-', marker=dots[c], ms=4, c=cols(c), label=N)
     c += 1
@@ -34,7 +34,7 @@ for N in range(18,36,2):
 ax.set_xlabel(r"$\varepsilon$")
 ax.set_ylabel(r"$r$")
 
-ax.set_title(r"disorder realizations: 10000 ($N$=12) to 700 ($N$=34)")
+#ax.set_title(r"disorder realizations: 10000 ($N$=12) to 700 ($N$=34)")
 
 ax.legend(title=r"$N$")
 plt.show()

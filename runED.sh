@@ -17,7 +17,7 @@ dis_num_fin=50
 overwrite=1
 nProc=7
 
-for N in $(seq 16 2 16);
+for N in $(seq 22 2 22);
 do    
     #(
     python3 buildDiagHam.py $N $dis_num_in $dis_num_fin 1>>log 2>>err

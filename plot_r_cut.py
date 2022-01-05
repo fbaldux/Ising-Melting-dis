@@ -28,7 +28,7 @@ Ns = []
 cuts = []
 
 
-for N in range(12,36,2): 
+for N in range(14,32,2): 
     which = data[0]==N
     f = interp1d(data[1,which], data[2,which], kind='cubic')
     f2 = lambda x: f(x) - cut

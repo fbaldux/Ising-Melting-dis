@@ -1,6 +1,6 @@
 #  ---------------------------------------------------------------------------------------------  #
 #
-#   The program computes the histogram of the level spacing $s = E_n - E_{n-1}$
+#   The program computes the histogram of the level spacing `s = E[n] - E[n-1]`  
 #   It loads the Results/spec\_{...} files, and saves to Analysis/
 #
 #  ---------------------------------------------------------------------------------------------  #

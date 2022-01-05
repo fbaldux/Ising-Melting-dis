@@ -8,11 +8,6 @@ Melting of "solid" initial condition in 2d disordered quantum Ising model.
 The program averages the output of `tEv.py` from Results/ to Averages/
 
 
-## average\_spec.py
-
-The program averages the data in the Results/spec\_{...} files, saving them to Analysis/
-
-
 ## buildAdj.py
 
 The program builds the adjacency matrix of the partitions graph as follows:
@@ -49,7 +44,7 @@ The program computes the average and standard deviation for the GS energy. It lo
 
 ## histo\_s.py
 
-The program computes the histogram of the level spacing $s = E_n - E_{n-1}$
+The program computes the histogram of the level spacing `s = E[n] - E[n-1]`  
 It loads the Results/spec\_{...} files, and saves to Analysis/
 
 
@@ -115,6 +110,11 @@ Shell to help the correct functioning of `runMissing{1,2}.sh`.
 Shell to run the single job on Ulysses, partition regular {1,2}.
 
 
+## save\_{...}.py
+
+The program averages the data in the Results/spec\_{...} files, saving them to Analysis/
+
+
 ## save\_r.py
 
 The program computes the average r parameter around the center of the spectrum.  
@@ -171,7 +171,7 @@ The program evolves a state on the Young diagram lattice.
 - It loads the non-zero entries of the adjacency matrix from the Hamiltonian/clean_N#.txt files.
 - It loads the diagonal entries of the Hamiltonian matrix from the files Hamiltonian/rand...
 - It builds the sparse Hamiltonian from the entries.
-- It evolves an initial state via full exponentiation or sparse Pade' (expm_multiply).
+- It evolves an initial state via full exponentiation or sparse Pade' (`expm_multiply`).
 - It saves to Results/ the linear dimensions of the state and the area.
 - It saves to States/ the final state reached.
 
@@ -183,7 +183,7 @@ The program evolves a state on the Young diagram lattice.
 - It loads the non-zero entries of the adjacency matrix from the Hamiltonian/clean_N#.txt files.
 - It loads the diagonal entries of the Hamiltonian matrix from the files Hamiltonian/rand...
 - It builds the sparse Hamiltonian from the entries.
-- It evolves an initial state via full exponentiation or sparse Pade' (expm_multiply).
+- It evolves an initial state via full exponentiation or sparse Pade' (`expm_multiply`).
 - It saves to Results/ the linear dimensions of the state and the area.
 - It saves to States/ the final state reached.
 - It is suited for time evolution in log scale (the dt is progressively increased).
