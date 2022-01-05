@@ -1,7 +1,9 @@
 *.pdf
 Analysis/*.*
+Analysis_old/
 Averages/*.*
 Hamiltonians/*.*
+Plots/*.pdf
 Results/*.*
 States/*.*
 **/.DS_store
