@@ -58,12 +58,12 @@ mid_std /= dis_num_true
 max_av /= dis_num_true
 max_std /= dis_num_true
 
-min_std -= min_av**2
-mid_std -= mid_av**2
-max_std -= max_av**2
+min_std = np.sqrt(min_std - min_av**2)
+mid_std = np.sqrt(mid_std - mid_av**2)
+max_std = np.sqrt(max_std - max_av**2)
 
 fOut = open("Analysis/lim_spec.txt", 'a')
-fOut.write("%d %f %e %e %e %e %e %e %d\n" % (N,eps, min_av,min_std, max_av,max_std, mid_av,mid_std, dis_num_true))
+fOut.write("%d %f %e %e %e %e %e %e %d\n" % (N,eps, min_av,min_std, mid_av,mid_std, max_av,max_std, dis_num_true))
 fOut.close()
 
 print(' '.join(sys.argv))   
