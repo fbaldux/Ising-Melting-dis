@@ -112,19 +112,7 @@ Shell to run the single job on Ulysses, partition regular {1,2}.
 
 ## save\_{...}.py
 
-The program averages the data in the Results/spec\_{...} files, saving them to Analysis/
-
-
-## save\_r.py
-
-The program computes the average r parameter around the center of the spectrum.  
-It loads the Results/spec\_{...} files, and saves to Analysis/
-
-
-## save\_r0.py
-
-The program computes the average r parameter around the energy E=0.  
-It loads the Results/spec\_{...} files, and saves to Analysis/
+The programs averages the data in the Results/spec\_{...} files, saving them to Analysis/
 
 
 ## sorter.py

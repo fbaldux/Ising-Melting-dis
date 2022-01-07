@@ -7,22 +7,15 @@ import cmasher as cmr
 
 #  -------------------------------------------  load  ------------------------------------------  #
 
-data1 = np.loadtxt("Analysis/rAv_d10000.txt")
-data2 = np.loadtxt("Analysis/rAv_d2000.txt")
-data3 = np.loadtxt("Analysis/rAv_d4800.txt")[:,:-1]
-data4 = np.loadtxt("Analysis/rAv_d1440.txt")[:,:-1]
-data5 = np.loadtxt("Analysis/rAv_d1800.txt")[:,:-1]
-data6 = np.loadtxt("Analysis/rAv_d780.txt")[:,:-1]
-
-data = np.vstack((data1,data2,data3,data4,data5,data6)).T
+data = np.loadtxt("Analysis/rAv.txt").T
 
 
 #  -----------------------------------------  analyze  -----------------------------------------  #
 
-def fitfunc(x,a,b,c):
-    return a*np.exp(-b*x) + c
+def fitfunc(x,a,b,c,d):
+    return (a*np.exp(-b*x) + c) * ( 1 + d/x )
 
-xmin = 6
+xmin = 7
 deg = 5
 
 rGOE = 0.5307
@@ -35,7 +28,7 @@ fs = []
 cols = cm.get_cmap('cmr.ember', 9)
 
 c = 0
-for N in range(12,36,2): 
+for N in range(22,36,2): 
     which = (data[0]==N) & (data[1]>=xmin)
     x = data[1,which]
     y = data[2,which]
@@ -51,18 +44,18 @@ for N in range(12,36,2):
     """
     # exp fit
     #bds = ((0,2,0),(np.inf,2.2,np.inf))
-    guess = (0.2,0.2,0.3)
+    guess = (0.2,0.2,0.3,0.01)
     fit, cov = curve_fit(fitfunc, x, y, p0=guess) #, bounds=bds)
     f = lambda x: fitfunc(x, *fit)
     
     # plot
-    """
+    
     plt.plot(x, y, '.', c=cols(c), label=N)
     x2 = np.linspace(min(x),max(x),100)
     plt.plot(x2, f(x2), '--', c=cols(c))
     plt.title(N)
     plt.show()
-    """
+    
     # store the results
     Ns.append(N)
     fs.append(fit)
@@ -81,7 +74,7 @@ crosses = np.zeros(len(Ns))
 crosses[0] = 8
 
 for iN in range(1,len(Ns)):
-    temp = lambda x: f(iN,x)-f(iN-1,x)
+    temp = lambda x: f(iN,x)-0.4
     
     crosses[iN] = fsolve(temp, crosses[iN-1])
     
