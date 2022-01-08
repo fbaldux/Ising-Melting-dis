@@ -8,7 +8,7 @@ from matplotlib import cm
 import cmasher as cmr
 
 
-typ = 'lin'
+typ = 'log'
 
 #  -------------------------------------------  load  ------------------------------------------  #
 
@@ -21,11 +21,11 @@ data = np.loadtxt("Analysis/KL.txt").T
 plt.rcParams.update({"text.usetex": True, "font.family": "serif", "font.size": 17})
 
 fig, ax = plt.subplots()
-cols = cm.get_cmap('cmr.ember_r', 8)
+cols = cm.get_cmap('cmr.ember_r', 10)
 dots = ('o', 'v', '^', '>', '<', 's', 'P', 'h', 'X', 'D')
 
 c = 0
-for N in range(22,36,2): 
+for N in range(18,36,2): 
     which = data[0]==N
     
     if typ == 'lin':

@@ -51,7 +51,7 @@ ax.set_ylabel(r"$P(s)$")
 
 #ax.set_title(r"$N = %d$; %d disorder realizations" % (N,dis_num))
 
-ax.legend(labelspacing=0.3)
+ax.legend(labelspacing=0.3, fontsize=15)
 plt.savefig("Plots/sHisto.pdf", bbox_inches='tight')
 plt.show()
 

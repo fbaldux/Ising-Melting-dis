@@ -19,11 +19,11 @@ data = np.loadtxt("Analysis/PE.txt").T
 plt.rcParams.update({"text.usetex": True, "font.family": "serif", "font.size": 17})
 
 fig, ax = plt.subplots()
-cols = cm.get_cmap('cmr.ember_r', 8)
+cols = cm.get_cmap('cmr.ember_r', 10)
 dots = ('o', 'v', '^', '>', '<', 's', 'P', 'h', 'X', 'D')
 
 c = 0
-for N in range(22,36,2): 
+for N in range(18,36,2): 
     which = data[0]==N
     #ax.plot(data[1,which], data[2,which], '-', marker=dots[c], ms=4, c=cols(c), label=N)
     ax.plot(2*data[1,which], data[2,which]/np.log(dim[N]), '-', marker=dots[c], ms=4, c=cols(c), label=N)

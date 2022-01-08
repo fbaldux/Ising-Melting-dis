@@ -9,7 +9,7 @@ import numpy as np
 
 #  -------------------------------------------  load  ------------------------------------------  #
 
-filename = "Analysis/lim_spec.txt"
+filename = "Analysis2/IPR.txt"
 
 data = np.loadtxt(filename).T
 data = np.flip(data, axis=0)

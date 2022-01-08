@@ -28,7 +28,7 @@ fs = []
 cols = cm.get_cmap('cmr.ember', 9)
 
 c = 0
-for N in range(22,36,2): 
+for N in range(18,36,2): 
     which = (data[0]==N) & (data[1]>=xmin)
     x = data[1,which]
     y = data[2,which]
