@@ -1,6 +1,5 @@
 *.pdf
 Analysis/*.*
-Analysis_old/
 Averages/*.*
 Hamiltonians/*.*
 Plots/*.pdf

@@ -24,6 +24,9 @@ frac = float( sys.argv[4] )
 # number of bins
 N_bins = int( sys.argv[5] )
 
+# value to cut histogram
+s_max = 10
+
 
 #  -------------------------------------------  load  ------------------------------------------  #
 
@@ -52,6 +55,9 @@ for dis in range(dis_num):
 s = np.array(s)
 
 #  --------------------------------------  make histogram  -------------------------------------  #
+
+s /= np.average(s)
+s = s[s<10]
 
 histo,bins = np.histogram(s, bins=N_bins, density=True)
 bins = 0.5 * ( bins[1:] + bins[:-1] )
