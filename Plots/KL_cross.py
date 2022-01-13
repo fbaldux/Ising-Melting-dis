@@ -7,7 +7,7 @@ import cmasher as cmr
 
 #  -------------------------------------------  load  ------------------------------------------  #
 
-data = np.loadtxt("Analysis/rAv.txt").T
+data = np.loadtxt("Analysis/KL.txt").T
 
 
 #  -----------------------------------------  analyze  -----------------------------------------  #
@@ -17,7 +17,8 @@ def fitfunc(x,a,b):
     #return (a*np.exp(-b*x) + c) * ( 1 + d/x )
     return (a*np.exp(-b*x) + c) 
 
-xmin = 7
+xmin = 6
+xmax = 18
 deg = 4
 
 rGOE = 0.5307
@@ -31,7 +32,7 @@ cols = cm.get_cmap('cmr.ember', 9)
 
 c = 0
 for N in range(18,36,2): 
-    which = (data[0]==N) & (data[1]>=xmin)
+    which = (data[0]==N) & (data[1]>=xmin) & (data[1]<=xmax)
     x = data[1,which]
     y = data[2,which]
     
@@ -40,8 +41,8 @@ for N in range(18,36,2):
     
     # polynomial fit
     fit = np.polyfit(x, y, deg)
-    f1 = lambda x: np.dot( x**np.arange(deg+1), fit[::-1] )
-    f = np.vectorize(f1)
+    f = lambda x: np.dot( x**np.arange(deg+1), fit[::-1] )
+    
     """
     # exp fit
     #bds = ((0,2,0),(np.inf,2.2,np.inf))
@@ -104,14 +105,14 @@ ax.plot(Ns[1:], f(Ns[1:]), '--', c='gray', label="fit")
 ax.set_xlabel(r"$N$")
 ax.set_ylabel(r"$\varepsilon^*$")
 
-ax.set_title(r"$\varepsilon^*$ s.t. $r(\varepsilon^*,N) = r(\varepsilon^*,N-2)$")
+ax.set_title(r"$\varepsilon^*$ s.t. KL$(\varepsilon^*,N)$ = KL$(\varepsilon^*,N-2)$")
 
 ax.legend()
 plt.show()
 
 exit(0)
-"""
 
+"""
 fig, ax = plt.subplots()
 cols = cm.get_cmap('cmr.ember', 12)
 dots = ('o', 'v', '^', '>', '<', 's', 'P', 'h', 'X', 'D')

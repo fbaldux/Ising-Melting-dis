@@ -29,7 +29,8 @@ for eps in range(1,19,3):
     filename = "Analysis/sHisto_N%d_e%.4f_d%d.txt" % (N,eps,dis_num)
     data = np.loadtxt(filename).T
     
-    # compute average spacing
+    """
+    #compute average spacing
     av_s = 0.5 * data[1,0]*data[0,0] * (data[0,1]-data[0,0])
     for x in range(1,len(data[0])-1):
         av_s += data[1,x]*data[0,x] * (data[0,x+1]-data[0,x])
@@ -37,6 +38,10 @@ for eps in range(1,19,3):
         
     ax.plot(data[0]/av_s, data[1]*av_s, '-', c=cols(c), label=r"$\varepsilon = %d$" % eps)
     #ax.plot(data[0]/av_s, data[1]*av_s, '-', c=cols(c), label=eps, marker=dots[c], ms=4)
+    """
+    
+    ax.plot(data[0], data[1], '-', c=cols(c), label=r"$W = %d$" % (2*eps))
+    
     c += 1
 
 

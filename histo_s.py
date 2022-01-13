@@ -56,7 +56,7 @@ s = np.array(s)
 
 #  --------------------------------------  make histogram  -------------------------------------  #
 
-s /= np.average(s)
+s = s / np.average(s)
 s = s[s<10]
 
 histo,bins = np.histogram(s, bins=N_bins, density=True)

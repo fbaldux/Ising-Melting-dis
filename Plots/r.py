@@ -23,7 +23,7 @@ dots = ('o', 'v', '^', '>', '<', 's', 'P', 'h', 'X', 'D')
 ax.axhline(0.53, ls='--', color='black', label="GOE")
 
 c = 0
-for N in range(18,36,2): 
+for N in range(18,38,2): 
     which = data[0]==N
     ax.plot(2*data[1,which], data[2,which], '-', marker=dots[c], ms=4, c=cols(c), label=r"$N = %d$" % N)
     c += 1

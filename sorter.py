@@ -9,7 +9,7 @@ import numpy as np
 
 #  -------------------------------------------  load  ------------------------------------------  #
 
-filename = "Analysis2/IPR.txt"
+filename = "Analysis2/rAv.txt"
 
 data = np.loadtxt(filename).T
 data = np.flip(data, axis=0)

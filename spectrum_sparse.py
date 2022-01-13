@@ -61,7 +61,7 @@ H0 = load_adjacency(N)
 
 
 #  -------------------------------  build magnetization operator  ------------------------------  #
-
+"""
 levels = [np.array(((0,),))]
 for n in range(1,N+1):
     levels.append( np.array( [x for x in generate_partitions(n)] ) )
@@ -95,7 +95,7 @@ M = np.einsum("xyi,i->xy", mag2d_op, np.ones(dim[N])).flatten()
 mag2d_op = mag2d_op.reshape(N*N,dim[N])
 mag2d_op = mag2d_op[M!=0]
 
-
+"""
 #  -------------------------------------------  main  ------------------------------------------  #
 
 for dis in range(dis_num_in,dis_num_fin):
@@ -136,12 +136,12 @@ for dis in range(dis_num_in,dis_num_fin):
         argLog[argLog==0] = 1.
         PE = - np.einsum( "ab,ab->a", eigvecs2, np.log(argLog) )
         
-        
+        """
         # compute the magnetization difference in every site, for neighbouring states
         # NOTE: magDiff2 has dimension (# squares)x(eig_num-1)
         magDiff = np.einsum("xk,ik->xi", mag2d_op, eigvecs2)
         magDiff = 2 * np.abs(magDiff[:,1:] - magDiff[:,:1])
-        
+        """
        
         # save to file
         filename = "Results/spec_N%d_e%.4f_d%d.txt" % (N, epsilon, dis)
@@ -149,10 +149,11 @@ for dis in range(dis_num_in,dis_num_fin):
         head = "eigenvalue IPR KL PE"
         np.savetxt(filename, toSave, header=head)
         
+        """
         filename = "Results/magDiff_N%d_e%.4f_d%d.txt" % (N, epsilon, dis)
         head = "magDiff[site 0] magDiff[site 1] etc."
         np.savetxt(filename, magDiff.T, header=head)
-        
+        """
         """
         filename = "Results/spec_N%d_e%.4f_d%d.txt" % (N, epsilon, dis)
         head = "eigval eigvec[0] eigvec[1] ..." 
