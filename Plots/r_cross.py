@@ -1,25 +1,21 @@
 import numpy as np
 from scipy.interpolate import interp1d
-from scipy.optimize import fsolve
+from scipy.optimize import fsolve, curve_fit
 from matplotlib import pyplot as plt
 from matplotlib import cm
 import cmasher as cmr
 
 #  -------------------------------------------  load  ------------------------------------------  #
 
-data1 = np.loadtxt("Analysis/rAv_d10000.txt")
-data2 = np.loadtxt("Analysis/rAv_d2000.txt")
-data3 = np.loadtxt("Analysis/rAv_d3200.txt")[:,:-1]
-data4 = np.loadtxt("Analysis/rAv_d960.txt")[:,:-1]
-data5 = np.loadtxt("Analysis/rAv_d880.txt")[:,:-1]
-data6 = np.loadtxt("Analysis/rAv_d600.txt")[:,:-1]
-
-data = np.vstack((data1,data2,data3,data4,data5,data6)).T
+data = np.loadtxt("Analysis/rAv.txt").T
 
 
 #  -----------------------------------------  analyze  -----------------------------------------  #
 
-xmin = 6
+def fitfunc(x,a,b,c,d):
+    return (a*np.exp(-b*x) + c) * ( 1 + d/x )
+
+xmin = 7
 deg = 5
 
 rGOE = 0.5307
@@ -32,26 +28,34 @@ fs = []
 cols = cm.get_cmap('cmr.ember', 9)
 
 c = 0
-for N in range(12,36,2): 
+for N in range(18,36,2): 
     which = (data[0]==N) & (data[1]>=xmin)
     x = data[1,which]
     y = data[2,which]
     
     # interpolation
     #f = interp1d(x, y, kind='cubic')
-    # fit
+    
+    # polynomial fit
+    """
     fit = np.polyfit(x, y, deg)
     f1 = lambda x: np.dot( x**np.arange(deg+1), fit[::-1] )
     f = np.vectorize(f1)
+    """
+    # exp fit
+    #bds = ((0,2,0),(np.inf,2.2,np.inf))
+    guess = (0.2,0.2,0.3,0.01)
+    fit, cov = curve_fit(fitfunc, x, y, p0=guess) #, bounds=bds)
+    f = lambda x: fitfunc(x, *fit)
     
     # plot
-    
+    """
     plt.plot(x, y, '.', c=cols(c), label=N)
     x2 = np.linspace(min(x),max(x),100)
     plt.plot(x2, f(x2), '--', c=cols(c))
     plt.title(N)
     plt.show()
-    
+    """
     # store the results
     Ns.append(N)
     fs.append(fit)
@@ -61,7 +65,8 @@ for N in range(12,36,2):
 Ns = np.array(Ns)
 
 def f1(iN,x):
-    return np.dot( x**np.arange(deg+1), fs[iN][::-1] )
+    return fitfunc(x, *fs[iN])
+    #return np.dot( x**np.arange(deg+1), fs[iN][::-1] )
 
 f = np.vectorize(f1)
 
@@ -69,14 +74,16 @@ crosses = np.zeros(len(Ns))
 crosses[0] = 8
 
 for iN in range(1,len(Ns)):
-    temp = lambda x: f(iN,x)-f(iN-1,x)
+    temp = lambda x: f(iN,x)-0.4
     
     crosses[iN] = fsolve(temp, crosses[iN-1])
     
 crosses = np.array(crosses)
 
+np.savetxt("Plots/r_cross.txt", np.stack((Ns[1:], crosses[1:])).T, header="N crossing", fmt="%d %f")
+
 #  -------------------------------------------  plot  ------------------------------------------  #
-"""
+
 fig, ax = plt.subplots()
 cols = cm.get_cmap('cmr.ember', 9)
 dots = ('o', 'v', '^', '>', '<', 's', 'P', 'h', 'X', 'D')
@@ -84,9 +91,9 @@ dots = ('o', 'v', '^', '>', '<', 's', 'P', 'h', 'X', 'D')
 ax.plot(Ns[1:], crosses[1:], '.', c='black', label="data")
 
 # fit
-fit = np.polyfit(Ns[1:], crosses[1:], 1)
+fit = np.polyfit(Ns[-4:], crosses[-4:], 1)
 f = lambda x: fit[0]*x + fit[1]
-ax.plot(Ns[1:], f(Ns[1:]), '--', c='gray', label="fit")
+ax.plot(Ns[-4:], f(Ns[-4:]), '--', c='gray', label="fit")
 
 ax.set_xlabel(r"$N$")
 ax.set_ylabel(r"$\varepsilon^*$")
@@ -117,6 +124,6 @@ ax.set_ylabel(r"$r$")
 
 ax.legend()
 plt.show()
-
+"""
 
 

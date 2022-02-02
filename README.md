@@ -77,7 +77,12 @@ Shell to reorganize folders of results.
 
 ## partitions.py
 
-The program contains routines for building the Young diagrams.
+The program contains routines for building the Young diagrams. In detail:
+
+- The accelerated "rule ascending" algorithm to generate the diagrams.
+- The procedures to load the Hamiltonian.
+- The procedures to build the (diagonal) operators that give the linear dimensions and the area of a diagram.
+- The procedures to compute the entanglement entropy of a vertical bipartition.
 
 
 ## plot\_{...}.py

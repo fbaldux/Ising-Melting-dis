@@ -19,7 +19,7 @@ def fitfunc(x,a,b):
 
 xmin = 6
 xmax = 18
-deg = 4
+deg = 3
 
 rGOE = 0.5307
 dr = 0.02
@@ -54,7 +54,7 @@ for N in range(18,36,2):
     """
     plt.plot(x, y, '.', c=cols(c), label=N)
     x2 = np.linspace(min(x),max(x),100)
-    plt.plot(x2, f(x2), '--', c=cols(c))
+    plt.plot(x2, np.vectorize(f)(x2), '--', c=cols(c))
     plt.title(N)
     plt.show()
     """
@@ -80,13 +80,13 @@ for iN in range(1,len(Ns)):
     
     crosses[iN] = fsolve(temp, crosses[iN-1])
     #crosses[iN] = brentq(temp,9,18)
-    """
-    x2 = np.linspace(9,18,100)
-    plt.plot(x2, temp(x2), '--', c=cols(c))
-    plt.title(N)
-    plt.axhline(0, ls=":", c='black')
+    #"""
+    x2 = np.linspace(xmin,xmax,100)
+    plt.plot(x2, f(iN-1,x2), '-', c='black', label=Ns[iN-1])
+    plt.plot(x2, f(iN,x2), '--', c='blue', label=Ns[iN])
+    plt.legend()
     plt.show()
-    """    
+    #"""    
 crosses = np.array(crosses)
 
 #  -------------------------------------------  plot  ------------------------------------------  #

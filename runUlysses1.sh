@@ -107,7 +107,7 @@ N=ENNE
 eps=EPSILON
 
 # for ED
-eig_num=2000
+eig_num=1000
 
 # for tEv
 Tin=0

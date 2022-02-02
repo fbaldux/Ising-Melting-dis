@@ -1,5 +1,8 @@
+import sys
+sys.path.append('../Numerics-dis')
 
 import numpy as np
+from partitions import *
 from matplotlib import pyplot as plt
 from matplotlib import cm
 from matplotlib.ticker import MultipleLocator
@@ -8,7 +11,7 @@ import cmasher as cmr
 
 #  -------------------------------------------  load  ------------------------------------------  #
 
-data = np.loadtxt("Analysis/rAv.txt").T
+data = np.loadtxt("Analysis/PE.txt").T
 
 
 #  -------------------------------------------  plot  ------------------------------------------  #
@@ -26,7 +29,7 @@ dots = ('o', 'v', '^', '>', '<', 's', 'P', 'h', 'X', 'D')
 c = 0
 for N in range(18,36,4): 
     which = data[0]==N
-    ax.plot(2*data[1,which], data[2,which], '-', marker=dots[c], ms=4, c=cols(c), label=r"$%d$" % N)
+    ax.plot(2*data[1,which], data[2,which]/np.log(dim[N]), '-', marker=dots[c], ms=4, c=cols(c), label=r"$%d$" % N)
     #ax.plot(2*data[1,which], data[2,which], '-', marker=dots[c], ms=4, c=cols(c))
     c += 2
 
@@ -34,20 +37,20 @@ for N in range(18,36,4):
 #ax.axhline(0.39, ls=':', color='black', label="Poisson")
 #ax.axhline(0.39, ls=':', color='black')
 
-ax.plot((5,14), (0.51,0.51), '--', c="steelblue")
-ax.text(12.6, 0.512, "U", c="steelblue")
+ax.plot((5,14), (0.8,0.8), '--', c="steelblue")
+#ax.text(12.6, 0.512, "U", c="steelblue")
 
 #ax.plot((14,22), (0.41,0.41), '-.cd ', c="darkgreen")
 #ax.text(14.4, 0.4, "L", c="darkgreen")
 
 ax.set_xlabel(r"$W$")
-ax.set_ylabel(r"$r$")
+ax.set_ylabel(r"$S_{\mathrm{P}} / \ln d_N$")
 
-ax.set_xlim((1,37))
-ax.set_ylim((0.38,0.54))
+#ax.set_xlim((1,37))
+#ax.set_ylim((0.38,0.54))
 
-ax.set_xticks(np.arange(5,40,5))
-ax.set_yticks(np.linspace(0.39,0.53,6))
+#ax.set_xticks(np.arange(5,40,5))
+#ax.set_yticks(np.linspace(0.39,0.53,6))
 #ax.tick_params(axis='x', which='minor', bottom=False)
 
 
@@ -62,15 +65,11 @@ ax2 = ax.inset_axes([left, bottom, width, height])
 
 
 # load
-#low = np.loadtxt("Plots/r_cut_low.txt").T
-high = np.loadtxt("Plots/r_cut_high.txt").T
-cross = np.loadtxt("Plots/r_cross.txt").T
+cut = np.loadtxt("Plots/PE_cut.txt").T
 
 
 # plot
-#ax2.plot(low[0], low[1], 'o', ms=3, c='darkgreen', label=r"$W_L$")
-ax2.plot(high[0], high[1], 's', ms=3, c='steelblue', label=r"$W_U$")
-ax2.plot(cross[0], cross[1], 'o', ms=3, c='darkgreen', label=r"$W^*$")
+ax2.plot(cut[0], cut[1], 's', ms=3, c='steelblue')
 
 """
 # fit low
@@ -81,20 +80,15 @@ f = lambda x: fit[0]*x + fit[1]
 ax2.plot(low[0,start:], f(low[0,start:]), '-.',  c='darkgreen')
 """
 
-# fit high
-fit = np.polyfit(high[0], high[1], 1)
-print("high", fit)
-f = lambda x: fit[0]*x + fit[1]
-ax2.plot(high[0], f(high[0]), '--',  c='steelblue')
 
-
+"""
 # fit cross
 fit = np.polyfit(cross[0,-4:], cross[1,-4:], 1)
 print("cross", fit)
 f = lambda x: fit[0]*x + fit[1]
 ax2.plot(cross[0,-4:], f(cross[0,-4:]), '-.',  c='darkgreen')
 
-
+"""
 ax2.set_xlabel(r"$N$")
 #ax2.set_ylabel(r"$W$")
 
@@ -108,7 +102,7 @@ ax2.set_xticks(np.arange(20,40,5))
 
 ax2.legend(labelspacing=0.3, handlelength=0.5, handletextpad=0.5, frameon=False, fontsize=15)
 
-plt.savefig("Plots/r.pdf", bbox_inches='tight')
+plt.savefig("Plots/PE.pdf", bbox_inches='tight')
 plt.show()
 
 

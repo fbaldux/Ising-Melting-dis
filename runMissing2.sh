@@ -14,7 +14,7 @@
 #
 # ---- Metadata configuration ----
 #
-#SBATCH --job-name=nENNE_eEPSILON_dDIS_FIN       # The name of your job, you'll se it in squeue.
+#SBATCH --job-name=nENNE_eEPSILON_miss       # The name of your job, you'll se it in squeue.
 #SBATCH --mail-type=NONE              # Mail events (NONE, BEGIN, END, FAIL, ALL). Sends you an email when the job begins, ends, or fails; you can combine options.
 #SBATCH --mail-user=fbalducc@sissa.it    # Where to send the mail
 #

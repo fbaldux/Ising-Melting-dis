@@ -1,10 +1,10 @@
 *.pdf
-Analysis/*.*
-Averages/*.*
-Hamiltonians/*.*
+Analysis*
+Averages*
+Hamiltonians*
 Plots/*.pdf
-Results/*.*
-States/*.*
+Results*
+States/*
 **/.DS_store
 log
 err

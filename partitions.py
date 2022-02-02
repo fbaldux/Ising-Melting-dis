@@ -1,12 +1,18 @@
 #  ---------------------------------------------------------------------------------------------  #
 #
-#   The program contains routines for building the Young diagrams.
+#   The program contains routines for building the Young diagrams. In detail:
+#
+#   - The accelerated "rule ascending" algorithm to generate the diagrams.
+#   - The procedures to load the Hamiltonian.
+#   - The procedures to build the (diagonal) operators that give the linear dimensions and the area of a diagram.
+#   - The procedures to compute the entanglement entropy of a vertical bipartition.
 #
 #  ---------------------------------------------------------------------------------------------  #
 
 import os
 import numpy as np
 from scipy import sparse
+from scipy.linalg import eigh
 import numba as nb
 
 #  -----------------------  dimensions of the Young graph level by level  ----------------------  #
@@ -51,8 +57,19 @@ def generate_partitions(n):
         yield np.concatenate(( np.flip(a[:k+1]), np.zeros(n-k-1,dtype=np.int_) ))
 
 
+# to generate all the diagrams
+"""
+levels = [np.array(((0,),))]
+for n in range(1,N+1):
+    levels.append( np.array( [x for x in generate_partitions(n)] ) )
+
+levels = tuple(levels)
+"""
+
+
 #  -------------------------------  load hopping terms from file  ------------------------------  #
 
+# first order moves
 def load_adjacency(N):
     H0 = sparse.lil_matrix((dim[N],dim[N]))
     H0[0,1] = 1
@@ -70,7 +87,32 @@ def load_adjacency(N):
         H0 += sparse.csr_matrix((np.ones(len(row_ind)), (row_ind, col_ind)), shape=(dim[N], dim[N]))
 
     H0 += H0.T
+        
+    return H0
+
+
+# second order moves
+def load_adjacency2(N):
+    H0 = sparse.lil_matrix((dim[N],dim[N]))
+    H0[0,2] = 1
+    H0[0,3] = 1
+    H0[1,4] = 1
+    H0[1,6] = 1
+    H0 = sparse.csr_matrix(H0)
+
+    for n in range(3,N):
     
+        filename = "Hamiltonians/clean2_N%d.txt" % n
+        if os.path.isfile(filename):
+            row_ind, col_ind = np.loadtxt(filename).T
+        else:
+            print("\nError! Hamiltonian for N=%d not built!\n" % n)
+            exit(0)
+
+        H0 += sparse.csr_matrix((np.ones(len(row_ind)), (row_ind, col_ind)), shape=(dim[N], dim[N]))
+
+    H0 += H0.T
+        
     return H0
 
 
@@ -140,5 +182,131 @@ def area(N):
         area_op[dim[n-1]:dim[n]] = n
     
     return area_op
+
+
+# (diagonal) operator that gives the number of corners in a Young diagram
+@nb.njit
+def corner_number(N,levels):
+    cn = np.zeros(dim[N], dtype=np.float_)
+    cn[0] = 1
+    
+    # sum over all basis states (split in n and i)
+    for n in range(1,N+1):
+        for i in range(p[n]):
+            k = dim[n-1]+i
+            
+            # the first row already has a corner
+            cn[k] = 1
+            for r in range(n-1):
+                if levels[n][i,r] != levels[n][i,r+1]:
+                    cn[k] += 2
+            # since I cannot test the last row with the cycle
+            if levels[n][i,-1] > 0:
+                cn[k] += 2
+     
+    return cn
+
+
+#  -----------------------------------  entanglement entropy  ----------------------------------  #
+
+# builds the integer representation in the language of the fermions for a single diagram
+def integer_repr(N,diagram):
+    diagram = np.append(diagram, np.zeros(N-np.sum(diagram)+1), 0)
+        
+    x = N
+    y = 0
+    s = ""
+    
+    # put a 0 for going down, 1 for going up
+    while y<N or x>0:
+        if diagram[y] < x:
+            x -= 1
+            s += "0"
+        elif diagram[y] == x:
+            y += 1
+            s += "1"
+    
+    # return directly the 0/1 string using the binary representation
+    return sum([int(s[k])*2**(2*N-k-1) for k in range(2*N)])
+
+
+# builds the integer representation in the language of the fermions for all the diagrams
+def build_integer_repr(N,levels):
+    int_rep = np.zeros(dim[N], dtype=np.int_)
+    
+    int_rep[0] = sum([2**(N-k-1) for k in range(N)])
+    
+    for n in range(1,N+1):
+        for i in range(p[n]):
+            k = dim[n-1]+i
+            
+            int_rep[k] = integer_repr(N,levels[n][i])        
+
+    return int_rep
+
+
+# standard binary search in a sorted array
+@nb.njit
+def binary_search(elem, array):
+    low = 0  
+    high = len(array) - 1  
+
+    while low <= high:  
+        mid = (high + low) // 2  
+
+        if array[mid] < elem:  
+            low = mid + 1  
+        elif array[mid] > elem:  
+            high = mid - 1  
+        else:  
+            return mid  
+
+    #return -1
+
+
+# computes the reduced density matrix of half the space, cut vertically from the vertex
+# needs in input:
+""" int_rep = build_integer_repr(N,levels)
+
+    dictionary = np.zeros((2,dim[N]), dtype=np.int_)
+    dictionary[0] = int_rep // (2**N)      # left half
+    dictionary[1] = int_rep %  (2**N)      # right half
+
+    new_states = np.unique(dictionary[1]) """
+@nb.njit
+def reduced_density_matrix(N,psi,dictionary,new_states):
+    
+    dim_red = len(new_states)
+    rho_red = np.zeros((dim_red,dim_red), dtype=np.complex_)
+
+    for D in range(dim[N]):
+        for Dp in range(dim[N]):
+            # if the diagrams are equal on the right
+            if dictionary[1,D] == dictionary[1,Dp]:
+                # then they become entangled on the left
+                Dleft = binary_search(dictionary[0,D], new_states)
+                Dpleft = binary_search(dictionary[0,Dp], new_states)
+                """
+                # not working with numba
+                Dleft = np.where(new_states==dictionary[0,D])[0]
+                Dpleft = np.where(new_states==dictionary[0,Dp])[0]
+                """
+                rho_red[Dleft,Dpleft] += psi[D] * np.conj(psi[Dp])
+
+    return rho_red
+    
+
+# standard entanglement entropy computation
+def entanglement_entropy(red_rho):
+    # eigenvalues of the reduced density matrix (cut the too small)
+    ent_spec = eigh(red_rho, eigvals_only=True)
+    ent_spec = ent_spec[ent_spec > 1e-10]
+
+    return -np.sum(ent_spec * np.log(ent_spec))
+
+
+
+
+
 
 

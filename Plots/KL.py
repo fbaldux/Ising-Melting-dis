@@ -8,7 +8,7 @@ from matplotlib import cm
 import cmasher as cmr
 
 
-typ = 'log'
+typ = 'lin'
 
 #  -------------------------------------------  load  ------------------------------------------  #
 
@@ -54,7 +54,7 @@ ax.set_xticks(np.arange(5,40,5))
 
 ax.legend(title=r"$N$", labelspacing=0.3)
 if typ == 'lin':
-    plt.savefig("Plots/KLlin.pdf", bbox_inches='tight')
+    plt.savefig("Plots/KL.pdf", bbox_inches='tight')
 elif typ == 'log':
     plt.savefig("Plots/KLlog.pdf", bbox_inches='tight')
 plt.show()
