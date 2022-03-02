@@ -13,9 +13,9 @@ do
     if [[ ! -f Results_N${N}_e${eps}/spec_N${N}_e${eps}.0000_d$d.txt ]];
     then
         count=$(( $count+1 ))
-        echo $d
+        echo -n "$d "
     fi
 done
 echo $d > final
-echo "$d -> final"
+echo "final=$d"
 

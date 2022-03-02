@@ -1,10 +1,9 @@
-*.pdf
+**/*.pdf
 Analysis*
 Averages*
 Hamiltonians*
-Plots/*.pdf
 Results*
-States/*
+States*
 **/.DS_store
 log
 err

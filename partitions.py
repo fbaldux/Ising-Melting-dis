@@ -213,34 +213,42 @@ def corner_number(N,levels):
 def integer_repr(N,diagram):
     diagram = np.append(diagram, np.zeros(N-np.sum(diagram)+1), 0)
         
-    x = N
-    y = 0
-    s = ""
+    x = N; y = 0
+    sL = ""; sR = ""
     
     # put a 0 for going down, 1 for going up
-    while y<N or x>0:
+    for k in range(N):
         if diagram[y] < x:
             x -= 1
-            s += "0"
+            sL += "0"
         elif diagram[y] == x:
             y += 1
-            s += "1"
+            sL += "1"
     
-    # return directly the 0/1 string using the binary representation
-    return sum([int(s[k])*2**(2*N-k-1) for k in range(2*N)])
+    for k in range(N):
+        if diagram[y] < x:
+            x -= 1
+            sR += "0"
+        elif diagram[y] == x:
+            y += 1
+            sR += "1"
+    
+    # return the 0/1 string using the binary representation
+    return np.array(( sum([int(sL[k])*2**(N-k-1) for k in range(N)]), sum([int(sR[k])*2**(N-k-1) for k in range(N)]) ))
 
 
 # builds the integer representation in the language of the fermions for all the diagrams
 def build_integer_repr(N,levels):
-    int_rep = np.zeros(dim[N], dtype=np.int_)
-    
-    int_rep[0] = sum([2**(N-k-1) for k in range(N)])
+    int_rep = np.zeros((dim[N],2), dtype=np.int_)
+
+    int_rep[0,0] = 0    
+    int_rep[0,1] = sum([2**(N-k-1) for k in range(N)])
     
     for n in range(1,N+1):
         for i in range(p[n]):
             k = dim[n-1]+i
             
-            int_rep[k] = integer_repr(N,levels[n][i])        
+            int_rep[k] = integer_repr(N,levels[n][i])  
 
     return int_rep
 
@@ -260,47 +268,52 @@ def binary_search(elem, array):
             high = mid - 1  
         else:  
             return mid  
+    
+    raise Exception("Binary search went wrong")
 
-    #return -1
 
 
 # computes the reduced density matrix of half the space, cut vertically from the vertex
 # needs in input:
 """ int_rep = build_integer_repr(N,levels)
-
-    dictionary = np.zeros((2,dim[N]), dtype=np.int_)
-    dictionary[0] = int_rep // (2**N)      # left half
-    dictionary[1] = int_rep %  (2**N)      # right half
-
-    new_states = np.unique(dictionary[1]) """
+    new_states = np.unique(int_rep[1]) """
 @nb.njit
-def reduced_density_matrix(N,psi,dictionary,new_states):
+def reduced_density_matrix(N,psi,int_rep,new_states):
     
     dim_red = len(new_states)
     rho_red = np.zeros((dim_red,dim_red), dtype=np.complex_)
 
     for D in range(dim[N]):
         for Dp in range(dim[N]):
+            
             # if the diagrams are equal on the right
-            if dictionary[1,D] == dictionary[1,Dp]:
+            if int_rep[D,1] == int_rep[Dp,1]:
+                
                 # then they become entangled on the left
-                Dleft = binary_search(dictionary[0,D], new_states)
-                Dpleft = binary_search(dictionary[0,Dp], new_states)
+                Dleft = binary_search(int_rep[D,0], new_states)
+                Dpleft = binary_search(int_rep[Dp,0], new_states)
+                
                 """
                 # not working with numba
-                Dleft = np.where(new_states==dictionary[0,D])[0]
-                Dpleft = np.where(new_states==dictionary[0,Dp])[0]
+                Dleft = np.where(new_states==int_rep[0,D])[0]
+                Dpleft = np.where(new_states==int_rep[0,Dp])[0]
                 """
+                
                 rho_red[Dleft,Dpleft] += psi[D] * np.conj(psi[Dp])
-
+                    
     return rho_red
     
+
+
 
 # standard entanglement entropy computation
 def entanglement_entropy(red_rho):
     # eigenvalues of the reduced density matrix (cut the too small)
     ent_spec = eigh(red_rho, eigvals_only=True)
+    print(ent_spec)
+    
     ent_spec = ent_spec[ent_spec > 1e-10]
+    
 
     return -np.sum(ent_spec * np.log(ent_spec))
 

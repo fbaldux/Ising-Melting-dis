@@ -9,7 +9,7 @@ import cmasher as cmr
 
 
 N = 32
-dis_num = 1800
+dis_num = 3000
 
 #  ---------------------------------------  load & plot  ---------------------------------------  #
 
@@ -17,7 +17,7 @@ dis_num = 1800
 plt.rcParams.update({"text.usetex": True, "font.family": "serif", "font.size": 17})
 
 fig, ax = plt.subplots()
-cols = cm.get_cmap('cmr.tropical', 6)
+cols = cm.get_cmap('cmr.tropical', 5)
 #cols = cm.get_cmap('viridis', 10)
 dots = ('o', 'v', '^', '>', '<', 's', 'P', 'h', 'X', 'D')
 
@@ -25,7 +25,7 @@ s = np.linspace(0,10,100)
 ax.plot(s, 0.5*s*np.pi * np.exp(-0.25*np.pi*s**2), '--', label='GOE', c='black')
 
 c = 0
-for eps in range(1,19,3): 
+for eps in range(1,19,4): 
     filename = "Analysis/sHisto_N%d_e%.4f_d%d.txt" % (N,eps,dis_num)
     data = np.loadtxt(filename).T
     
@@ -40,7 +40,7 @@ for eps in range(1,19,3):
     #ax.plot(data[0]/av_s, data[1]*av_s, '-', c=cols(c), label=eps, marker=dots[c], ms=4)
     """
     
-    ax.plot(data[0], data[1], '-', c=cols(c), label=r"$W = %d$" % (2*eps))
+    ax.plot(data[0], data[1], '-', marker=dots[c], ms=4, c=cols(c), label=r"$W = %d$" % (2*eps))
     
     c += 1
 

@@ -80,6 +80,14 @@ sl_op = 0.5 * (side1_length(N,levels) + side2_length(N,levels))
 area_op = area(N)
 
 
+#  ----------------------------  stuff for the entanglement entropy  ---------------------------  #
+
+# integer representation in the language of the fermions
+int_rep = build_integer_repr(N,levels)     # int_rep[0]=left, int_rep[1]=right
+new_states = np.unique(int_rep[:,0])
+
+
+
 #  ---------------------------  store stuff in the array of results  ---------------------------  #
 
 def store(it,v2):
@@ -88,6 +96,8 @@ def store(it,v2):
     toSave[it,1] = np.dot(v2, sl_op)
     toSave[it,2] = np.dot(v2, vh_op)
     toSave[it,3] = np.dot(v2, area_op)
+
+    toSave[it,4] = entanglement_entropy(reduced_density_matrix(N, v, dictionary, new_states))
 
 
 #  -------------------------------------------  main  ------------------------------------------  #
@@ -103,7 +113,7 @@ for dis in range(dis_num_in,dis_num_fin):
         H = np.copy(H0)
 
     # array to store the observables
-    toSave = np.zeros((save_steps+1,4)) # t lateral vertical area
+    toSave = np.zeros((save_steps+1,5)) # t lateral vertical area EE
 
     # initial state
     if Tin == 0:

@@ -30,7 +30,7 @@ Ns = []
 cuts = []
 
 
-for N in range(18,36,2): 
+for N in range(18,38,2): 
     which = (data[0]==N) & (eps_min<=data[1]) & (data[1]<=eps_max)
     x = data[1,which]
     y = data[2,which]

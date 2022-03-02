@@ -21,7 +21,7 @@
 # ---- CPU resources configuration  ----  |  Clarifications at https://slurm.schedmd.com/mc_support.html
 #
 #SBATCH --ntasks=1                   # Number of MPI ranks (1 for MPI serial job)
-#SBATCH --cpus-per-task=64           # Number of threads per MPI rank (MAX: 2x32 cores on _partition_2, 2x20 cores on _partition_1) 
+#SBATCH --cpus-per-task=40           # Number of threads per MPI rank (MAX: 2x32 cores on _partition_2, 2x20 cores on _partition_1) 
 #[optional] #SBATCH --nodes=1                    # Number of nodes
 #[optional] #SBATCH --ntasks-per-node=1          # How many tasks on each node
 #[optional] #SBATCH --ntasks-per-socket=1        # How many tasks on each socket
@@ -36,14 +36,14 @@
 #
 # ---- Memory configuration ----
 #
-#SBATCH --mem=63500                 # Memory per node (MAX: 63500 on the new ones, 40000 on the old ones); incompatible with --mem-per-cpu.
+#SBATCH --mem=40000                 # Memory per node (MAX: 63500 on the new ones, 40000 on the old ones); incompatible with --mem-per-cpu.
 #[optional] #SBATCH --mem-per-cpu=4000mb         # Memory per thread; incompatible with --mem
 #
 # ---- Partition, Walltime and Output ----
 #
 #[unconfig] #SBATCH --array=01-10    # Create a job array. Useful for multiple, similar jobs. To use, read this: https://slurm.schedmd.com/job_array.html
-#SBATCH --partition=regular2         # Partition (queue). Avail: regular1, regular2, long1, long2, wide1, wide2, gpu1, gpu2. Multiple partitions are possible.
-#SBATCH --time=8:00:00              # Time limit hrs:min:sec
+#SBATCH --partition=regular1         # Partition (queue). Avail: regular1, regular2, long1, long2, wide1, wide2, gpu1, gpu2. Multiple partitions are possible.
+#SBATCH --time=6:00:00              # Time limit hrs:min:sec
 #SBATCH --output=%x.o%j              # Standard output log in TORQUE-style -- WARNING: %x requires a new enough SLURM. Use %j for regular jobs and %A-%a for array jobs
 #SBATCH --error=%x.e%j               # Standard error  log in TORQUE-style -- WARNING: %x requires a new enough SLURM. Use %j for regular jobs and %A-%a for array jobs
 #
@@ -106,11 +106,11 @@ N=ENNE
 
 eps=EPSILON
 
-eig_num=2000
+eig_num=1000
 
 dis_num_in=DIS_IN
 dis_num_fin=DIS_FIN
-dis_threads=6
+dis_threads=4
 
 overwrite=0
 nProc=10
@@ -121,7 +121,7 @@ do
     if [[ ! -f Results_N${N}_e${eps}/spec_N${N}_e${eps}.0000_d$d.txt ]];
     then
         count=$(( $count+1 ))
-        python3 spectrum_sparse.py $N $eps $eig_num $d $(( $d+1 )) $overwrite $nProc 1>>log 2>>err_n${N}_e${eps} &        
+        python3 spectrum_sparse.py $N $eps $eig_num $d $(( $d+1 )) $overwrite $nProc 1>>log 2>>err_n${N}_e${eps} &
     fi
 done
 

@@ -24,7 +24,7 @@ dots = ('o', 'v', '^', '>', '<', 's', 'P', 'h', 'X', 'D')
 #ax.axhline(0.53, ls='--', color='black')
 
 c = 0
-for N in range(18,36,4): 
+for N in range(20,38,4): 
     which = data[0]==N
     ax.plot(2*data[1,which], data[2,which], '-', marker=dots[c], ms=4, c=cols(c), label=r"$%d$" % N)
     #ax.plot(2*data[1,which], data[2,which], '-', marker=dots[c], ms=4, c=cols(c))
