@@ -33,6 +33,6 @@ fOut = open("Analysis/p0_typ.txt", 'a')
 fOut.write("%d %f %e %e %e %e %d\n" % (N, eps, E_av, E_std, N_av, p0_typ, len(data)))
 fOut.close()
 
-print(' '.join(sys.argv))   
+print("END", ' '.join(sys.argv))   
    
 

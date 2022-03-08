@@ -37,7 +37,7 @@ do
             
                 #python3 spectrum2.py $N $eps $dis_num_in $dis_num_fin
             
-                #python3 tEv.py $N $eps $initState $Tin $Tfin $dt $save_dt $dis_num_in $dis_num_fin $sparse $nProc 1>>log 2>>err &
+                #python3 tEv.py $N $eps $initState $Tin $Tfin $dt $save_dt $dis_num_in $dis_num_fin $sparse $overwrite $nProc 1>>log 2>>err &
                 python3 tEv_log.py $N $eps $initState $Tin $Tfin $ts_per_pow2 $dis_num_in $dis_num_fin $sparse $overwrite $nProc 1>>log 2>>err
                 :
             fi            

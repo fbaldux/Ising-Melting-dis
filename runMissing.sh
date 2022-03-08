@@ -14,7 +14,7 @@
 #
 # ---- Metadata configuration ----
 #
-#SBATCH --job-name=nENNE_eEPSILON_miss       # The name of your job, you'll se it in squeue.
+#SBATCH --job-name=n£N_e£E_miss       # The name of your job, you'll se it in squeue.
 #SBATCH --mail-type=NONE              # Mail events (NONE, BEGIN, END, FAIL, ALL). Sends you an email when the job begins, ends, or fails; you can combine options.
 #SBATCH --mail-user=fbalducc@sissa.it    # Where to send the mail
 #
@@ -98,18 +98,16 @@ cd $SLURM_SUBMIT_DIR
 
 
 # ==== JOB COMMANDS ===== #
-#   The part that actually executes all the operations you want to do.
-#   Just fill this part as if it was a regular Bash script that you want to
-#   run on your computer.
 
-N=ENNE
 
-eps=EPSILON
+N=£N
+
+eps=£E
 
 eig_num=1000
 
-dis_num_in=DIS_IN
-dis_num_fin=DIS_FIN
+dis_num_in=£Di
+dis_num_fin=£Df
 dis_threads=4
 
 overwrite=0

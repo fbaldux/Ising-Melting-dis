@@ -1,9 +1,9 @@
-N=ENNE
+N=£N
 
-eps=EPSILON
+eps=£E
 
-dis_num_in=DIS_IN
-dis_num_fin=DIS_FIN
+dis_num_in=£Di
+dis_num_fin=£Df
 dis_threads=4
 
 

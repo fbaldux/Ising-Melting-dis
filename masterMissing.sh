@@ -3,21 +3,21 @@ N=30
 for eps in $(seq 1 17);
 do
     echo "Starting eps $eps"
-    DIS_IN=0
-    DIS_FIN=480
+    Di=0
+    Df=480
     
-    while (( DIS_IN<DIS_FIN ));
+    while (( Di<Df ));
     do
         
-        sed "s/ENNE/$N/g;s/EPSILON/$eps/g;s/DIS_IN/$DIS_IN/g;s/DIS_FIN/$DIS_FIN/g;" runMissing-ctrl.sh > temp.sh        
+        sed "s/£N/$N/g;s/£E/$eps/g;s/£Di/$Di/g;s/£Df/$Df/g;" runMissing-ctrl.sh > temp.sh        
         bash temp.sh
         
-        sed "s/ENNE/$N/g;s/EPSILON/$eps/g;s/DIS_IN/$DIS_IN/g;s/DIS_FIN/$DIS_FIN/g;" runMissing.sh > temp.sh        
+        sed "s/£N/$N/g;s/£E/$eps/g;s/£Di/$Di/g;s/£Df/$Df/g;" runMissing.sh > temp.sh        
         sbatch temp.sh
         
         #sleep 1
         
-        DIS_IN=$(more final) 
+        Di=$(more final) 
         
     done
 done

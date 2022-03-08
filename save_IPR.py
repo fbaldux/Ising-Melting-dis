@@ -57,6 +57,6 @@ fOut = open("Analysis/IPR.txt", 'a')
 fOut.write("%d %f %e %d\n" % (N, eps, IPR, dis_num_true))
 fOut.close()
 
-print(' '.join(sys.argv))   
+print("END", ' '.join(sys.argv))   
    
 

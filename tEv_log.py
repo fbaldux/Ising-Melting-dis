@@ -33,11 +33,14 @@ Tin_cutoff = 1e-1
 dis_num_in = int( sys.argv[7] )
 dis_num_fin = int( sys.argv[8] )
 
+# whether to overwrite existing files
+overwrite = int( sys.argv[9] )
+
 # whether to use sparse exponentiation
-use_sparse = int( sys.argv[9] )
+use_sparse = int( sys.argv[10] )
 
 # number of processors to use
-nProc = int( sys.argv[10] )
+nProc = int( sys.argv[11] )
 
 
 os.environ["MKL_NUM_THREADS"] = str(nProc)
@@ -108,79 +111,82 @@ else:
     Tin_true = Tin
 
 for dis in range(dis_num_in,dis_num_fin):
-
-    # load the disorder
-    if epsilon != 0:
-        filename = "Hamiltonians/rand_N%d_d%d.txt" % (N,dis)
-        diag = np.loadtxt(filename)
-        H = H0 + epsilon * sparse.diags(diag)
-    else:
-        H = H0
-
-
-    # array to store the observables
-    toSave = [] # t lateral vertical area EE
-
-
-    # initial state
-    if Tin == 0:
-        v = np.zeros(dim[N])
-        v[init_state] = 1
-        toSave.append( store(0,0,v) )
-    else:
-        v = np.load("States/N%d_e%.4f_s%d_T%.1f_d%d.npy" % (N,epsilon,init_state,Tin,dis))
     
-
-    # time evolution
-    if use_sparse:
-        Him = -1j*H
-        del H
+    if overwrite or ( not os.path.isfile("Results/spec_N%d_e%.4f_d%d.txt" % (N, epsilon, dis)) ):
         
-        # first step
+        # load the disorder
+        if epsilon != 0:
+            filename = "Hamiltonians/rand_N%d_d%d.txt" % (N,dis)
+            diag = np.loadtxt(filename)
+            H = H0 + epsilon * sparse.diags(diag)
+        else:
+            H = H0
+
+
+        # array to store the observables
+        toSave = [] # t lateral vertical area EE
+
+
+        # initial state
         if Tin == 0:
-            v = expm_multiply(Him, v, start=0, stop=Tin_true, num=2, endpoint=True)[-1]
-            toSave.append( store(Tin,1,v) )
+            v = np.zeros(dim[N])
+            v[init_state] = 1
+            toSave.append( store(0,0,v) )
+        else:
+            v = np.load("States/N%d_e%.4f_s%d_T%.1f_d%d.npy" % (N,epsilon,init_state,Tin,dis))
     
-        # bulk
-        c = 2
-        t_pivots = np.concatenate(( 2**np.arange( 0, np.log2(Tfin/Tin_true) )*Tin_true, (Tfin,) ))
 
-        for p in range(len(t_pivots)-1):
-            vt = expm_multiply(Him, v, start=0, stop=t_pivots[p+1]-t_pivots[p], num=ts_per_pow2, endpoint=True)
+        # time evolution
+        if use_sparse:
+            Him = -1j*H
+            del H
+        
+            # first step
+            if Tin == 0:
+                v = expm_multiply(Him, v, start=0, stop=Tin_true, num=2, endpoint=True)[-1]
+                toSave.append( store(Tin,1,v) )
+    
+            # bulk
+            c = 2
+            t_pivots = np.concatenate(( 2**np.arange( 0, np.log2(Tfin/Tin_true) )*Tin_true, (Tfin,) ))
+
+            for p in range(len(t_pivots)-1):
+                vt = expm_multiply(Him, v, start=0, stop=t_pivots[p+1]-t_pivots[p], num=ts_per_pow2, endpoint=True)
             
-            ts = np.linspace(t_pivots[p],t_pivots[p+1],ts_per_pow2)
-            for it in range(1,ts_per_pow2):
-                toSave.append( store(ts[it], c, vt[it]) )
-                c += 1
+                ts = np.linspace(t_pivots[p],t_pivots[p+1],ts_per_pow2)
+                for it in range(1,ts_per_pow2):
+                    toSave.append( store(ts[it], c, vt[it]) )
+                    c += 1
 
-            v = vt[-1]
+                v = vt[-1]
     
-    else:
+        else:
         
-        save_steps = int( (np.log2(Tfin/Tin_true))*ts_per_pow2 )
-        ts = np.exp( np.linspace(np.log(Tin_true), np.log(Tfin), save_steps) )
+            save_steps = int( (np.log2(Tfin/Tin_true))*ts_per_pow2 )
+            ts = np.exp( np.linspace(np.log(Tin_true), np.log(Tfin), save_steps) )
         
-        # it holds H = U @ Hdiag @ U.H
-        Hdiag, U = eigh(H.todense())
+            # it holds H = U @ Hdiag @ U.H
+            Hdiag, U = eigh(H.todense())
         
-        vrot = np.dot(np.conj(U.T), v)
+            vrot = np.dot(np.conj(U.T), v)
         
-        for it in range(save_steps):
-            vt = np.einsum("ab,b,b", U, np.exp(-1j*Hdiag*ts[it]), vrot)
-            toSave.append( store(ts[it], it+1, vt) )
+            for it in range(save_steps):
+                vt = np.einsum("ab,b,b", U, np.exp(-1j*Hdiag*ts[it]), vrot)
+                toSave.append( store(ts[it], it+1, vt) )
         
-        v = vt
+            v = vt
         
     
-    # save to file
-    filename = "Results/tEv_N%d_e%.4f_s%d_T%.1f_d%d.txt" % (N,epsilon,init_state,Tfin,dis)
-    head = "t lat vert area EE"
-    np.savetxt(filename, np.array(toSave), header=head)
+        # save to file
+        filename = "Results/tEv_N%d_e%.4f_s%d_T%.1f_d%d.txt" % (N,epsilon,init_state,Tfin,dis)
+        head = "t lat vert area EE"
+        np.savetxt(filename, np.array(toSave), header=head)
     
-    filename = "States/N%d_e%.4f_s%d_T%.1f_d%d.npy" % (N,epsilon,init_state,Tfin,dis)
-    np.save(filename, v)
+        filename = "States/N%d_e%.4f_s%d_T%.1f_d%d.npy" % (N,epsilon,init_state,Tfin,dis)
+        np.save(filename, v)
 
-print(' '.join(sys.argv), "time", time()-startTime)
+
+print("END", ' '.join(sys.argv), "time", time()-startTime)
 
 
 

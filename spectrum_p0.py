@@ -5,7 +5,8 @@
 #   - It loads the non-zero entries of the adjacency matrix from the Hamiltonian/clean_N#.txt files.
 #   - It loads the diagonal entries of the Hamiltonian matrix from the files Hamiltonian/rand...
 #   - It builds the sparse Hamiltonian from the entries, and converts it to a full matrix.
-#   - It saves to Results/p0_{...} the max ...
+#   - It saves to Results/p0_{...} data regarding the eigenstate with the maximum overlap with
+#     the empty Young diagram.
 #
 #  ---------------------------------------------------------------------------------------------  #
 

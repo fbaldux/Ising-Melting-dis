@@ -49,7 +49,7 @@ fOut = open("Analysis/rAv0_d%d.txt" % dis_num, 'a')
 fOut.write("%d %f %e\n" % (N, eps, r_av))
 fOut.close()
 
-print(' '.join(sys.argv))   
+print("END", ' '.join(sys.argv))   
 
 
 

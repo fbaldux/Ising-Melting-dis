@@ -54,14 +54,19 @@ Program nicely given us from Vittorio Vitale & Alessadro Santini. It contains th
 NOTE: performs worse than scipy.sparse!
 
 
-## masterMissing{1,2}.sh
+## masterMissing.sh
 
-Shell to send multiple jobs on Ulysses, on partition regular {1,2}, to fill voids (i.e. jobs that haven't delivered the final output). It modifies and executes `runMissing{1,2}.py` and `runMissing{1,2}-ctrl.py`.
+Shell to send multiple jobs on Ulysses, on partition regular1, to fill voids (i.e. jobs that haven't delivered the final output). It modifies and executes `runMissing.py` and `runMissing-ctrl.py`.
 
 
-## masterUlysses{1,2}.sh
+## masterUlysses.sh
 
-Shell to send multiple jobs on Ulysses, on partition regular {1,2}. It modifies and executes `runUlysses{1,2}.py`.
+Shell to send multiple jobs on Ulysses, on partition regular1. It modifies and executes `runUlysses.py`.
+
+
+## MC\_resonant.py
+
+The program performs a walk on the Young diagram lattice, by trying to stay in resonance with the energy of the initial state.
 
 
 ## min\_potential.sh
@@ -97,22 +102,22 @@ Shell to run jobs on workstations.
 
 ## runSave.sh
 
-Shell to run `save_r.py` or `average_ev.py` on Ulysses.
+Shell to run `save_r.py`, `average_ev.py`, etc. on Ulysses.
 
 
-## runMissing{1,2}.sh
+## runMissing.sh
 
-Shell to run the single job on Ulysses, partition regular {1,2}, to fill voids (i.e. jobs that haven't delivered the final output).
-
-
-## runMissing{1,2}-ctrl.sh
-
-Shell to help the correct functioning of `runMissing{1,2}.sh`.
+Shell to run the single job on Ulysses, partition regular1, to fill voids (i.e. jobs that haven't delivered the final output).
 
 
-## runUlysses{1,2}.sh
+## runMissing-ctrl.sh
 
-Shell to run the single job on Ulysses, partition regular {1,2}.
+Shell to help the correct functioning of `runMissing.sh`.
+
+
+## runUlysses.sh
+
+Shell to run the single job on Ulysses, partition regular1.
 
 
 ## save\_{...}.py
@@ -141,6 +146,16 @@ The program diagonalizes the disordered, Young graph Hamiltonian.
 - It optionally saves the eigenvectors, but it takes a HUGE amount of space.
 
 
+## spectrum\_p0.py
+
+The program diagonalizes the disordered, Young graph Hamiltonian.
+
+- It loads the non-zero entries of the adjacency matrix from the Hamiltonian/clean_N#.txt files.
+- It loads the diagonal entries of the Hamiltonian matrix from the files Hamiltonian/rand...
+- It builds the sparse Hamiltonian from the entries, and converts it to a full matrix.
+- It saves to Results/p0_{...} data regarding the eigenstate with the maximum overlap with the empty Young diagram.
+
+
 ## spectrum\_sparse.py
 
 The program diagonalizes the disordered, Young graph Hamiltonian.
@@ -165,7 +180,7 @@ The program evolves a state on the Young diagram lattice.
 - It loads the diagonal entries of the Hamiltonian matrix from the files Hamiltonian/rand...
 - It builds the sparse Hamiltonian from the entries.
 - It evolves an initial state via full exponentiation or sparse Pade' (`expm_multiply`).
-- It saves to Results/ the linear dimensions of the state and the area.
+- It saves to Results/ the linear dimensions of the state, the area and the entanglement entropy. 
 - It saves to States/ the final state reached.
 
 
@@ -177,7 +192,7 @@ The program evolves a state on the Young diagram lattice.
 - It loads the diagonal entries of the Hamiltonian matrix from the files Hamiltonian/rand...
 - It builds the sparse Hamiltonian from the entries.
 - It evolves an initial state via full exponentiation or sparse Pade' (`expm_multiply`).
-- It saves to Results/ the linear dimensions of the state and the area.
+- It saves to Results/ the linear dimensions of the state, the area and the entanglement entropy. 
 - It saves to States/ the final state reached.
 - It is suited for time evolution in log scale (the dt is progressively increased).
 

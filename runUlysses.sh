@@ -14,7 +14,7 @@
 #
 # ---- Metadata configuration ----
 #
-#SBATCH --job-name=nENNE_eEPSILON_dDIS_FIN       # The name of your job, you'll se it in squeue.
+#SBATCH --job-name=n£N_e£E_d£Df       # The name of your job, you'll se it in squeue.
 #SBATCH --mail-type=NONE              # Mail events (NONE, BEGIN, END, FAIL, ALL). Sends you an email when the job begins, ends, or fails; you can combine options.
 #SBATCH --mail-user=fbalducc@sissa.it    # Where to send the mail
 #
@@ -98,28 +98,25 @@ cd $SLURM_SUBMIT_DIR
 
 
 # ==== JOB COMMANDS ===== #
-#   The part that actually executes all the operations you want to do.
-#   Just fill this part as if it was a regular Bash script that you want to
-#   run on your computer.
 
-N=ENNE
+N=£N
 
-eps=EPSILON
+eps=£E
 
 # for ED
 eig_num=1000
 
 # for tEv
-Tin=1e-1
+Tin=0
 Tfin=1e4
 dt=1
 save_dt=2
-ts_per_pow2=20
+ts_per_pow2=10
 
 sparse=0
 
-dis_num_in=DIS_IN
-dis_num_fin=DIS_FIN
+dis_num_in=£Di
+dis_num_fin=£Df
 dis_threads=2
 dis_per_thread=$(( ($dis_num_fin-$dis_num_in) / $dis_threads ))
 
@@ -135,7 +132,7 @@ do
     
     for initState in 0 24 121
     do
-        #python3 tEv.py $N $eps $Tin $Tfin $dt $save_dt $dis_num_in $dis_num_fin $sparse $overwrite $nProc 1>>log 2>>err_n${N}_e${eps} &
+        #python3 tEv.py $N $eps $initState $Tin $Tfin $dt $save_dt $dis_num_in $dis_num_fin $sparse $overwrite $nProc 1>>log 2>>err_n${N}_e${eps} &
         python3 tEv_log.py $N $eps $initState $Tin $Tfin $ts_per_pow2 $dis_num_in $dis_num_fin $sparse $overwrite $nProc 1>>log 2>>err_n${N}_e${eps} &
     done
 done

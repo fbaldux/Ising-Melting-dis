@@ -38,8 +38,11 @@ dis_num_fin = int( sys.argv[9] )
 # whether to use sparse exponentiation
 use_sparse = int( sys.argv[10] )
 
+# whether to overwrite existing files
+overwrite = int( sys.argv[11] )
+
 # number of processors to use
-nProc = int( sys.argv[11] )
+nProc = int( sys.argv[12] )
 
 
 os.environ["MKL_NUM_THREADS"] = str(nProc)
@@ -105,55 +108,57 @@ def store(it,v):
 
 for dis in range(dis_num_in,dis_num_fin):
 
-    # load the disorder
-    if epsilon != 0:
-        filename = "Hamiltonians/rand_N%d_d%d.txt" % (N,dis)
-        diag = np.loadtxt(filename)
-        H = H0 + epsilon * sparse.diags(diag)
-    else:
-        H = np.copy(H0)
+    if overwrite or ( not os.path.isfile("Results/spec_N%d_e%.4f_d%d.txt" % (N, epsilon, dis)) ):
 
-    # array to store the observables
-    toSave = np.zeros((save_steps+1,5)) # t lateral vertical area EE
+        # load the disorder
+        if epsilon != 0:
+            filename = "Hamiltonians/rand_N%d_d%d.txt" % (N,dis)
+            diag = np.loadtxt(filename)
+            H = H0 + epsilon * sparse.diags(diag)
+        else:
+            H = np.copy(H0)
 
-    # initial state
-    if Tin == 0:
-        v = np.zeros(dim[N])
-        v[init_state] = 1
-        store(0,v)
-    else:
-        v = np.load("States/N%d_e%.4f_s%d_T%.1f_d%d.npy" % (N,epsilon,init_state,Tin,dis))
+        # array to store the observables
+        toSave = np.zeros((save_steps+1,5)) # t lateral vertical area EE
 
-    if use_sparse:
-        vt = expm_multiply(-1j*H*dt, v, start=0, stop=t_steps, num=save_steps+1)
+        # initial state
+        if Tin == 0:
+            v = np.zeros(dim[N])
+            v[init_state] = 1
+            store(0,v)
+        else:
+            v = np.load("States/N%d_e%.4f_s%d_T%.1f_d%d.npy" % (N,epsilon,init_state,Tin,dis))
 
-        for it in range(1,save_steps+1):
-            store(it,vt[it])
+        if use_sparse:
+            vt = expm_multiply(-1j*H*dt, v, start=0, stop=t_steps, num=save_steps+1)
+
+            for it in range(1,save_steps+1):
+                store(it,vt[it])
         
-        # to save the final state
-        v = vt[-1]
+            # to save the final state
+            v = vt[-1]
             
-    else:
-        # evolutor from the Hamiltonian
-        U = expm(-1j * H.todense() * dt)
+        else:
+            # evolutor from the Hamiltonian
+            U = expm(-1j * H.todense() * dt)
         
-        for it in range(1,t_steps+1):
-            v = U.dot(v)
+            for it in range(1,t_steps+1):
+                v = U.dot(v)
     
-            if it%save_step == 0:
-                store(it//save_step,v)
+                if it%save_step == 0:
+                    store(it//save_step,v)
     
-    # save to file
-    filename = "Results/tEv_N%d_e%.4f_s%d_T%.1f_d%d.txt" % (N,epsilon,init_state,Tfin,dis)
-    head = "t lat vert area EE"
-    np.savetxt(filename, toSave, header=head)
+        # save to file
+        filename = "Results/tEv_N%d_e%.4f_s%d_T%.1f_d%d.txt" % (N,epsilon,init_state,Tfin,dis)
+        head = "t lat vert area EE"
+        np.savetxt(filename, toSave, header=head)
     
-    filename = "States/N%d_e%.4f_s%d_T%.1f_d%d.npy" % (N,epsilon,init_state,Tfin,dis)
-    #np.savetxt(filename, np.stack((v.real,v.imag)), header="Re Im")
-    np.save(filename, v)
+        filename = "States/N%d_e%.4f_s%d_T%.1f_d%d.npy" % (N,epsilon,init_state,Tfin,dis)
+        #np.savetxt(filename, np.stack((v.real,v.imag)), header="Re Im")
+        np.save(filename, v)
 
     
-print(' '.join(sys.argv), "time", time()-start)
+print("END", ' '.join(sys.argv), "time", time()-start)
 
 
 

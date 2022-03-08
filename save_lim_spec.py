@@ -66,6 +66,6 @@ fOut = open("Analysis/lim_spec.txt", 'a')
 fOut.write("%d %f %e %e %e %e %e %e %d\n" % (N,eps, min_av,min_std, mid_av,mid_std, max_av,max_std, dis_num_true))
 fOut.close()
 
-print(' '.join(sys.argv))   
+print("END", ' '.join(sys.argv))   
    
 

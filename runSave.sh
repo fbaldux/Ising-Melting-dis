@@ -98,9 +98,7 @@ cd $SLURM_SUBMIT_DIR
 
 
 # ==== JOB COMMANDS ===== #
-#   The part that actually executes all the operations you want to do.
-#   Just fill this part as if it was a regular Bash script that you want to
-#   run on your computer.
+
 
 Ns=(          22   24   26   28   30   32  34 )
 dis_nums=( 10000 2000 2000 4800 1920 1800 800 )

@@ -1,6 +1,7 @@
 #  ---------------------------------------------------------------------------------------------  #
 #
-#   The program samples Young diagrams by successively adding boxes...
+#   The program performs a walk on the Young diagram lattice, by trying to stay in resonance
+#   with the energy of the initial state.
 #
 #  ---------------------------------------------------------------------------------------------  #
 

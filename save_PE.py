@@ -57,6 +57,6 @@ fOut = open("Analysis/PE.txt", 'a')
 fOut.write("%d %f %e %d\n" % (N, eps, PE, dis_num_true))
 fOut.close()
 
-print(' '.join(sys.argv))   
+print("END", ' '.join(sys.argv))   
    
 

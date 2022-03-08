@@ -160,7 +160,7 @@ for dis in range(dis_num_in,dis_num_fin):
         np.savetxt( filename, np.vstack((eigvals, eigvecs)).T, header=head )
         """
 
-print(' '.join(sys.argv), "time", time()-start)
+print("END", ' '.join(sys.argv), "time", time()-startTime)
 
 
 
