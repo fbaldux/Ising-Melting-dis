@@ -309,11 +309,8 @@ def reduced_density_matrix(N,psi,int_rep,new_states):
 # standard entanglement entropy computation
 def entanglement_entropy(red_rho):
     # eigenvalues of the reduced density matrix (cut the too small)
-    ent_spec = eigh(red_rho, eigvals_only=True)
-    print(ent_spec)
-    
+    ent_spec = eigh(red_rho, eigvals_only=True)    
     ent_spec = ent_spec[ent_spec > 1e-10]
-    
 
     return -np.sum(ent_spec * np.log(ent_spec))
 

@@ -5,7 +5,7 @@ eig_num=100
 # for tEv
 initState=0
 Tin=0
-Tfin=5e3
+Tfin=1e3
 dt=5
 save_dt=5
 sparse=1
@@ -13,18 +13,18 @@ sparse=1
 ts_per_decade=10
 
 dis_num_in=0
-dis_num_fin=50
+dis_num_fin=1
 
 overwrite=1
 nProc=1
 
-for N in $(seq 24 2 32)
+for N in $(seq 18 2 18)
 do    
-    #python3 buildDiagHam.py $N $dis_num_in $dis_num_fin 1>>log 2>>err
+    python3 buildDiagHam.py $N $dis_num_in $dis_num_fin #1>>log 2>>err
     
-    for eps in $(seq 1 2 5)
+    for eps in $(seq 1 2 1)
     do
-        for initState in 0 5 24 121 623
+        for initState in 0 #5 24 121 623
         do
             
             if [[ ! -f stop ]];
@@ -37,14 +37,17 @@ do
             
                 #python3 spectrum2.py $N $eps $dis_num_in $dis_num_fin
             
-                python3 tEv.py $N $eps $initState $Tin $Tfin $dt $save_dt $dis_num_in $dis_num_fin $sparse $nProc 1>>log 2>>err &
-                #python3 tEv_log.py $N $eps $initState $Tin $Tfin $ts_per_decade $dis_num_in $dis_num_fin $sparse $overwrite $nProc 1>>log 2>>err
+                #python3 tEv.py $N $eps $initState $Tin $Tfin $dt $save_dt $dis_num_in $dis_num_fin $sparse $nProc 1>>log 2>>err &
+                python3 tEv_log.py $N $eps $initState $Tin $Tfin $ts_per_decade $dis_num_in $dis_num_fin $sparse $overwrite $nProc 1>>log 2>>err
+                :
             fi            
+            
+            #python3 average_ev.py $N $eps $initState $Tfin $dis_num_fin
             #python3 plot_ev.py $N $eps $initState $Tfin $dis_num_fin &
         done       
     done
 
-    wait
+    #wait
 done
 
 

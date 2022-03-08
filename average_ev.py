@@ -16,19 +16,26 @@ dis_num = int( sys.argv[5] )
 
 filename = "Results/tEv_N%d_e%.4f_s%d_T%.1f_d%d.txt" % (N,epsilon,init_state,Tfin,0)
 data = np.loadtxt(filename).T
-data2 = (np.loadtxt(filename).T)**2
+data2 = np.copy(data)
+data2[1:] = data2[1:]**2
 
+dis_num_true = dis_num
 for dis in range(1,dis_num):
 
-    #  load the results
-    filename = "Results/tEv_N%d_e%.4f_s%d_T%.1f_d%d.txt" % (N,epsilon,init_state,Tfin,dis)
-    new = np.loadtxt(filename)[:,1:].T
-    data[1:] += new
-    data2[1:] += new**2
+    # load the results
+    try:
+        filename = "Results/tEv_N%d_e%.4f_s%d_T%.1f_d%d.txt" % (N,epsilon,init_state,Tfin,dis)
+        new = np.loadtxt(filename)[:,1:].T
+        data[1:] += new
+        data2[1:] += new**2
     
-data[1:] /= dis_num
+    except:
+        sys.stderr.write("Error at " + filename + "\n")
+        dis_num_true -= 1
 
-data2[1:] /= dis_num
+
+data[1:] /= dis_num_true
+data2[1:] /= dis_num_true
 data2[1:] = np.sqrt( data2[1:] - data[1:]**2 ) 
 
 #  -------------------------------------------  plot  ------------------------------------------  #
@@ -44,4 +51,4 @@ np.savetxt(filename, data.T, header=head)
 filename = "Averages/tEv_N%d_e%.4f_s%d_T%.1f_std%d.txt" % (N,epsilon,init_state,Tfin,dis_num)
 np.savetxt(filename, data2.T, header=head)
 
-print(' '.join(sys.argv))
+print("END " + ' '.join(sys.argv))

@@ -27,6 +27,7 @@ init_state = int( sys.argv[3] )
 Tin = float( sys.argv[4] )
 Tfin = float( sys.argv[5] )
 ts_per_decade = int( sys.argv[6] )
+Tin_cutoff = 1e-1
 
 # number of disorder instances
 dis_num_in = int( sys.argv[7] )
@@ -51,11 +52,7 @@ import numba as nb
 from partitions import *
 from time import time
 
-
-save_steps = int( (np.log10(Tfin/Tin))*ts_per_decade )
-
 startTime = time()
-
 
 #  ---------------------------------  build all the partitions  --------------------------------  #
 
@@ -89,14 +86,17 @@ new_states = np.unique(int_rep[:,0])
 
 #  ---------------------------  store stuff in the array of results  ---------------------------  #
 
-def store(t,i,v2):
-    toSave[i,0] = t
+def store(t,it,v):
+    temp = [t]
     
-    toSave[i,1] = np.dot(v2, sl_op)
-    toSave[i,2] = np.dot(v2, vh_op)
-    toSave[i,3] = np.dot(v2, area_op)
+    v2 = np.abs(v)**2
+    temp.append( np.dot(v2, sl_op) )
+    temp.append( np.dot(v2, vh_op) )
+    temp.append( np.dot(v2, area_op) )
 
-    toSave[it,4] = entanglement_entropy(reduced_density_matrix(N, v, int_rep, new_states))
+    temp.append( entanglement_entropy(reduced_density_matrix(N, v, int_rep, new_states)) )
+
+    return temp
 
 
 #  -------------------------------------------  main  ------------------------------------------  #
@@ -113,13 +113,18 @@ for dis in range(dis_num_in,dis_num_fin):
 
 
     # array to store the observables
-    toSave = np.zeros((save_steps+1,5)) # t lateral vertical area EE
+    toSave = [] # t lateral vertical area EE
 
 
     # initial state
-    v = np.zeros(dim[N])
-    v[init_state] = 1
-    store(0, 0, np.abs(v)**2)
+    if Tin == 0:
+        v = np.zeros(dim[N])
+        v[init_state] = 1
+        toSave.append( store(0,0,v) )
+        
+        Tin = Tin_cutoff
+    else:
+        v = np.load("States/N%d_e%.4f_s%d_T%.1f_d%d.npy" % (N,epsilon,init_state,Tin,dis))
     
 
     # time evolution
@@ -128,29 +133,31 @@ for dis in range(dis_num_in,dis_num_fin):
         del H
         
         # first step
-        v = expm_multiply(Him, v, start=0, stop=Tin, num=2, endpoint=True)[-1]
-        store(Tin, 1, np.abs(v)**2)
+        if Tin == Tin_cutoff:
+            v = expm_multiply(Him, v, start=0, stop=Tin, num=2, endpoint=True)[-1]
+            toSave.append( store(Tin,1,v) )
     
         # bulk
         c = 2
-        for p in range( int(np.log10(Tin)), int(np.log10(Tfin)) ):
+        t_pivots = np.concatenate(( 2**np.arange( 0, np.log2(Tfin/Tin) )*Tin, (Tfin,) ))
 
-            start = 10**p
-            stop = 10**(p+1)
-            dt = (stop-start) / (ts_per_decade-1)
-            vt = expm_multiply(Him, v, start=0, stop=stop-start, num=ts_per_decade, endpoint=True)
-
-            for it in range(ts_per_decade-1):
-                store(start+it*dt, c, np.abs(vt[it])**2)
+        for p in range(len(t_pivots)-1):
+            vt = expm_multiply(Him, v, start=0, stop=t_pivots[p+1]-t_pivots[p], num=ts_per_decade, endpoint=True)
+            
+            ts = np.linspace(t_pivots[p],t_pivots[p+1],ts_per_decade)
+            for it in range(1,ts_per_decade):
+                toSave.append( store(ts[it], c, vt[it]) )
                 c += 1
 
             v = vt[-1]
     
         # last step
-        store(Tfin, c, np.abs(v)**2)
-        toSave = toSave[:c+1]
+        #toSave.append( store(ts[it], c, vt[it]) )
+
     
     else:
+        save_steps = int( (np.log10(Tfin/Tin))*ts_per_decade )
+        
         ts = np.exp( np.linspace(np.log(Tin), np.log(Tfin), save_steps) )
         
         # it holds H = U @ Hdiag @ U.H
@@ -160,15 +167,15 @@ for dis in range(dis_num_in,dis_num_fin):
         
         for it in range(save_steps):
             vt = np.einsum("ab,b,b", U, np.exp(-1j*Hdiag*ts[it]), vrot)
-            store(ts[it], it+1, np.abs(vt)**2)
+            toSave.append( store(ts[it], it+1, vt) )
         
         v = vt
         
     
     # save to file
     filename = "Results/tEv_N%d_e%.4f_s%d_T%.1f_d%d.txt" % (N,epsilon,init_state,Tfin,dis)
-    head = "t lat vert area"
-    np.savetxt(filename, toSave, header=head)
+    head = "t lat vert area EE"
+    np.savetxt(filename, np.array(toSave), header=head)
     
     filename = "States/N%d_e%.4f_s%d_T%.1f_d%d.npy" % (N,epsilon,init_state,Tfin,dis)
     np.save(filename, v)

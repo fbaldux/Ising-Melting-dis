@@ -107,21 +107,25 @@ dis_nums=( 10000 2000 2000 4800 1920 1800 800 )
 fracs=(      0.1  0.1  0.1    1    1    1   1 )
 Nbins=50
 
-for iN in $(seq 0 5);
+Tfin=1e4
+
+for iN in $(seq 0 0);
 do
-    for eps in $(seq 1 18);
+    for eps in $(seq 1 5);
     do
         (
-        python3 save_r.py ${Ns[$iN]} $eps ${dis_nums[$iN]} ${fracs[$iN]} 1>>log 2>>err
-    	python3 save_lim_spec.py ${Ns[$iN]} $eps ${dis_nums[$iN]} 1>>log 2>>err
-        python3 save_IPR.py ${Ns[$iN]} $eps ${dis_nums[$iN]} ${fracs[$iN]} 1>>log 2>>err
-        python3 save_KL.py ${Ns[$iN]} $eps ${dis_nums[$iN]} ${fracs[$iN]} 1>>log 2>>err
-        python3 save_PE.py ${Ns[$iN]} $eps ${dis_nums[$iN]} ${fracs[$iN]} 1>>log 2>>err
-        
-        python3 histo_s.py ${Ns[$iN]} $eps ${dis_nums[$iN]} ${fracs[$iN]} $Nbins 1>>log 2>>err
-        
-        #python average_ev.py $N $eps 1000 300 1>>log 2>>err &
-        #python ground_state.py $N $eps 10000 1>>log 2>>err &
+        #python3 save_r.py ${Ns[$iN]} $eps ${dis_nums[$iN]} ${fracs[$iN]} 1>>log 2>>err
+    	#python3 save_lim_spec.py ${Ns[$iN]} $eps ${dis_nums[$iN]} 1>>log 2>>err
+        #python3 save_IPR.py ${Ns[$iN]} $eps ${dis_nums[$iN]} ${fracs[$iN]} 1>>log 2>>err
+        #python3 save_KL.py ${Ns[$iN]} $eps ${dis_nums[$iN]} ${fracs[$iN]} 1>>log 2>>err
+        #python3 save_PE.py ${Ns[$iN]} $eps ${dis_nums[$iN]} ${fracs[$iN]} 1>>log 2>>err
+    
+        #python3 histo_s.py ${Ns[$iN]} $eps ${dis_nums[$iN]} ${fracs[$iN]} $Nbins 1>>log 2>>err
+            
+        for initState in 0 24 121
+        do
+            python3 average_ev.py ${Ns[$iN]} $eps $initState $Tfin 1000 1>>log 2>>err
+        done
         )&
     done
     wait

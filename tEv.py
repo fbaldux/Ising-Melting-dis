@@ -90,9 +90,10 @@ new_states = np.unique(int_rep[:,0])
 
 #  ---------------------------  store stuff in the array of results  ---------------------------  #
 
-def store(it,v2):
+def store(it,v):
     toSave[it,0] = it*save_dt + Tin
     
+    v2 = np.abs(v)**2
     toSave[it,1] = np.dot(v2, sl_op)
     toSave[it,2] = np.dot(v2, vh_op)
     toSave[it,3] = np.dot(v2, area_op)
@@ -119,7 +120,7 @@ for dis in range(dis_num_in,dis_num_fin):
     if Tin == 0:
         v = np.zeros(dim[N])
         v[init_state] = 1
-        store(0,np.abs(v)**2)
+        store(0,v)
     else:
         v = np.load("States/N%d_e%.4f_s%d_T%.1f_d%d.npy" % (N,epsilon,init_state,Tin,dis))
 
@@ -127,7 +128,7 @@ for dis in range(dis_num_in,dis_num_fin):
         vt = expm_multiply(-1j*H*dt, v, start=0, stop=t_steps, num=save_steps+1)
 
         for it in range(1,save_steps+1):
-            store(it,np.abs(vt[it])**2)
+            store(it,vt[it])
         
         # to save the final state
         v = vt[-1]
@@ -140,11 +141,11 @@ for dis in range(dis_num_in,dis_num_fin):
             v = U.dot(v)
     
             if it%save_step == 0:
-                store(it//save_step,np.abs(v)**2)
+                store(it//save_step,v)
     
     # save to file
     filename = "Results/tEv_N%d_e%.4f_s%d_T%.1f_d%d.txt" % (N,epsilon,init_state,Tfin,dis)
-    head = "t lat vert area"
+    head = "t lat vert area EE"
     np.savetxt(filename, toSave, header=head)
     
     filename = "States/N%d_e%.4f_s%d_T%.1f_d%d.npy" % (N,epsilon,init_state,Tfin,dis)

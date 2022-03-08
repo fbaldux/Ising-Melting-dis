@@ -110,31 +110,34 @@ eps=EPSILON
 eig_num=1000
 
 # for tEv
-Tin=0
-Tfin=20
+Tin=1e-1
+Tfin=1e4
 dt=1
 save_dt=2
-ts_per_decade=10
+ts_per_decade=20
 
-sparse=1
+sparse=0
 
 dis_num_in=DIS_IN
 dis_num_fin=DIS_FIN
-dis_threads=4
+dis_threads=2
 dis_per_thread=$(( ($dis_num_fin-$dis_num_in) / $dis_threads ))
 
 overwrite=1
-nProc=10
+nProc=7
 
 for ((d=$dis_num_in; d<$dis_num_fin; d+=$dis_per_thread));
 do
     #python3 buildDiagHam.py $N $d $(( $d+$dis_per_thread )) 1>>log 2>>err_n${N}
     
     #python3 spectrum.py $N $eps $d $(( $d+$dis_per_thread )) $overwrite $nProc 1>>log 2>>err_n${N}_e${eps} &
-    python3 spectrum_sparse.py $N $eps $eig_num $d $(( $d+$dis_per_thread )) $overwrite $nProc 1>>log 2>>err_n${N}_e${eps} &
+    #python3 spectrum_sparse.py $N $eps $eig_num $d $(( $d+$dis_per_thread )) $overwrite $nProc 1>>log 2>>err_n${N}_e${eps} &
     
-    #python3 tEv.py $N $eps $Tin $Tfin $dt $save_dt $dis_num_in $dis_num_fin $sparse $overwrite $nProc 1>>log 2>>err_n${N}_e${eps} &
-    #python3 tEv_log.py $N $eps $Tin $Tfin $ts_per_decade $dis_num_in $dis_num_fin $sparse $overwrite $nProc 1>>log 2>>err_n${N}_e${eps} &
+    for initState in 0 24 121
+    do
+        #python3 tEv.py $N $eps $Tin $Tfin $dt $save_dt $dis_num_in $dis_num_fin $sparse $overwrite $nProc 1>>log 2>>err_n${N}_e${eps} &
+        python3 tEv_log.py $N $eps $initState $Tin $Tfin $ts_per_decade $dis_num_in $dis_num_fin $sparse $overwrite $nProc 1>>log 2>>err_n${N}_e${eps} &
+    done
 done
 
 

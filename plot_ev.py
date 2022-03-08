@@ -40,9 +40,10 @@ data /= dis_num
 
 fig, ax = plt.subplots()
 
-ax.plot(ts, data[0], '-', label="lateral", c='black')
-ax.plot(ts, data[1], '-', label="central", c='firebrick')
-ax.plot(ts, np.sqrt(data[2]), '-', label="sqrt(area)", c='darkblue')
+ax.plot(ts, data[0], '.', label="lateral", c='black')
+ax.plot(ts, data[1], '.', label="central", c='firebrick')
+ax.plot(ts, np.sqrt(data[2]), '.', label="sqrt(area)", c='darkblue')
+ax.plot(ts, data[3], '.', label="EE", c='darkgreen')
 
 # clean case
 #ax.plot(ts, np.sqrt(2)*ts, '--', c='black')
@@ -63,7 +64,7 @@ ax.set_ylabel(r"$\ell$")
 
 ax.set_title(r"$N$=%d, $\epsilon$=%.2f, init.state=%d" %(N,epsilon,init_state))
 
-#ax.set_xscale("log")
+ax.set_xscale("log")
 #ax.set_yscale("log")
 
 ax.legend()
