@@ -26,7 +26,7 @@ init_state = int( sys.argv[3] )
 # time evolution parameters
 Tin = float( sys.argv[4] )
 Tfin = float( sys.argv[5] )
-ts_per_decade = int( sys.argv[6] )
+ts_per_pow2 = int( sys.argv[6] )
 Tin_cutoff = 1e-1
 
 # number of disorder instances
@@ -101,6 +101,12 @@ def store(t,it,v):
 
 #  -------------------------------------------  main  ------------------------------------------  #
 
+# handling Tin=0
+if Tin == 0:
+    Tin_true = Tin_cutoff
+else:
+    Tin_true = Tin
+
 for dis in range(dis_num_in,dis_num_fin):
 
     # load the disorder
@@ -121,8 +127,6 @@ for dis in range(dis_num_in,dis_num_fin):
         v = np.zeros(dim[N])
         v[init_state] = 1
         toSave.append( store(0,0,v) )
-        
-        Tin = Tin_cutoff
     else:
         v = np.load("States/N%d_e%.4f_s%d_T%.1f_d%d.npy" % (N,epsilon,init_state,Tin,dis))
     
@@ -133,32 +137,28 @@ for dis in range(dis_num_in,dis_num_fin):
         del H
         
         # first step
-        if Tin == Tin_cutoff:
-            v = expm_multiply(Him, v, start=0, stop=Tin, num=2, endpoint=True)[-1]
+        if Tin == 0:
+            v = expm_multiply(Him, v, start=0, stop=Tin_true, num=2, endpoint=True)[-1]
             toSave.append( store(Tin,1,v) )
     
         # bulk
         c = 2
-        t_pivots = np.concatenate(( 2**np.arange( 0, np.log2(Tfin/Tin) )*Tin, (Tfin,) ))
+        t_pivots = np.concatenate(( 2**np.arange( 0, np.log2(Tfin/Tin_true) )*Tin_true, (Tfin,) ))
 
         for p in range(len(t_pivots)-1):
-            vt = expm_multiply(Him, v, start=0, stop=t_pivots[p+1]-t_pivots[p], num=ts_per_decade, endpoint=True)
+            vt = expm_multiply(Him, v, start=0, stop=t_pivots[p+1]-t_pivots[p], num=ts_per_pow2, endpoint=True)
             
-            ts = np.linspace(t_pivots[p],t_pivots[p+1],ts_per_decade)
-            for it in range(1,ts_per_decade):
+            ts = np.linspace(t_pivots[p],t_pivots[p+1],ts_per_pow2)
+            for it in range(1,ts_per_pow2):
                 toSave.append( store(ts[it], c, vt[it]) )
                 c += 1
 
             v = vt[-1]
     
-        # last step
-        #toSave.append( store(ts[it], c, vt[it]) )
-
-    
     else:
-        save_steps = int( (np.log10(Tfin/Tin))*ts_per_decade )
         
-        ts = np.exp( np.linspace(np.log(Tin), np.log(Tfin), save_steps) )
+        save_steps = int( (np.log2(Tfin/Tin_true))*ts_per_pow2 )
+        ts = np.exp( np.linspace(np.log(Tin_true), np.log(Tfin), save_steps) )
         
         # it holds H = U @ Hdiag @ U.H
         Hdiag, U = eigh(H.todense())

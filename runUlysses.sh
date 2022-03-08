@@ -114,7 +114,7 @@ Tin=1e-1
 Tfin=1e4
 dt=1
 save_dt=2
-ts_per_decade=20
+ts_per_pow2=20
 
 sparse=0
 
@@ -136,7 +136,7 @@ do
     for initState in 0 24 121
     do
         #python3 tEv.py $N $eps $Tin $Tfin $dt $save_dt $dis_num_in $dis_num_fin $sparse $overwrite $nProc 1>>log 2>>err_n${N}_e${eps} &
-        python3 tEv_log.py $N $eps $initState $Tin $Tfin $ts_per_decade $dis_num_in $dis_num_fin $sparse $overwrite $nProc 1>>log 2>>err_n${N}_e${eps} &
+        python3 tEv_log.py $N $eps $initState $Tin $Tfin $ts_per_pow2 $dis_num_in $dis_num_fin $sparse $overwrite $nProc 1>>log 2>>err_n${N}_e${eps} &
     done
 done
 
