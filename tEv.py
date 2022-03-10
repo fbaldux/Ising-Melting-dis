@@ -101,7 +101,7 @@ def store(it,v):
     toSave[it,2] = np.dot(v2, vh_op)
     toSave[it,3] = np.dot(v2, area_op)
 
-    toSave[it,4] = entanglement_entropy(reduced_density_matrix(N, v, dictionary, new_states))
+    toSave[it,4] = entanglement_entropy(reduced_density_matrix(N, v, int_rep, new_states))
 
 
 #  -------------------------------------------  main  ------------------------------------------  #
@@ -147,7 +147,13 @@ for dis in range(dis_num_in,dis_num_fin):
     
                 if it%save_step == 0:
                     store(it//save_step,v)
-    
+        
+                
+        if Tin > 0:
+            filename = "Results/tEv_N%d_e%.4f_s%d_T%.1f_d%d.txt" % (N,epsilon,init_state,Tin,dis)
+            temp = np.loadtxt(filename)
+            toSave = np.vstack((temp,toSave))
+        
         # save to file
         filename = "Results/tEv_N%d_e%.4f_s%d_T%.1f_d%d.txt" % (N,epsilon,init_state,Tfin,dis)
         head = "t lat vert area EE"
@@ -156,7 +162,10 @@ for dis in range(dis_num_in,dis_num_fin):
         filename = "States/N%d_e%.4f_s%d_T%.1f_d%d.npy" % (N,epsilon,init_state,Tfin,dis)
         #np.savetxt(filename, np.stack((v.real,v.imag)), header="Re Im")
         np.save(filename, v)
-
+        
+        if Tin > 0:
+            filename = "Results/tEv_N%d_e%.4f_s%d_T%.1f_d%d.txt" % (N,epsilon,init_state,Tin,dis)
+            os.system("rm " + filename)
     
 print("END", ' '.join(sys.argv), "time", time()-start)
 

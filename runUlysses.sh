@@ -108,7 +108,7 @@ eig_num=1000
 
 # for tEv
 Tin=0
-Tfin=1e4
+Tfin=£Tf
 dt=1
 save_dt=2
 ts_per_pow2=10

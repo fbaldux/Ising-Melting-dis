@@ -5,10 +5,10 @@ eig_num=100
 # for tEv
 initState=0
 Tin=0
-Tfin=1e1
-dt=5
-save_dt=5
-sparse=1
+Tfin=1e4
+dt=0.1
+save_dt=0.1
+sparse=0
 
 ts_per_pow2=10
 
@@ -18,7 +18,7 @@ dis_num_fin=1
 overwrite=1
 nProc=1
 
-for N in $(seq 18 2 18)
+for N in $(seq 12 2 12)
 do    
     #python3 buildDiagHam.py $N $dis_num_in $dis_num_fin 1>>log 2>>err
     
@@ -37,8 +37,8 @@ do
             
                 #python3 spectrum2.py $N $eps $dis_num_in $dis_num_fin
             
-                #python3 tEv.py $N $eps $initState $Tin $Tfin $dt $save_dt $dis_num_in $dis_num_fin $sparse $overwrite $nProc 1>>log 2>>err &
-                python3 tEv_log.py $N $eps $initState $Tin $Tfin $ts_per_pow2 $dis_num_in $dis_num_fin $sparse $overwrite $nProc 1>>log 2>>err
+                python3 tEv.py $N $eps $initState $Tin $Tfin $dt $save_dt $dis_num_in $dis_num_fin $sparse $overwrite $nProc #1>>log 2>>err
+                #python3 tEv_log.py $N $eps $initState $Tin $Tfin $ts_per_pow2 $dis_num_in $dis_num_fin $sparse $overwrite $nProc 1>>log 2>>err
                 :
             fi            
             

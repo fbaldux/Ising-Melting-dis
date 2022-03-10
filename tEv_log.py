@@ -176,14 +176,26 @@ for dis in range(dis_num_in,dis_num_fin):
         
             v = vt
         
+        toSave = np.array(toSave)
     
+        if Tin > 0:
+            filename = "Results/tEv_N%d_e%.4f_s%d_T%.1f_d%d.txt" % (N,epsilon,init_state,Tin,dis)
+            temp = np.loadtxt(filename)
+            print(temp.shape, toSave.shape)
+            toSave = np.vstack((temp,toSave))
+        
         # save to file
         filename = "Results/tEv_N%d_e%.4f_s%d_T%.1f_d%d.txt" % (N,epsilon,init_state,Tfin,dis)
         head = "t lat vert area EE"
-        np.savetxt(filename, np.array(toSave), header=head)
+        np.savetxt(filename, toSave, header=head)
     
         filename = "States/N%d_e%.4f_s%d_T%.1f_d%d.npy" % (N,epsilon,init_state,Tfin,dis)
+        #np.savetxt(filename, np.stack((v.real,v.imag)), header="Re Im")
         np.save(filename, v)
+        
+        if Tin > 0:
+            filename = "Results/tEv_N%d_e%.4f_s%d_T%.1f_d%d.txt" % (N,epsilon,init_state,Tin,dis)
+            os.system("rm " + filename)
 
 
 print("END", ' '.join(sys.argv), "time", time()-startTime)

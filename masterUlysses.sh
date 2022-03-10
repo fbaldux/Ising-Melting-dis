@@ -7,15 +7,15 @@ dis_num_in=0
 dis_num_fin=4
 dis_per_run=4
 
-for ((d=$dis_num_in; d<$dis_num_fin; d+=$dis_per_run));
+for ((d=$dis_num_in; d<$dis_num_fin; d+=$dis_per_run))
 do
     Di=$d 
     Df=$(( $d+$dis_per_run ))
 
-    for N in $(seq 28 2 28);
+    for N in $(seq 28 2 28)
     do
     
-        for ie in $(seq 0 4);
+        for ie in $(seq 0 4)
         do
             sed "s/£N/$N/g;s/£E/${eps[$ie]}/g;s/£Tf/${Tf[$ie]}/g;s/£Di/$Di/g;s/£Df/$Df/g;" runUlysses.sh > temp.sh        
                 
