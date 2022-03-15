@@ -11,12 +11,12 @@ from matplotlib import cm
 
 
 #Ns = np.arange(30,34,2)
-Ns = np.array((26,32))
+Ns = np.array((22,24,26))
 #eps = np.arange(0.5,3.5,0.5)
-eps = np.array((1,3,5))
-init_states = np.array((0,5,24,121,623,))
-Tfin = 5000
-dis_num = 50
+eps = np.array((1,2,3,4,5))
+init_states = np.array((0,24,121,))
+Tfin = np.array((1e4,1e4,1e4,1e5,1e5))
+dis_num = 1500
 
 
 #plt.rcParams["figure.figsize"] = [6,6]
@@ -48,13 +48,13 @@ for ie in range(len(eps)):
         for iS in range(len(init_states)):
             in_st = init_states[iS]
         
-            filename = "Averages/tEv_N%d_e%.4f_s%d_T%.1f_av%d.txt" % (N,e,in_st,Tfin,dis_num)
+            filename = "Averages/tEv_N%d_e%.4f_s%d_T%.1f_av%d.txt" % (N,e,in_st,Tfin[ie],dis_num)
             av = np.loadtxt(filename).T  # t lat vert area
             ts = av[0]
             av = av[1:]
             
-            filename = "Averages/tEv_N%d_e%.4f_s%d_T%.1f_std%d.txt" % (N,e,in_st,Tfin,dis_num)
-            std = np.sqrt(np.loadtxt(filename)[:,1:])  # t lat vert area
+            filename = "Averages/tEv_N%d_e%.4f_s%d_T%.1f_std%d.txt" % (N,e,in_st,Tfin[ie],dis_num)
+            std = np.sqrt(np.loadtxt(filename)[:,1:])  # t lat vert area EE
 
 #  -------------------------------------------  plot  ------------------------------------------  #
                         
@@ -68,7 +68,8 @@ for ie in range(len(eps)):
             #ax.plot(data[0], data[2], '-', label=lab, c=cols(c))
             #ax.plot(data[0], np.sqrt(data[4]), '-', label=lab, c=cols(c))
             
-            ax.plot(ts[::10], av[2,::10], '-', marker=dots[iN], ms=3, label=lab, c=cols(iS))
+            #ax.plot(ts[::], av[2,::], '-', marker=dots[iN], ms=3, label=lab, c=cols(iS))
+            ax.plot(ts, av[3], ls[iN], label=lab, c=cols(iS))
             #ax.fill_between(ts[::10], av[2,::10]+std[2,::10], av[2,::10]-std[2,::10], alpha=0.5, lw=0, color=cols(iS))
 
             c += 1
@@ -77,8 +78,8 @@ for ie in range(len(eps)):
 
     ax.set_xlabel(r"$t$")
     #ax.set_ylabel(r"$\ell$")
-    ax.set_ylabel(r"$N(t)$")
-    #ax.set_ylabel(r"$\ell$")
+    #ax.set_ylabel(r"$N(t)$")
+    ax.set_ylabel(r"$S_E(t)$")
 
     #plt.clim((0,1))
 
@@ -86,7 +87,7 @@ for ie in range(len(eps)):
     ax.set_title(r"$W$ = %.2f" %(2*e))
 
     ax.set_xscale("log")
-    ax.set_yscale("log")
+    #ax.set_yscale("log")
 
     ax.legend(fontsize="small")
     plt.savefig("temp/p_e%.2f.pdf" % (e), bbox_inches='tight')

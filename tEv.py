@@ -108,7 +108,7 @@ def store(it,v):
 
 for dis in range(dis_num_in,dis_num_fin):
 
-    if overwrite or ( not os.path.isfile("Results/spec_N%d_e%.4f_d%d.txt" % (N, epsilon, dis)) ):
+    if overwrite or ( not os.path.isfile("Results/tEv_N%d_e%.4f_s%d_T%.1f_d%d.txt" % (N,epsilon,init_state,Tfin,dis)) ):
 
         # load the disorder
         if epsilon != 0:
@@ -166,6 +166,10 @@ for dis in range(dis_num_in,dis_num_fin):
         if Tin > 0:
             filename = "Results/tEv_N%d_e%.4f_s%d_T%.1f_d%d.txt" % (N,epsilon,init_state,Tin,dis)
             os.system("rm " + filename)
+            
+            filename = "States/N%d_e%.4f_s%d_T%.1f_d%d.npy" % (N,epsilon,init_state,Tin,dis)
+            os.system("rm " + filename)
+            
     
 print("END", ' '.join(sys.argv), "time", time()-start)
 

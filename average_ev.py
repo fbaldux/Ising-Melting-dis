@@ -19,6 +19,10 @@ data = np.loadtxt(filename).T
 data2 = np.copy(data)
 data2[1:] = data2[1:]**2
 
+fIn = open(filename, 'r')
+head = fIn.readline()[2:-1]
+fIn.close()
+
 dis_num_true = dis_num
 for dis in range(1,dis_num):
 
@@ -40,10 +44,8 @@ data2[1:] = np.sqrt( data2[1:] - data[1:]**2 )
 
 #  -------------------------------------------  plot  ------------------------------------------  #
 
-fIn = open(filename, 'r')
-head = fIn.readline()[2:-1]
-fIn.close()
 
+head += "; dis_true = %d" % dis_num_true
 
 filename = "Averages/tEv_N%d_e%.4f_s%d_T%.1f_av%d.txt" % (N,epsilon,init_state,Tfin,dis_num)
 np.savetxt(filename, data.T, header=head)
