@@ -13,18 +13,20 @@ sparse=0
 ts_per_pow2=5
 
 dis_num_in=0
-dis_num_fin=1
+dis_num_fin=3
 
 overwrite=1
 nProc=1
 
-for N in $(seq 12 2 12)
+for N in $(seq 36 2 36)
 do    
-    #python3 buildDiagHam.py $N $dis_num_in $dis_num_fin 1>>log 2>>err
+    python3 buildDiagHam.py $N $dis_num_in $dis_num_fin 1>>log 2>>err
+    
+    python3 save_H.py $N $dis_num_in $dis_num_fin
     
     for eps in $(seq 1 2 1)
     do
-        for initState in 0 24 121
+        for initState in 0 #24 121
             do
             
             if [[ ! -f stop ]];
@@ -38,7 +40,7 @@ do
                 #python3 spectrum2.py $N $eps $dis_num_in $dis_num_fin
             
                 #python3 tEv.py $N $eps $initState $Tin $Tfin $dt $save_dt $dis_num_in $dis_num_fin $sparse $overwrite $nProc #1>>log 2>>err
-                python3 tEv_log.py $N $eps $initState $Tin $Tfin $ts_per_pow2 $dis_num_in $dis_num_fin $sparse $overwrite $nProc 1>>log 2>>err
+                #python3 tEv_log.py $N $eps $initState $Tin $Tfin $ts_per_pow2 $dis_num_in $dis_num_fin $sparse $overwrite $nProc 1>>log 2>>err
                 :
             fi            
             #python3 average_ev.py $N $eps $initState $Tfin $dis_num_fin

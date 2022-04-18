@@ -100,16 +100,17 @@ cd $SLURM_SUBMIT_DIR
 # ==== JOB COMMANDS ===== #
 
 
-Ns=(          22   24   26   28   30   32  34 )
-dis_nums=( 10000 2000 2000 4800 1920 1800 800 )
-fracs=(      0.1  0.1  0.1    1    1    1   1 )
+#            0     1    2    3    4    5    6   7                                                             
+Ns=(        20    22   24   26   28   30   32  34 )
+dis_nums=(   0 10000 2000 2000 4800 1920 1800 800 )
+fracs=(      0   0.1  0.1  0.1    1    1    1   1 )
 Nbins=50
 
 Tfin=1e4
 
-for iN in $(seq 0 0);
+for iN in $(seq 0 0)
 do
-    for eps in $(seq 1 5);
+    for eps in $(seq 2 5)
     do
         (
         #python3 save_r.py ${Ns[$iN]} $eps ${dis_nums[$iN]} ${fracs[$iN]} 1>>log 2>>err
@@ -122,7 +123,7 @@ do
             
         for initState in 0 24 121
         do
-            python3 average_ev.py ${Ns[$iN]} $eps $initState $Tfin 1000 1>>log 2>>err
+            python3 average_ev.py ${Ns[$iN]} $eps $initState $Tfin 1500 1>>log 2>>err
         done
         )&
     done

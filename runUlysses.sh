@@ -111,17 +111,17 @@ Tin=0
 Tfin=£Tf
 dt=1
 save_dt=2
-ts_per_pow2=10
+ts_per_pow2=5
 
 sparse=0
 
 dis_num_in=£Di
 dis_num_fin=£Df
-dis_threads=2
+dis_threads=4
 dis_per_thread=$(( ($dis_num_fin-$dis_num_in) / $dis_threads ))
 
 overwrite=1
-nProc=7
+nProc=10
 
 for ((d=$dis_num_in; d<$dis_num_fin; d+=$dis_per_thread));
 do
@@ -130,7 +130,7 @@ do
     #python3 spectrum.py $N $eps $d $(( $d+$dis_per_thread )) $overwrite $nProc 1>>log 2>>err_n${N}_e${eps} &
     #python3 spectrum_sparse.py $N $eps $eig_num $d $(( $d+$dis_per_thread )) $overwrite $nProc 1>>log 2>>err_n${N}_e${eps} &
     
-    for initState in 0 24 121
+    for initState in 0
     do
         #python3 tEv.py $N $eps $initState $Tin $Tfin $dt $save_dt $dis_num_in $dis_num_fin $sparse $overwrite $nProc 1>>log 2>>err_n${N}_e${eps} &
         python3 tEv_log.py $N $eps $initState $Tin $Tfin $ts_per_pow2 $dis_num_in $dis_num_fin $sparse $overwrite $nProc 1>>log 2>>err_n${N}_e${eps} &

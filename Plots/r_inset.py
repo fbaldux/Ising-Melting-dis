@@ -65,12 +65,14 @@ ax2 = ax.inset_axes([left, bottom, width, height])
 #low = np.loadtxt("Plots/r_cut_low.txt").T
 high = np.loadtxt("Plots/r_cut_high.txt").T
 cross = np.loadtxt("Plots/r_cross.txt").T
+cross_err = np.loadtxt("Plots/r_cross_err.txt").T
 
 
 # plot
 #ax2.plot(low[0], low[1], 'o', ms=3, c='darkgreen', label=r"$W_L$")
 ax2.plot(high[0], high[1], 's', ms=3, c='steelblue', label=r"$W_U$")
-ax2.plot(cross[0], cross[1], 'o', ms=3, c='darkgreen', label=r"$W^*$")
+#ax2.plot(cross[0], 2*cross[1], 'o', ms=3, c='darkgreen', label=r"$W^*$")
+ax2.errorbar(cross[0], 2*cross[1], yerr=2/(4*cross[1]**2*cross_err[1]), marker='o', ms=3, c='darkgreen', label=r"$W^*$")
 
 """
 # fit low
@@ -89,7 +91,7 @@ ax2.plot(high[0], f(high[0]), '--',  c='steelblue')
 
 
 # fit cross
-fit = np.polyfit(cross[0,-4:], cross[1,-4:], 1)
+fit = np.polyfit(cross[0,-4:], 2*cross[1,-4:], 1)
 print("cross", fit)
 f = lambda x: fit[0]*x + fit[1]
 ax2.plot(cross[0,-4:], f(cross[0,-4:]), '-.',  c='darkgreen')

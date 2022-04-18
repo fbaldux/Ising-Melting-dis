@@ -15,6 +15,9 @@ data = np.loadtxt("Analysis/rAv.txt").T
 def fitfunc(x,a,b,c,d):
     return (a*np.exp(-b*x) + c) * ( 1 + d/x )
 
+def fitfuncp(x,a,b,c,d):
+    return (a*b*np.exp(-b*x)) * ( 1 + d/x ) - (a*np.exp(-b*x) + c) * d/x**2 
+
 xmin = 7
 deg = 5
 
@@ -74,9 +77,20 @@ crosses = np.zeros(len(Ns))
 crosses[0] = 8
 
 for iN in range(1,len(Ns)):
-    temp = lambda x: f(iN,x)-0.4
+    temp = lambda x: f(iN,x)-f(iN-1,x)
+    
+    
+    x2 = np.linspace(1,18,100)
+    plt.plot(x2, f(iN-1,x2), '-', c=cols(0))
+    plt.plot(x2, f(iN,x2), '-', c=cols(5))
+    plt.title(Ns[iN])
+    #plt.yscale("log")
+    plt.show()
     
     crosses[iN] = fsolve(temp, crosses[iN-1])
+    
+    print(Ns[iN], fitfuncp(crosses[iN],*fs[iN]) - fitfuncp(crosses[iN],*fs[iN-1]))
+    
     
 crosses = np.array(crosses)
 

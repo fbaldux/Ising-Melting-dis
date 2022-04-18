@@ -11,11 +11,11 @@ from matplotlib import cm
 
 
 #Ns = np.arange(30,34,2)
-Ns = np.array((22,24,26))
+Ns = np.array((20,22,24,26,))
 #eps = np.arange(0.5,3.5,0.5)
-eps = np.array((1,2,3,4,5))
-init_states = np.array((0,24,121,))
-Tfin = np.array((1e4,1e4,1e4,1e5,1e5))
+eps = np.array((2,3,4,5))
+init_states = np.array((0,))
+Tfin = np.array((1e3,1e4,1e5))
 dis_num = 1500
 
 
@@ -30,6 +30,7 @@ cols = cm.get_cmap("inferno", len(init_states)+1)
 
 dots = ('o', 'v', '^', '>', '<', 's', 'P', 'h', 'X', 'D')
 ls = ['-', '--', '-.', ':']
+alpha = 0.1
 
 #  -------------------------------------------  load  ------------------------------------------  #
 
@@ -47,15 +48,22 @@ for ie in range(len(eps)):
         
         for iS in range(len(init_states)):
             in_st = init_states[iS]
-        
-            filename = "Averages/tEv_N%d_e%.4f_s%d_T%.1f_av%d.txt" % (N,e,in_st,Tfin[ie],dis_num)
-            av = np.loadtxt(filename).T  # t lat vert area
-            ts = av[0]
-            av = av[1:]
             
-            filename = "Averages/tEv_N%d_e%.4f_s%d_T%.1f_std%d.txt" % (N,e,in_st,Tfin[ie],dis_num)
-            std = np.sqrt(np.loadtxt(filename)[:,1:])  # t lat vert area EE
-
+            for T in Tfin[::-1]:
+                
+                try:
+                    filename = "Averages/tEv_N%d_e%.4f_s%d_T%.1f_av%d.txt" % (N,e,in_st,T,dis_num)
+                    av = np.loadtxt(filename).T  # t lat vert area EE
+                    ts = av[0]
+                    av = av[1:]
+                    
+                    filename = "Averages/tEv_N%d_e%.4f_s%d_T%.1f_std%d.txt" % (N,e,in_st,T,dis_num)
+                    std = np.sqrt(np.loadtxt(filename)[:,1:]).T  # t lat vert area EE
+                                    
+                    break
+                    
+                except:
+                    None
 #  -------------------------------------------  plot  ------------------------------------------  #
                         
             #lab = r"$N=%d$" % N
@@ -69,7 +77,10 @@ for ie in range(len(eps)):
             #ax.plot(data[0], np.sqrt(data[4]), '-', label=lab, c=cols(c))
             
             #ax.plot(ts[::], av[2,::], '-', marker=dots[iN], ms=3, label=lab, c=cols(iS))
+            
             ax.plot(ts, av[3], ls[iN], label=lab, c=cols(iS))
+            ax.fill_between(ts, av[3]+std[3], av[3]-std[3], color=cols(iS), alpha=alpha)
+            
             #ax.fill_between(ts[::10], av[2,::10]+std[2,::10], av[2,::10]-std[2,::10], alpha=0.5, lw=0, color=cols(iS))
 
             c += 1
