@@ -43,7 +43,7 @@
 #
 #[unconfig] #SBATCH --array=01-10    # Create a job array. Useful for multiple, similar jobs. To use, read this: https://slurm.schedmd.com/job_array.html
 #SBATCH --partition=regular1         # Partition (queue). Avail: regular1, regular2, long1, long2, wide1, wide2, gpu1, gpu2. Multiple partitions are possible.
-#SBATCH --time=02:00:00              # Time limit hrs:min:sec
+#SBATCH --time=08:00:00              # Time limit hrs:min:sec
 #SBATCH --output=%x.o%j              # Standard output log in TORQUE-style -- WARNING: %x requires a new enough SLURM. Use %j for regular jobs and %A-%a for array jobs
 #SBATCH --error=%x.e%j               # Standard error  log in TORQUE-style -- WARNING: %x requires a new enough SLURM. Use %j for regular jobs and %A-%a for array jobs
 #
@@ -100,34 +100,40 @@ cd $SLURM_SUBMIT_DIR
 # ==== JOB COMMANDS ===== #
 
 
-#            0     1    2    3    4    5    6   7                                                             
-Ns=(        20    22   24   26   28   30   32  34 )
-dis_nums=(   0 10000 2000 2000 4800 1920 1800 800 )
-fracs=(      0   0.1  0.1  0.1    1    1    1   1 )
+#           0     1    2    3    4    5    6    7    8                                                        
+Ns=(       20    22   24   26   28   30   32   34   36 )
+dis_nums=(  0 10000 5000 5000 6600 3360 3000 1400 1000 )
+fracs=(     0   0.1  0.1  0.1    1    1    1    1    1 )
+
+#         0   1   2   3   4   5   6   7   8   9
+eps=(   1.0 1.5 2.0 2.5 3.0 3.5 4.0 4.5 5.0 5.5 )
+Tfins=( 1e2 1e2 1e3 1e3 1e4 1e4 1e4 1e4 1e5 1e5 )
+
 Nbins=50
 
-Tfin=1e4
-
-for iN in $(seq 0 0)
+for iN in $(seq 1 3)
 do
-    for eps in $(seq 2 5)
-    do
-        (
-        #python3 save_r.py ${Ns[$iN]} $eps ${dis_nums[$iN]} ${fracs[$iN]} 1>>log 2>>err
-    	#python3 save_lim_spec.py ${Ns[$iN]} $eps ${dis_nums[$iN]} 1>>log 2>>err
-        #python3 save_IPR.py ${Ns[$iN]} $eps ${dis_nums[$iN]} ${fracs[$iN]} 1>>log 2>>err
-        #python3 save_KL.py ${Ns[$iN]} $eps ${dis_nums[$iN]} ${fracs[$iN]} 1>>log 2>>err
-        #python3 save_PE.py ${Ns[$iN]} $eps ${dis_nums[$iN]} ${fracs[$iN]} 1>>log 2>>err
-    
-        #python3 histo_s.py ${Ns[$iN]} $eps ${dis_nums[$iN]} ${fracs[$iN]} $Nbins 1>>log 2>>err
-            
-        for initState in 0 24 121
-        do
-            python3 average_ev.py ${Ns[$iN]} $eps $initState $Tfin 1500 1>>log 2>>err
-        done
-        )&
-    done
-    wait
+	#for eps in $(seq 2 5)
+	for ie in $(seq 0 9)
+	do
+		(
+		#python3 save_r.py ${Ns[$iN]} $eps ${dis_nums[$iN]} ${fracs[$iN]} 1>>log 2>>err
+		#python3 save_lim_spec.py ${Ns[$iN]} $eps ${dis_nums[$iN]} 1>>log 2>>err
+		#python3 save_IPR.py ${Ns[$iN]} $eps ${dis_nums[$iN]} ${fracs[$iN]} 1>>log 2>>err
+		#python3 save_KL.py ${Ns[$iN]} $eps ${dis_nums[$iN]} ${fracs[$iN]} 1>>log 2>>err
+		#python3 save_PE.py ${Ns[$iN]} $eps ${dis_nums[$iN]} ${fracs[$iN]} 1>>log 2>>err
+
+		#python3 histo_s.py ${Ns[$iN]} $eps ${dis_nums[$iN]} ${fracs[$iN]} $Nbins 1>>log 2>>err
+
+		#python3 DOS.py ${Ns[$iN]} $eps ${dis_nums[$iN]} $Nbins 1>>log 2>>err
+
+		for initState in 0 #24 121
+		do
+			python3 average_ev.py ${Ns[$iN]} ${eps[$ie]} $initState ${Tfins[$ie]} 1000 1>>log 2>>err
+		done
+		)&
+	done
+	wait
 done
 
 # ==== END OF JOB COMMANDS ===== #

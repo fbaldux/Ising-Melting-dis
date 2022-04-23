@@ -11,12 +11,12 @@ from matplotlib import cm
 
 
 #Ns = np.arange(30,34,2)
-Ns = np.array((20,22,24,26,))
+Ns = np.array((22,24,26,))
 #eps = np.arange(0.5,3.5,0.5)
-eps = np.array((2,3,4,5))
+eps = np.array(( 1.0,1.5,2.0,2.5,3.0,3.5,4.0,4.5,5.0,5.5))
+Tfin = np.array((1e2,1e2,1e3,1e3,1e4,1e4,1e4,1e4,1e5,1e5))
 init_states = np.array((0,))
-Tfin = np.array((1e3,1e4,1e5))
-dis_num = 1500
+dis_num = 1000
 
 
 #plt.rcParams["figure.figsize"] = [6,6]
@@ -24,7 +24,8 @@ dis_num = 1500
 #fig, ax = plt.subplots()
 
 #cols = cm.get_cmap("inferno", len(Ns)*len(eps)+1)
-cols = cm.get_cmap("inferno", len(init_states)+1)
+cols = cm.get_cmap("inferno", len(Ns)+1)
+#cols = cm.get_cmap("inferno", len(init_states)+1)
 #cmaps = ["Greys", "Purples", "Blues", "Oranges", "Reds"]
 #cmaps = ["viridis", "plasma", "cividis", "Greys", "Purples", "Blues", "Oranges", "Reds"]
 
@@ -37,6 +38,7 @@ alpha = 0.1
 c = 0
 for ie in range(len(eps)):
     e = eps[ie]
+    T = Tfin[ie]
     
     #cols = cm.get_cmap(cmaps[ie], len(Ns)+1)
     fig, ax = plt.subplots()
@@ -49,27 +51,30 @@ for ie in range(len(eps)):
         for iS in range(len(init_states)):
             in_st = init_states[iS]
             
-            for T in Tfin[::-1]:
+            if 1:
+            #try:
+                filename = "Averages/tEv_N%d_e%.4f_s%d_T%.1f_av%d.txt" % (N,e,in_st,T,dis_num)
+                av = np.loadtxt(filename).T  # t lat vert area EE
+                ts = av[0]
+                av = av[1:]
                 
-                try:
-                    filename = "Averages/tEv_N%d_e%.4f_s%d_T%.1f_av%d.txt" % (N,e,in_st,T,dis_num)
-                    av = np.loadtxt(filename).T  # t lat vert area EE
-                    ts = av[0]
-                    av = av[1:]
-                    
-                    filename = "Averages/tEv_N%d_e%.4f_s%d_T%.1f_std%d.txt" % (N,e,in_st,T,dis_num)
-                    std = np.sqrt(np.loadtxt(filename)[:,1:]).T  # t lat vert area EE
-                                    
-                    break
-                    
-                except:
-                    None
+                f = open(filename, 'r')
+                print(filename, "->", f.readline()[:-1])
+                f.close()
+                
+                filename = "Averages/tEv_N%d_e%.4f_s%d_T%.1f_std%d.txt" % (N,e,in_st,T,dis_num)
+                std = np.sqrt(np.loadtxt(filename)[:,1:]).T  # t lat vert area EE
+                                
+                #break
+                
+            #except:
+            #    None
 #  -------------------------------------------  plot  ------------------------------------------  #
                         
-            #lab = r"$N=%d$" % N
+            lab = r"$N=%d$" % N
             #lab = r"$\varepsilon=%.2f$" % e
             #lab = r"$N=%d$, $\varepsilon=%.2f$" % (N,e)
-            lab = r"$N$=%d, in.st.=%d" % (N,in_st)
+            #lab = r"$N$=%d, in.st.=%d" % (N,in_st)
             
             #ax.plot(ts, 0.5*(data[1]+data[3]), '-', label="lateral", c='black')
     
@@ -78,8 +83,8 @@ for ie in range(len(eps)):
             
             #ax.plot(ts[::], av[2,::], '-', marker=dots[iN], ms=3, label=lab, c=cols(iS))
             
-            ax.plot(ts, av[3], ls[iN], label=lab, c=cols(iS))
-            ax.fill_between(ts, av[3]+std[3], av[3]-std[3], color=cols(iS), alpha=alpha)
+            ax.plot(ts, av[3], '-', label=lab, c=cols(iN))
+            ax.fill_between(ts, av[3]+std[3], av[3]-std[3], color=cols(iN), alpha=alpha)
             
             #ax.fill_between(ts[::10], av[2,::10]+std[2,::10], av[2,::10]-std[2,::10], alpha=0.5, lw=0, color=cols(iS))
 

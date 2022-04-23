@@ -32,6 +32,11 @@ The program uses Numba to speed up calculations.
 The matrix elements are saved to a .txt file.
 
 
+## DOS.sh
+
+The program computes the histogram of the average DOS (normalized from -1 to 1), and the histogram of the positions of the max and min eigenvalue.
+
+
 ## empty.sh
 
 The shell removes empty files (coming from failed jobs).
@@ -195,6 +200,20 @@ The program evolves a state on the Young diagram lattice.
 - It saves to Results/ the linear dimensions of the state, the area and the entanglement entropy. 
 - It saves to States/ the final state reached.
 - It is suited for time evolution in log scale (the dt is progressively increased).
+
+
+## tEv\_log\_multiState.py
+
+The program evolves a state on the Young diagram lattice.
+
+- It loads the non-zero entries of the adjacency matrix from the Hamiltonian/clean_N#.txt files.
+- It loads the diagonal entries of the Hamiltonian matrix from the files Hamiltonian/rand...
+- It builds the sparse Hamiltonian from the entries.
+- It evolves an initial state via full exponentiation or sparse Pade' (`expm_multiply`).
+- It saves to Results/ the linear dimensions of the state, the area and the entanglement entropy. 
+- It saves to States/ the final state reached.
+- It is suited for time evolution in log scale (the dt is progressively increased).
+- It evolves several initial states, but diagonalizing the Hamiltonian only once.
 
 
 ## time_fit.py

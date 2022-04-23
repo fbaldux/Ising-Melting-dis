@@ -34,11 +34,11 @@ Tin_cutoff = 1e-1
 dis_num_in = int( sys.argv[7] )
 dis_num_fin = int( sys.argv[8] )
 
-# whether to overwrite existing files
-overwrite = int( sys.argv[9] )
-
 # whether to use sparse exponentiation
 use_sparse = False
+
+# whether to overwrite existing files
+overwrite = int( sys.argv[10] )
 
 # number of processors to use
 nProc = int( sys.argv[11] )

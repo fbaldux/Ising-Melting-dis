@@ -37,8 +37,8 @@ for N in range(20,38,4):
 ax.plot((5,14), (0.51,0.51), '--', c="steelblue")
 ax.text(12.6, 0.512, "U", c="steelblue")
 
-#ax.plot((14,22), (0.41,0.41), '-.cd ', c="darkgreen")
-#ax.text(14.4, 0.4, "L", c="darkgreen")
+ax.plot((14,23), (0.41,0.41), '-.', c="darkgreen")
+ax.text(14.4, 0.4, "L", c="darkgreen")
 
 ax.set_xlabel(r"$W$")
 ax.set_ylabel(r"$r$")
@@ -62,26 +62,25 @@ ax2 = ax.inset_axes([left, bottom, width, height])
 
 
 # load
-#low = np.loadtxt("Plots/r_cut_low.txt").T
+low = np.loadtxt("Plots/r_cut_low.txt").T
 high = np.loadtxt("Plots/r_cut_high.txt").T
-cross = np.loadtxt("Plots/r_cross.txt").T
-cross_err = np.loadtxt("Plots/r_cross_err.txt").T
+#cross = np.loadtxt("Plots/r_cross.txt").T
+#cross_err = np.loadtxt("Plots/r_cross_err.txt").T
 
 
 # plot
-#ax2.plot(low[0], low[1], 'o', ms=3, c='darkgreen', label=r"$W_L$")
+ax2.plot(low[0], low[1], 'o', ms=3, c='darkgreen', label=r"$W_L$")
 ax2.plot(high[0], high[1], 's', ms=3, c='steelblue', label=r"$W_U$")
 #ax2.plot(cross[0], 2*cross[1], 'o', ms=3, c='darkgreen', label=r"$W^*$")
-ax2.errorbar(cross[0], 2*cross[1], yerr=2/(4*cross[1]**2*cross_err[1]), marker='o', ms=3, c='darkgreen', label=r"$W^*$")
+#ax2.errorbar(cross[0], 2*cross[1], yerr=2/(4*cross[1]**2*cross_err[1]), marker='o', ms=3, c='darkgreen', label=r"$W^*$")
 
-"""
+
 # fit low
 start = 5
 fit = np.polyfit(low[0,start:], low[1,start:], 1)
 print("low", fit)
 f = lambda x: fit[0]*x + fit[1]
 ax2.plot(low[0,start:], f(low[0,start:]), '-.',  c='darkgreen')
-"""
 
 # fit high
 fit = np.polyfit(high[0], high[1], 1)
@@ -89,13 +88,13 @@ print("high", fit)
 f = lambda x: fit[0]*x + fit[1]
 ax2.plot(high[0], f(high[0]), '--',  c='steelblue')
 
-
+"""
 # fit cross
 fit = np.polyfit(cross[0,-4:], 2*cross[1,-4:], 1)
 print("cross", fit)
 f = lambda x: fit[0]*x + fit[1]
 ax2.plot(cross[0,-4:], f(cross[0,-4:]), '-.',  c='darkgreen')
-
+"""
 
 ax2.set_xlabel(r"$N$")
 #ax2.set_ylabel(r"$W$")
