@@ -5,12 +5,12 @@ eig_num=100
 # for tEv
 initState=0
 Tin=0
-Tfin=2e1
+Tfin=1e3
 dt=0.1
 save_dt=0.1
 sparse=1
 
-ts_per_pow2=5
+ts_per_pow2=10
 
 dis_num_in=0
 dis_num_fin=1
@@ -18,18 +18,18 @@ dis_num_fin=1
 overwrite=1
 nProc=1
 
-for N in $(seq 16 2 16)
+for N in $(seq 20 2 20)
 do    
     python3 buildDiagHam.py $N $dis_num_in $dis_num_fin 1>>log 2>>err
     
     #python3 save_H.py $N $dis_num_in $dis_num_fin
     
-    for eps in $(seq 1 2 1)
+    for eps in $(seq 5 2 5)
     do
         for initState in 0 #24 121
             do
             
-            if [[ ! -f stop ]];
+            if [[ ! -f stop ]]
             then
                 #python3 spectrum.py $N $eps $dis_num_in $dis_num_fin $overwrite $nProc 1>>log 2>>err
                 #python3 spectrum_sparse.py $N $eps $eig_num $dis_num_in $dis_num_fin $overwrite $nProc 1>>log 2>>err
@@ -39,12 +39,13 @@ do
             
                 #python3 spectrum2.py $N $eps $dis_num_in $dis_num_fin
             
-                #python3 tEv.py $N $eps $initState $Tin $Tfin $dt $save_dt $dis_num_in $dis_num_fin $sparse $overwrite $nProc #1>>log 2>>err
-                python3 tEv_log.py $N $eps $initState $Tin $Tfin $ts_per_pow2 $dis_num_in $dis_num_fin $sparse $overwrite $nProc #1>>log 2>>err
+                #python3 tEv.py $N $eps $initState $Tin $Tfin $dt $save_dt $dis_num_in $dis_num_fin $sparse $overwrite $nProc 1>>log 2>>err
+                #python3 tEv_log.py $N $eps $initState $Tin $Tfin $ts_per_pow2 $dis_num_in $dis_num_fin $sparse $overwrite $nProc 1>>log 2>>err
+                #python3 tEv_log_corrJ.py $N $eps $initState $Tin $Tfin $ts_per_pow2 $dis_num_in $dis_num_fin $sparse $overwrite $nProc #1>>log 2>>err
                 :
             fi            
             #python3 average_ev.py $N $eps $initState $Tfin $dis_num_fin
-            #python3 plot_ev.py $N $eps $initState $Tfin $dis_num_fin &
+            python3 plot_ev.py $N $eps $initState $Tfin $dis_num_fin &
         done
         
         #python3 tEv_log_multiState.py $N $eps 0 $Tin $Tfin $ts_per_pow2 $dis_num_in $dis_num_fin 0 $overwrite $nProc

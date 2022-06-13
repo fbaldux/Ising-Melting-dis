@@ -29,7 +29,7 @@ for N in range(18,38,2):
     c += 1
 
 
-ax.axhline(0.39, ls=':', color='black', label="Poisson")
+ax.axhline(0.386, ls=':', color='black', label="Poisson")
 
 ax.set_xlabel(r"$W$")
 ax.set_ylabel(r"$r$")

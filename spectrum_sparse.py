@@ -46,25 +46,25 @@ os.environ["OMP_NUM_THREADS"] = str(nProc)
 import numpy as np
 from scipy import sparse
 from scipy.sparse.linalg import eigsh
-from partitions import *
+import partitions as pt
 from time import time
 
 np.seterr(divide='ignore')
 
-#eig_num = dim[N]//eig_frac
-start = time()
+#eig_num = pt.dim[N]//eig_frac
+startTime = time()
 
 #  ------------------------------------  load hopping terms  -----------------------------------  #
 
 # from partitions.py
-H0 = load_adjacency(N)
+H0 = pt.load_adjacency(N)
 
 
 #  -------------------------------  build magnetization operator  ------------------------------  #
 """
 levels = [np.array(((0,),))]
 for n in range(1,N+1):
-    levels.append( np.array( [x for x in generate_partitions(n)] ) )
+    levels.append( np.array( [x for x in pt.generate_partitions(n)] ) )
 
 levels = tuple(levels)
 
@@ -73,12 +73,12 @@ levels = tuple(levels)
 @nb.njit
 def build_mag2d():
     
-    M = np.zeros((N,N,dim[N]), dtype=np.float_)
+    M = np.zeros((N,N,pt.dim[N]), dtype=np.float_)
     
     # sum over all basis states (split in n and i)
     for n in range(1,N+1):
         for i in range(p[n]):
-            k = dim[n-1]+i
+            k = pt.dim[n-1]+i
             
             # iterate over the rows of the Young diagrams
             r = 0
@@ -91,8 +91,8 @@ def build_mag2d():
 mag2d_op = build_mag2d()
 
 # get rid of inaccessible spins in the NxN grid
-M = np.einsum("xyi,i->xy", mag2d_op, np.ones(dim[N])).flatten()
-mag2d_op = mag2d_op.reshape(N*N,dim[N])
+M = np.einsum("xyi,i->xy", mag2d_op, np.ones(pt.dim[N])).flatten()
+mag2d_op = mag2d_op.reshape(N*N,pt.dim[N])
 mag2d_op = mag2d_op[M!=0]
 
 """
@@ -110,7 +110,7 @@ for dis in range(dis_num_in,dis_num_fin):
         H = H0 + epsilon * sparse.diags(np.loadtxt(filename))
                 
         # sparse
-        center = np.sum(H.diagonal()) / dim[N]
+        center = np.sum(H.diagonal()) / pt.dim[N]
         eigvals, eigvecs = eigsh(H, k=eig_num, which='LM', sigma=center)
         eigvecs = eigvecs.T
         eigvecs2 = eigvecs**2

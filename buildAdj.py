@@ -37,6 +37,7 @@ def create_dict(l):
 
     return d
 
+
 #  -------------------------------  generate nearest neighbours  -------------------------------  #
 
 # generate partitions on the next level that come from C

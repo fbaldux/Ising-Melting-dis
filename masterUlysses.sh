@@ -12,12 +12,17 @@ do
     Di=$d 
     Df=$(( $d+$dis_per_run ))
 
-    for N in $(seq 20 2 22)
+    for N in $(seq 30 2 30)
     do
     
-        for ie in $(seq 0 9)
+        #for ie in $(seq 0 9)
+		for e in $(seq 9 18)
         do
-            sed "s/£N/$N/g;s/£E/${eps[$ie]}/g;s/£Tf/${Tf[$ie]}/g;s/£Di/$Di/g;s/£Df/$Df/g;" runUlysses.sh > temp.sh        
+            # spectrum
+			sed "s/£N/$N/g;s/£E/$e/g;s/£Tf/0/g;s/£Di/$Di/g;s/£Df/$Df/g;" runUlysses.sh > temp.sh        
+            
+			# tEv
+			#sed "s/£N/$N/g;s/£E/${eps[$ie]}/g;s/£Tf/${Tf[$ie]}/g;s/£Di/$Di/g;s/£Df/$Df/g;" runUlysses.sh > temp.sh        
                 
             sbatch temp.sh
         

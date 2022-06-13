@@ -207,6 +207,45 @@ def corner_number(N,levels):
     return cn
 
 
+#  ------------------------------------  current operators  ------------------------------------  #
+
+# current operator at the center of the (holographic) chain
+def current_center(N,levels):
+    
+    J0 = sparse.lil_matrix((dim[N],dim[N]), dtype=np.complex_)
+    J0[0,1] = 1j
+    J0[1,0] = -1j
+    
+    # sum over all basis states (split in n and i)
+    for n in range(1,N):
+        
+        l_string = [','.join([str(num) for num in x]) for x in levels[n+1]]
+        dict_nl = {l_string[i]:i for i in range(len(l_string))}
+        
+        for i in range(p[n]):
+            k = dim[n-1]+i            
+            
+            # determine the vertical height (copied from vertical_height)
+            r = 0
+            while r<n and levels[n][i,r]>r:
+                r += 1
+            
+            if levels[n][i,r-1]>r and levels[n][i,r]==r:
+                # create the new diagram by adding one box at the center
+                newD = np.copy(levels[n][i])
+                newD[r] = r+1                
+                
+                # find the index of the new diagram
+                newD_string = ','.join([str(y) for y in newD]) + ',0'
+                k2 = dim[n]+dict_nl[newD_string]
+                
+                # store it in J0 
+                J0[k,k2] = 1j
+                J0[k2,k] = -1j
+                
+    return sparse.csr_matrix(J0)
+
+
 #  -----------------------------------  entanglement entropy  ----------------------------------  #
 
 # builds the integer representation in the language of the fermions for a single diagram
@@ -275,8 +314,8 @@ def binary_search(elem, array):
 
 # computes the reduced density matrix of half the space, cut vertically from the vertex
 # needs in input:
-""" int_rep = build_integer_repr(N,levels)
-    new_states = np.unique(int_rep[1]) """
+#   int_rep = pt.build_integer_repr(N,levels)
+#   new_states = np.unique(int_rep[1])
 @nb.njit
 def reduced_density_matrix(N,psi,int_rep,new_states):
     

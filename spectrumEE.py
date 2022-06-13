@@ -42,7 +42,7 @@ os.environ["OMP_NUM_THREADS"] = str(nProc)
 import numpy as np
 from scipy import sparse
 from scipy.linalg import eigh
-from partitions import *
+import partitions as pt
 import numba as nb
 from time import time
 
@@ -51,7 +51,7 @@ start = time()
 #  ------------------------------------  load hopping terms  -----------------------------------  #
 
 # from partitions.py
-H0 = load_adjacency(N)
+H0 = pt.load_adjacency(N)
 
 
 #  -------------------------------  build magnetization operator  ------------------------------  #

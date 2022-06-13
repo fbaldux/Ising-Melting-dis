@@ -12,8 +12,11 @@ from matplotlib import pyplot as plt
 # system size
 N = int( float(sys.argv[1]) )
 
+# power-law decay of waiting time distribution
+a = float( sys.argv[2] )
+
 # number of disorder instances
-dis_num = int( sys.argv[2] )
+dis_num = int( sys.argv[3] )
 
 
 plt.rcParams["figure.figsize"] = [8,4]
@@ -38,10 +41,20 @@ def CGM(x):
     else:
         return (1+2*x*x) / np.sqrt(8)
 
+# corner growth model, aka TASEP
+@nb.vectorize
+def TASEP(x,c):
+    x = np.abs(x)
+
+    if x >= np.sqrt(2*c):
+        return x
+    else:
+        return (2*np.sqrt(2)*x**2 + np.sqrt(2)*c**2)/(4*c)
 
 #  -------------------------------------------  load  ------------------------------------------  #
 
-filename = "Averages/MCshape_N%d_d%d.txt" % (N,dis_num)
+#filename = "Averages/TASEP_shape_exp_N%d_d%d.txt" % (N,dis_num)
+filename = "Averages/TASEP_shape_pow_N%d_a%.4f_d%d.txt" % (N,a,dis_num)
 x,y = np.loadtxt(filename).T
 
 
@@ -51,7 +64,8 @@ plt.plot(np.sqrt(2)*x, np.sqrt(2)*y, '-', c='black', label="MC")
 
 xO = np.linspace(-10,10,100)
 plt.plot(xO, Okounkov(xO), '--', c='darkgreen', label="Okounkov")
-plt.plot(xO, CGM(xO), '--', c='darkred', label="corner model")
+#plt.plot(xO, CGM(xO), '--', c='darkred', label="standard TASEP")
+plt.plot(xO, TASEP(xO,np.sqrt(12)), '-.', c='royalblue', label="standard TASEP")
 
 plt.xlabel("x")
 plt.ylabel("y")

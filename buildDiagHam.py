@@ -16,7 +16,7 @@ import sys
 import numpy as np
 import numba as nb
 rng = np.random.default_rng()
-from partitions import *
+import partitions as pt
 
 N = int( sys.argv[1] )
 dis_num_in = int( sys.argv[2] )
@@ -30,7 +30,7 @@ def update_diag(l,square_dis,n):
     matr_el = [np.float_(1) for i in range(0)]
     
     # sum the squares in the Young diagram
-    for i in range(p[n]):
+    for i in range(pt.p[n]):
         r = 0
         tot = 0.
         while r<n and l[i,r]>0:
@@ -46,7 +46,7 @@ def update_diag(l,square_dis,n):
 
 levels = [np.array(((0,),))]
 for n in range(1,N+1):
-    levels.append( np.array( [x for x in generate_partitions(n)] ) )
+    levels.append( np.array( [x for x in pt.generate_partitions(n)] ) )
 
 
 #  --------------------------  build the diagonal of the Hamiltonian  --------------------------  #

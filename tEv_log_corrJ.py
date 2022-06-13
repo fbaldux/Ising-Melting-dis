@@ -24,7 +24,7 @@ epsilon = float( sys.argv[2] )
 init_state = int( sys.argv[3] )
 
 # time evolution parameters
-Tin = float( sys.argv[4] )
+Tin = 0
 Tfin = float( sys.argv[5] )
 ts_per_pow2 = int( sys.argv[6] )
 Tin_cutoff = 1e-1
@@ -87,17 +87,20 @@ int_rep = pt.build_integer_repr(N,levels)     # int_rep[0]=left, int_rep[1]=righ
 new_states = np.unique(int_rep[:,0])
 
 
+#  -------------------------------------  current operator  ------------------------------------  #
+
+J_op = pt.current_center(N,levels)
+
+
 #  ---------------------------  store stuff in the array of results  ---------------------------  #
 
-def store(t,v):
+def store(t,v0,v1,J):
     temp = [t]
     
-    v2 = np.abs(v)**2
-    temp.append( np.dot(v2, sl_op) )
-    temp.append( np.dot(v2, vh_op) )
-    temp.append( np.dot(v2, area_op) )
-
-    temp.append( pt.entanglement_entropy(pt.reduced_density_matrix(N, v, int_rep, new_states)) )
+    temp.append( np.dot(np.abs(v0)**2, area_op) )
+    temp2 = np.dot(np.conj(v0), J.dot(v1))
+    temp.append( temp2.real )
+    temp.append( temp2.imag )
 
     return temp
 
@@ -133,40 +136,43 @@ for dis in range(dis_num_in,dis_num_fin):
 
 
         # array to store the observables
-        toSave = [] # t lateral vertical area EE
+        toSave = [] # t area <J(t)J(0)>
 
 
         # initial state
-        if Tin == 0:
-            v = np.zeros(pt.dim[N])
-            v[init_state] = 1
-            toSave.append( store(0,v) )
-        else:
-            v = np.load(filename_state(Tin,dis))
-    
+        v0 = np.zeros(pt.dim[N], dtype=np.complex_); v0[0] = 1
+        v1 = np.zeros(pt.dim[N], dtype=np.complex_); v1[1] = 1j
 
         # time evolution
         if use_sparse:
+            
             Him = -1j*H
             del H
         
             # first step
             if Tin == 0:
-                v = expm_multiply(Him, v, start=0, stop=Tin_true, num=2, endpoint=True)[-1]
-                toSave.append( store(Tin_true,v) )
+                v0_running = expm_multiply(Him, v0, start=0, stop=Tin_true, num=2, endpoint=True)[-1]
+                v1_running = expm_multiply(Him, v1, start=0, stop=Tin_true, num=2, endpoint=True)[-1]
+                toSave.append( store(Tin_true, v0_running, v1_running, J_op) )
+                # for <J(t)>
+                #toSave.append( store(Tin_true, v0_running, v0_running, J_op) )
     
             # bulk
             t_pivots = np.concatenate(( 2**np.arange( 0, np.log2(Tfin/Tin_true) )*Tin_true, (Tfin,) ))
 
             for p in range(len(t_pivots)-1):
-                vt = expm_multiply(Him, v, start=0, stop=t_pivots[p+1]-t_pivots[p], num=ts_per_pow2, endpoint=True)
+                v0t = expm_multiply(Him, v0_running, start=0, stop=t_pivots[p+1]-t_pivots[p], num=ts_per_pow2, endpoint=True)
+                v1t = expm_multiply(Him, v1_running, start=0, stop=t_pivots[p+1]-t_pivots[p], num=ts_per_pow2, endpoint=True)
             
                 ts = np.linspace(t_pivots[p],t_pivots[p+1],ts_per_pow2)
                 for it in range(1,ts_per_pow2):
-                    toSave.append( store(ts[it], vt[it]) )
+                    toSave.append( store(ts[it], v0t[it], v1t[it], J_op) )
+                    # for <J(t)>
+                    #toSave.append( store(ts[it], v0t[it], v0t[it], J_op) )
 
-                v = vt[-1]
-    
+                v0_running = v0t[-1]
+                v1_running = v1t[-1]
+            
         else:
         
             save_steps = int( (np.log2(Tfin/Tin_true))*ts_per_pow2 )
@@ -175,30 +181,23 @@ for dis in range(dis_num_in,dis_num_fin):
             # it holds H = U @ Hdiag @ U.H
             Hdiag, U = eigh(H.todense())
         
-            vrot = np.dot(np.conj(U.T), v)
+            v0rot = np.dot(np.conj(U.T), v0)
+            v1rot = np.dot(np.conj(U.T), v1)
+            Jrot = np.einsum("ab,bc,cd->ad", np.conj(U.T), J_op.todense(), U)
         
             for it in range(save_steps):
-                vt = np.einsum("ab,b,b", U, np.exp(-1j*Hdiag*ts[it]), vrot)
-                toSave.append( store(ts[it], vt) )
+                v0t = np.einsum("ab,b,b", U, np.exp(-1j*Hdiag*ts[it]), v0rot)
+                v1t = np.einsum("ab,b,b", U, np.exp(-1j*Hdiag*ts[it]), v1rot)
+                toSave.append( store(ts[it], v0t, v1t, Jrot) )
         
-            v = vt
         
         toSave = np.array(toSave)
     
-        if Tin > 0:
-            temp = np.loadtxt(filename_obs(Tin,dis))
-            print(temp.shape, toSave.shape)
-            toSave = np.vstack((temp,toSave))
         
         # save to file
-        head = "t lat vert area EE"
+        head = "t area <J(t)J(0)>"
         np.savetxt(filename_obs(Tfin,dis), toSave, header=head)
     
-        np.save(filename_state(Tfin,dis), v)
-        
-        if Tin > 0:
-            os.system("rm " + filename_obs(Tin,dis))
-            os.system("rm " + filename_state(Tin,dis))
 
 print("END", ' '.join(sys.argv), "time", time()-startTime)
 

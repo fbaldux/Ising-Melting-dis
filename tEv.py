@@ -54,7 +54,7 @@ from scipy.linalg import expm
 from scipy import sparse
 from scipy.sparse.linalg import expm_multiply
 import numba as nb
-from partitions import *
+import partitions as pt
 from time import time
 
 start = time()
@@ -64,7 +64,7 @@ start = time()
 
 levels = [np.array(((0,),))]
 for n in range(1,N+1):
-    levels.append( np.array( [x for x in generate_partitions(n)] ) )
+    levels.append( np.array( [x for x in pt.generate_partitions(n)] ) )
 
 levels = tuple(levels)
 
@@ -72,21 +72,21 @@ levels = tuple(levels)
 #  ------------------------------------  load hopping terms  -----------------------------------  #
 
 # from partitions.py
-H0 = load_adjacency(N)
+H0 = pt.load_adjacency(N)
 
 
 #  ------------------------  operators for quantifying the removed area  -----------------------  #
 
 # from partitions.py
-vh_op = vertical_height(N,levels)
-sl_op = 0.5 * (side1_length(N,levels) + side2_length(N,levels))
-area_op = area(N)
+vh_op = pt.vertical_height(N,levels)
+sl_op = 0.5 * (pt.side1_length(N,levels) + pt.side2_length(N,levels))
+area_op = pt.area(N)
 
 
 #  ----------------------------  stuff for the entanglement entropy  ---------------------------  #
 
 # integer representation in the language of the fermions
-int_rep = build_integer_repr(N,levels)     # int_rep[0]=left, int_rep[1]=right
+int_rep = pt.build_integer_repr(N,levels)     # int_rep[0]=left, int_rep[1]=right
 new_states = np.unique(int_rep[:,0])
 
 
@@ -101,7 +101,7 @@ def store(it,v):
     toSave[it,2] = np.dot(v2, vh_op)
     toSave[it,3] = np.dot(v2, area_op)
 
-    toSave[it,4] = entanglement_entropy(reduced_density_matrix(N, v, int_rep, new_states))
+    toSave[it,4] = pt.entanglement_entropy(pt.reduced_density_matrix(N, v, int_rep, new_states))
 
 
 #  -------------------------------------------  main  ------------------------------------------  #
@@ -123,7 +123,7 @@ for dis in range(dis_num_in,dis_num_fin):
 
         # initial state
         if Tin == 0:
-            v = np.zeros(dim[N])
+            v = np.zeros(pt.dim[N])
             v[init_state] = 1
             store(0,v)
         else:

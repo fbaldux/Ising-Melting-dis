@@ -33,7 +33,7 @@ os.environ["OMP_NUM_THREADS"] = str(nProc)
 import numpy as np
 from scipy import sparse
 from scipy.linalg import eigh
-from partitions import *
+import partitions as pt
 import numba as nb
 from time import time
 
@@ -42,18 +42,18 @@ start = time()
 #  ------------------------------------  load hopping terms  -----------------------------------  #
 
 # from partitions.py
-H0 = load_adjacency(N)
+H0 = pt.load_adjacency(N)
 
 
 #  ------------------------  operator for quantifying the removed area  ------------------------  #
 
 levels = [np.array(((0,),))]
 for n in range(1,N+1):
-    levels.append( np.array( [x for x in generate_partitions(n)] ) )
+    levels.append( np.array( [x for x in pt.generate_partitions(n)] ) )
 
 levels = tuple(levels)
 
-area_op = area(N)
+area_op = pt.area(N)
 
 
 #  -------------------------------------------  main  ------------------------------------------  #
