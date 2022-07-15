@@ -36,21 +36,13 @@ alpha = 0.1
 
 #  -------------------------------------------  load  ------------------------------------------  #
 
-# clean case
-ts2 = np.linspace(1e-1,10,100)
-ax[0].plot(ts2, ts2**2, '--', c='black', label=r"$t^2$")
-ax[1].plot(ts2, ts2**2, '--', c='black')
-ts2 = np.linspace(1e-1,3.6,100)
-ax[2].plot(ts2, ts2**2, '--', c='black')
-
-
 for ie in range(len(eps)):
     e = eps[ie]
-    
+    """
     if ie==2:
         left, bottom, width, height = 0.2, 0.45, 0.7, 0.5
         ax_in = ax[ie].inset_axes([left, bottom, width, height])
-    
+    """
     for iN in range(len(Ns)):
         N = Ns[iN]
         
@@ -83,18 +75,17 @@ for ie in range(len(eps)):
                         
         lab = r"$N=%d$" % N
         
-        ax[ie].plot(ts, av[2], '-', label=lab, c=cols(iN))
-        ax[ie].fill_between(ts, av[2]+std[2], av[2]-std[2], color=cols(iN), alpha=alpha)         
-            
+        ax[ie].plot(ts, av[3], '-', label=lab, c=cols(iN))
+        ax[ie].fill_between(ts, av[3]+std[3], av[3]-std[3], color=cols(iN), alpha=alpha)
 
 #  ------------------------------------------  inset  ------------------------------------------  #
-        
+        """
         if ie==2:
             logt = np.log(ts[1:])
             av2 = np.maximum(av[2,1:], np.ones(len(av[2,1:]))*1e-10)
             logN = np.log(av2)
             ax_in.plot(0.5*(ts[1:-1]+ts[2:]), np.diff(logN)/np.diff(logt), '-', c=cols(iN))
-
+        """
 #  ----------------------------------------  parameters  ---------------------------------------  #
 
     ax[ie].set_xlabel(r"$t$")
@@ -105,9 +96,10 @@ for ie in range(len(eps)):
     #ax.set_yscale("log")
     
     if ie==0:
-        ax[ie].legend(labelspacing=0.3, fontsize=14, loc="lower right", frameon=False)
+        ax[ie].legend(labelspacing=0.3, fontsize=14, loc="upper left", frameon=False, bbox_to_anchor=(0.01, 0.8))
 
     ax[ie].text(0.02, 0.93, plot_label[ie], c='black', transform=ax[ie].transAxes)
+    
 
 
 ax[0].xaxis.set_ticks([1e-1,1e0,1e1])
@@ -118,18 +110,17 @@ ax[1].set_xlim((1e-1,1e4))
 
 ax[2].xaxis.set_ticks([1e0,1e1,1e2,1e3,1e4,1e5])
 ax[2].set_xlim((1e-1,1e5))
-
-ax_in.set_xlabel(r"$t$", fontsize=14)
-ax_in.xaxis.labelpad = -1
-ax_in.set_ylabel(r"$\frac{d \ln(N)}{d \ln(t)}$")
+"""
+ax_in.set_xlabel(r"$t$")
+ax_in.set_ylabel(r"$\frac{d \log(N)}{d \log(t)}$")
 ax_in.set_xscale("log")
-
-ax[0].set_ylabel(r"$N(t)$")
+"""
+ax[0].set_ylabel(r"$S_E(t)$")
 
 ax[0].yaxis.set_minor_locator(AutoMinorLocator())
-ax[0].set_ylim((0,24))
+ax[0].set_ylim((0,5.2))
 
-plt.savefig("Plots/ev.pdf", bbox_inches='tight')
+plt.savefig("Plots/evEE.pdf", bbox_inches='tight')
 plt.show()
 
 

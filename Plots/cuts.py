@@ -16,7 +16,7 @@ high = np.loadtxt("Plots/r_cut_high.txt").T
 #  -------------------------------------------  main  ------------------------------------------  #
 
 plt.rcParams["figure.figsize"] = [6.4,4.6]
-plt.rcParams.update({"text.usetex": True, "font.family": "serif", "font.size": 17})
+plt.rcParams.update({"text.usetex": True, "font.family": "serif", "font.size": 16})
 
 fig, ax = plt.subplots()
 cols = cm.get_cmap('cmr.ember', 8)

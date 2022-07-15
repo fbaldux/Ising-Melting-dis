@@ -14,7 +14,7 @@ data = np.loadtxt("Analysis/rAv.txt").T
 #  -------------------------------------------  plot  ------------------------------------------  #
 
 #plt.rcParams["figure.figsize"] = [4,3.2]
-plt.rcParams.update({"text.usetex": True, "font.family": "serif", "font.size": 17})
+plt.rcParams.update({"text.usetex": True, "font.family": "serif", "font.size": 16})
 
 fig, ax = plt.subplots()
 cols = cm.get_cmap('cmr.ember_r', 10)
