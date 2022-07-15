@@ -30,4 +30,4 @@
 
 # IN PRATICA CONVIENE USARE
 # 1000 stati: N28->160, N30->48, N32->40, N34->18 (3 threads)
-#  500 stati: N36->12 (2 threads)
+#  500 stati: N36->10 (2 threads)

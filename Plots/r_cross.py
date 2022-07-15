@@ -12,13 +12,15 @@ data = np.loadtxt("Analysis/rAv.txt").T
 
 #  -----------------------------------------  analyze  -----------------------------------------  #
 
-def fitfunc(x,a,b,c,d):
-    return (a*np.exp(-b*x) + c) * ( 1 + d/x )
+def fitfunc(x,a,b,c):
+    #return (a*np.exp(-b*x) + c) * ( 1 + d/x )
+    return (a*np.exp(-b*x) + 0.38629) * ( 1 + c/x )
+
 
 def fitfuncp(x,a,b,c,d):
     return (a*b*np.exp(-b*x)) * ( 1 + d/x ) - (a*np.exp(-b*x) + c) * d/x**2 
 
-xmin = 7
+xmin = 6
 deg = 5
 
 rGOE = 0.5307
@@ -40,17 +42,18 @@ for N in range(18,38,2):
     #f = interp1d(x, y, kind='cubic')
     
     # polynomial fit
-    """
     fit = np.polyfit(x, y, deg)
     f1 = lambda x: np.dot( x**np.arange(deg+1), fit[::-1] )
     f = np.vectorize(f1)
+    
     """
     # exp fit
     #bds = ((0,2,0),(np.inf,2.2,np.inf))
-    guess = (0.2,0.2,0.3,0.01)
+    #guess = (0.2,0.2,0.3,0.01)
+    guess = (0.2,0.2,0.01)
     fit, cov = curve_fit(fitfunc, x, y, p0=guess) #, bounds=bds)
     f = lambda x: fitfunc(x, *fit)
-    
+    """
     # plot
     """
     plt.plot(x, y, '.', c=cols(c), label=N)
@@ -68,8 +71,8 @@ for N in range(18,38,2):
 Ns = np.array(Ns)
 
 def f1(iN,x):
-    return fitfunc(x, *fs[iN])
-    #return np.dot( x**np.arange(deg+1), fs[iN][::-1] )
+    #return fitfunc(x, *fs[iN])
+    return np.dot( x**np.arange(deg+1), fs[iN][::-1] )
 
 f = np.vectorize(f1)
 
@@ -79,17 +82,28 @@ crosses[0] = 8
 for iN in range(1,len(Ns)):
     temp = lambda x: f(iN,x)-f(iN-1,x)
     
+    # plot
+    which = (data[0]==Ns[iN-1]) & (data[1]>=xmin)
+    plt.plot(data[1,which], data[2,which], 'o', ms=4, c=cols(0))
+    which = (data[0]==Ns[iN-1]) & (data[1]<xmin)
+    plt.plot(data[1,which], data[2,which], 'x', ms=4, c=cols(0))
+    which = (data[0]==Ns[iN]) & (data[1]>=xmin)
+    plt.plot(data[1,which], data[2,which], 'o', ms=4, c=cols(5))
+    which = (data[0]==Ns[iN]) & (data[1]<xmin)
+    plt.plot(data[1,which], data[2,which], 'x', ms=4, c=cols(5))
     
     x2 = np.linspace(1,18,100)
     plt.plot(x2, f(iN-1,x2), '-', c=cols(0))
     plt.plot(x2, f(iN,x2), '-', c=cols(5))
+    
     plt.title(Ns[iN])
+    plt.ylim((0.38, 0.5))
     #plt.yscale("log")
     plt.show()
     
     crosses[iN] = fsolve(temp, crosses[iN-1])
     
-    print(Ns[iN], fitfuncp(crosses[iN],*fs[iN]) - fitfuncp(crosses[iN],*fs[iN-1]))
+    #print(Ns[iN], fitfuncp(crosses[iN],*fs[iN]) - fitfuncp(crosses[iN],*fs[iN-1]))
     
     
 crosses = np.array(crosses)
@@ -105,9 +119,9 @@ dots = ('o', 'v', '^', '>', '<', 's', 'P', 'h', 'X', 'D')
 ax.plot(Ns[1:], crosses[1:], '.', c='black', label="data")
 
 # fit
-fit = np.polyfit(Ns[-4:], crosses[-4:], 1)
+fit = np.polyfit(Ns[:], crosses[:], 1)
 f = lambda x: fit[0]*x + fit[1]
-ax.plot(Ns[-4:], f(Ns[-4:]), '--', c='gray', label="fit")
+ax.plot(Ns[:], f(Ns[:]), '--', c='gray', label="fit")
 
 ax.set_xlabel(r"$N$")
 ax.set_ylabel(r"$\varepsilon^*$")

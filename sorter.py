@@ -9,7 +9,7 @@ import numpy as np
 
 #  -------------------------------------------  load  ------------------------------------------  #
 
-filename = "Analysis2/KL.txt"
+filename = "Analysis2/rAv.txt"
 #filename = "a.txt"
 
 data = np.loadtxt(filename).T

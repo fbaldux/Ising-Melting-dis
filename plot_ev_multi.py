@@ -80,25 +80,25 @@ for ie in range(2,len(eps)):
         #ax.plot(data[0], np.sqrt(data[4]), '-', label=lab, c=cols(c))
         
         # N(t)
-        ax.plot(ts, av[2], '-', label=lab, c=cols(iN))
-        ax.fill_between(ts, av[2]+std[2], av[2]-std[2], color=cols(iN), alpha=alpha)         
+        #ax.plot(ts, av[2], '-', label=lab, c=cols(iN))
+        #ax.fill_between(ts, av[2]+std[2], av[2]-std[2], color=cols(iN), alpha=alpha)         
         
         # EE
         #ax.plot(ts, av[3], '-', label=lab, c=cols(iN))
         #ax.fill_between(ts, av[3]+std[3], av[3]-std[3], color=cols(iN), alpha=alpha)
         
         # log-derivative
-        """logt = np.log(ts)
+        logt = np.log(ts)
         logN = np.log(av[2])
         ax.plot(0.5*(ts[:-1]+ts[1:]), np.diff(logN)/np.diff(logt), '-', label=lab, c=cols(iN))
-        """
+        
         c += 1
 
 #  ----------------------------------------  parameters  ---------------------------------------  #
 
     ax.set_xlabel(r"$t$")
-    ax.set_ylabel(r"$N(t)$")
-    #ax.set_ylabel(r"$\frac{d \log(N)}{d \log(t)}$")
+    #ax.set_ylabel(r"$N(t)$")
+    ax.set_ylabel(r"$\frac{d \log(N)}{d \log(t)}$")
     #ax.set_ylabel(r"$\frac{dN}{d \log(t)}$")
     #ax.set_ylabel(r"$S_E(t)$")
 
