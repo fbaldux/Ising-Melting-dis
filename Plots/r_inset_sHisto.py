@@ -2,7 +2,7 @@
 import numpy as np
 from matplotlib import pyplot as plt
 from matplotlib import cm
-from matplotlib.ticker import MultipleLocator
+from matplotlib.ticker import *
 import cmasher as cmr
 
 
@@ -41,7 +41,7 @@ ax.plot((15,22), (0.41,0.41), '-.', c="darkgreen")
 ax.text(15.4, 0.4, "L", c="darkgreen")
 
 
-ax.text(1.5, 0.515, "(a)", c="black")
+#ax.text(1.5, 0.515, "(a)", c="black")
 
 
 ax.set_xlabel(r"$W$")
@@ -51,8 +51,9 @@ ax.set_xlim((1,37))
 ax.set_ylim((0.38,0.54))
 
 ax.set_xticks(np.arange(5,40,5))
-ax.set_yticks(np.linspace(0.39,0.53,6))
-#ax.tick_params(axis='x', which='minor', bottom=False)
+ax.xaxis.set_minor_locator(AutoMinorLocator())
+ax.set_yticks(np.linspace(0.4,0.52,4))
+ax.yaxis.set_minor_locator(AutoMinorLocator())
 
 
 #ax.legend(labelspacing=0.3, fontsize=15, title_fontsize=15, loc="lower left", title=r"$N$")
@@ -90,8 +91,13 @@ ax2.plot(s, np.exp(-s), ':', c='black')
 
 ax2.set_xlim((0,6))
 
+
 ax2.set_xlabel(r"$s$", fontsize=16)
 ax2.set_ylabel(r"$P(s)$", fontsize=16)
+
+ax2.xaxis.set_minor_locator(AutoMinorLocator())
+ax2.yaxis.set_minor_locator(AutoMinorLocator())
+
 
 ax2.legend(labelspacing=0.3, handlelength=1, handletextpad=0.5, frameon=False, fontsize=14)
 

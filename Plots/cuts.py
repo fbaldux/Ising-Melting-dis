@@ -4,6 +4,8 @@ from scipy.optimize import fsolve, brentq, curve_fit
 from matplotlib import pyplot as plt
 from matplotlib import cm
 import cmasher as cmr
+from matplotlib.ticker import *
+
 
 
 #  -------------------------------------------  load  ------------------------------------------  #
@@ -24,8 +26,8 @@ dots = ('o', 'v', '^', '>', '<', 's', 'P', 'h', 'X', 'D')
 
 
 # plot
-ax.plot(1/low[0], low[1], 'o', ms=4, c='darkgreen', label=r"$W_L$")
-ax.plot(1/high[0], high[1], 'o', ms=4, c='steelblue', label=r"$W_U$")
+ax.plot(1/low[0], low[1], 's', ms=4, c='darkgreen', label=r"$W_L$")
+ax.plot(1/high[0], high[1], '^', ms=4, c='steelblue', label=r"$W_U$")
 
 
 # fit low (~L)
@@ -66,7 +68,11 @@ ax.set_ylabel(r"$W$")
 ax.set_xlim((0,0.06))
 ax.set_ylim((6,50))
 
-ax.text(0.01, 0.93, "(b)", c='black', transform=ax.transAxes)
+ax.xaxis.set_minor_locator(AutoMinorLocator())
+ax.yaxis.set_minor_locator(AutoMinorLocator())
+
+
+#ax.text(0.01, 0.93, "(b)", c='black', transform=ax.transAxes)
 
 #ax.set_title(r"$\varepsilon^*$ s.t. $r(\varepsilon^*) = $%.3f" % cut)
 
@@ -81,8 +87,8 @@ ax2 = ax.inset_axes([left, bottom, width, height])
 
 
 # plot
-ax2.plot(low[0], low[1], 'o', ms=3, c='darkgreen')
-ax2.plot(high[0], high[1], 's', ms=3, c='steelblue')
+ax2.plot(low[0], low[1], 's', ms=3, c='darkgreen')
+ax2.plot(high[0], high[1], '^', ms=3, c='steelblue')
 #ax2.plot(cross[0], 2*cross[1], 'o', ms=3, c='darkgreen', label=r"$W^*$")
 #ax2.errorbar(cross[0], 2*cross[1], yerr=2/(4*cross[1]**2*cross_err[1]), marker='o', ms=3, c='darkgreen', label=r"$W^*$")
 
@@ -114,8 +120,8 @@ ax2.set_ylabel(r"$W$")
 ax2.xaxis.set_label_coords(0.55, -0.15)
 #ax2.yaxis.set_label_coords(-0.1, 0.4)
 
-ax2.set_xticks(np.arange(20,40,5))
-#ax.set_yticks(np.linspace(0.39,0.53,6))
+ax2.xaxis.set_minor_locator(AutoMinorLocator())
+ax2.yaxis.set_minor_locator(AutoMinorLocator())
 
 #ax.set_title(r"$\varepsilon^*$ s.t. $r(\varepsilon^*) = $%.3f" % cut)
 

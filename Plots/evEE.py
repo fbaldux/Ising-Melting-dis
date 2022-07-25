@@ -2,10 +2,7 @@
 #   ...
 #  ---------------------------------------------------------------------------------------------  #
 
-import sys
 import numpy as np
-from scipy.special import jv
-import numba as nb
 from matplotlib import pyplot as plt
 from matplotlib import cm
 from matplotlib.ticker import *
@@ -36,6 +33,17 @@ alpha = 0.1
 
 #  -------------------------------------------  load  ------------------------------------------  #
 
+# exact
+data = np.loadtxt("Plots/EE_exact.txt").T
+#data2 = np.loadtxt("Plots/a.txt")
+for ie in range(3):
+    temp = np.logspace(1,5,100)
+    ts = np.append(data[0], temp)
+    EE = np.append(data[1], np.log(2*temp)/6+0.475)
+    ax[ie].plot(ts, EE, '--', c='black')
+
+    
+
 for ie in range(len(eps)):
     e = eps[ie]
     """
@@ -58,10 +66,11 @@ for ie in range(len(eps)):
                     av = np.loadtxt(filename).T  # t lat vert area EE
                     ts = av[0]
                     av = av[1:]
-                
+                    """
                     filename = "Averages/tEv_N%d_e%.4f_s%d_T%.1f_std%d.txt" % (N,e,0,T,dis_num)
-                    std = np.sqrt(np.loadtxt(filename)[:,1:]).T  # t lat vert area EE
-                    
+                    #std = np.sqrt(np.loadtxt(filename)[:,1:]).T  # t lat vert area EE
+                    std = np.loadtxt(filename)[:,1:].T  # t lat vert area EE
+                    """
                     found = True
                     break
                 
@@ -76,7 +85,36 @@ for ie in range(len(eps)):
         lab = r"$N=%d$" % N
         
         ax[ie].plot(ts, av[3], '-', label=lab, c=cols(iN))
-        ax[ie].fill_between(ts, av[3]+std[3], av[3]-std[3], color=cols(iN), alpha=alpha)
+        #ax[ie].fill_between(ts, av[3]+std[3], av[3]-std[3], color=cols(iN), alpha=alpha)
+
+#  -------------------------------------------  fit  -------------------------------------------  #
+
+        if ie>0 and N==30:
+            
+            if ie==1:
+                which = (ts>1.7) & (ts<46)
+            if ie==2:
+                which = (ts>4) & (ts<2300)
+            x = np.log(ts[which])
+            y = av[3,which]
+            fit = np.polyfit(x, y, 1)
+            print(fit)
+            f = np.poly1d(fit)
+            if ie==1:
+                ax[ie].plot(np.exp(x), f(x)+0.2, ':', c='steelblue')
+            if ie==2:
+                ax[ie].plot(np.exp(x), f(x)-0.2, ':', c='steelblue')
+            
+        
+            """
+            if ie==1:
+                t = np.logspace(np.log10(2), np.log10(80),20)
+            if ie==2:
+                t = np.logspace(np.log10(2), np.log10(1900),20)
+            """
+            
+            
+            #ax[ie].plot(t, 3.57*np.log(t)+0.5, ':', c='green')
 
 #  ------------------------------------------  inset  ------------------------------------------  #
         """
@@ -90,13 +128,13 @@ for ie in range(len(eps)):
 
     ax[ie].set_xlabel(r"$t$")
         
-    ax[ie].set_title(r"$W$ = %.2f" %(2*e), fontsize=16)
+    ax[ie].set_title(r"$W$ = %d" %(2*e), fontsize=16)
 
     ax[ie].set_xscale("log")
     #ax.set_yscale("log")
     
     if ie==0:
-        ax[ie].legend(labelspacing=0.3, fontsize=14, loc="upper left", frameon=False, bbox_to_anchor=(0.01, 0.8))
+        ax[ie].legend(labelspacing=0.3, fontsize=14, loc="upper left", frameon=False, bbox_to_anchor=(0.01, 0.9))
 
     ax[ie].text(0.02, 0.93, plot_label[ie], c='black', transform=ax[ie].transAxes)
     
@@ -118,7 +156,7 @@ ax_in.set_xscale("log")
 ax[0].set_ylabel(r"$S_E(t)$")
 
 ax[0].yaxis.set_minor_locator(AutoMinorLocator())
-ax[0].set_ylim((0,5.2))
+ax[0].set_ylim((0,5))
 
 plt.savefig("Plots/evEE.pdf", bbox_inches='tight')
 plt.show()

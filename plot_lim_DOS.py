@@ -62,7 +62,7 @@ ax.set_ylabel(r"prob")
 #ax.set_title(r"$-$=min, --=max; dis.realiz.=%d" % dis_num)
 
 ax.legend()
-plt.savefig("plot.pdf", bbox_inches='tight')
+#plt.savefig("plot.pdf", bbox_inches='tight')
 plt.show()
 
 

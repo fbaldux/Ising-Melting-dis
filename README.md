@@ -1,6 +1,6 @@
 # Ising-Melting
 
-Melting of "solid" initial condition in 2d disordered quantum Ising model.
+Melting of "solid" initial condition in 2d disordered quantum Ising model. This repository is _not_ user-friendly, contact me for any needs.
 
 
 ## average\_ev.py

@@ -14,7 +14,7 @@ dis_num = int( sys.argv[5] )
 
 def filename(dis):
     #return "Results/tEv_N%d_e%.4f_s%d_T%.1f_d%d.txt" % (N,epsilon,init_state,Tfin,dis)
-    return "Results_N%de%.0f/tEv_N%d_e%.4f_s%d_T%.1f_d%d.txt" % (N,epsilon,N,epsilon,init_state,Tfin,dis)
+    return "Results_N%d_e%.0f/tEv_N%d_e%.4f_s%d_T%.1f_d%d.txt" % (N,epsilon,N,epsilon,init_state,Tfin,dis)
 
 
 #  -------------------------------------------  load  ------------------------------------------  #
